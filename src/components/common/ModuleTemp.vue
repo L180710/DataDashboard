@@ -5,21 +5,26 @@
 <template>
   <div class="module-container">
     <div class="module-header flex align-items space-x">
-      <h3 class="title">{{ data.title }}</h3>
+      <h3 class="title">{{ title }}</h3>
       <!-- <div class="operate">操作</div> -->
     </div>
     <div class="module-main flex data-list">
-      <dataTemp v-for="item in data.list" :key="item.id" :data="item" />
+      <slot />
+      <!-- <dataTemp v-for="item in data.list" :key="item.id" :data="item" /> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import dataTemp from './dataTemp.vue'
-import type { KeyDataObj } from '@/types/dashboard.ts'
+// import dataTemp from './dataTemp.vue'
+// import type { KeyDataObj } from '@/types/dashboard.ts'
 
-const props = defineProps<{
-  data: KeyDataObj
+// const props = defineProps<{
+//   data: KeyDataObj
+// }>()
+
+defineProps<{
+  title: string
 }>()
 </script>
 

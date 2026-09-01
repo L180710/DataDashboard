@@ -11,11 +11,12 @@
 <style lang="less" scoped>
 .header {
   position: relative;
-  height: 15vh;
-  padding: 0 0.3rem;
+  height: 12vh;
   justify-content: space-between;
   column-gap: 10px;
+  padding: 0 0.3rem;
   color: #fff;
+  flex-shrink: 0;
 
   .header-left,
   .header-right {

@@ -1,25 +1,65 @@
 <!-- 单项数据模型 -->
 <template>
-  <div class="data-container" :style="{ '--color': data.color }">
+  <div
+    class="data-container"
+    v-for="item in list"
+    :key="item.id"
+    :style="{ '--color': item.color }"
+  >
     <div class="data-icon flex">
-      <AppIcon :name="`${data.icon}`" size=".2rem" :color="`${data.color}`" />
+      <Icon :name="`${item.icon}`" size=".2rem" :color="`${item.color}`" />
     </div>
-    <div class="data-title">{{ data.title }}</div>
-    <div class="data-account">{{ data.account }}</div>
+    <div class="data-title">{{ item.title }}</div>
+    <div class="data-account">{{ item.account }}</div>
     <div class="data-diff-status">
       较上个月
-      <span class="data-status"> {{ data.status ? '↑' : '↓' }} {{ data.diff }}%</span>
+      <span class="data-status"> {{ item.status ? '↑' : '↓' }} {{ item.diff }}%</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import AppIcon from './appIcon.vue'
-import type { KeyDataItem } from '@/types/dashboard.ts'
+import Icon from './Icon.vue'
+import type { KeyDataList } from '@/types/dashboard.ts'
 
-const props = defineProps<{
-  data: KeyDataItem
-}>()
+const list: KeyDataList = [
+  {
+    id: '1',
+    icon: 'zongyonghushu',
+    title: '用户总数',
+    account: 128681,
+    diff: 3,
+    status: 1,
+    color: '#6fadea',
+  },
+  {
+    id: '2',
+    icon: 'dingdanshu',
+    title: '总订单数',
+    account: 128999,
+    diff: 2.3,
+    status: 1,
+    color: '#725bce',
+  },
+  {
+    id: '3',
+    icon: 'xiaoshouguanli',
+    title: '总销售额',
+    account: 8999,
+    diff: 1,
+    status: 0,
+    color: '#d6aa59',
+  },
+  {
+    id: '4',
+    icon: 'zhuanhuashuai',
+    title: '转化率',
+    account: 35.6,
+    diff: 3.2,
+    status: 1,
+    color: '#89d1b5',
+  },
+]
 </script>
 
 <style lang="less" scoped>

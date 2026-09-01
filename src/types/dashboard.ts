@@ -12,8 +12,3 @@ export interface KeyDataItem {
 }
 
 export type KeyDataList = KeyDataItem[]
-
-export interface KeyDataObj {
-  title: string
-  list: KeyDataList
-}
