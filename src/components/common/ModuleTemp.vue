@@ -1,29 +1,17 @@
-<!--
- 模块容器
-共同部分：边框，头部和内容用插超表示
-  -->
 <template>
-  <div class="module-container">
+  <div class="module-container flex flex-col" :style="{ '--flex': flex }">
     <div class="module-header flex align-items space-x">
       <h3 class="title">{{ title }}</h3>
-      <!-- <div class="operate">操作</div> -->
     </div>
-    <div class="module-main flex data-list">
+    <div class="module-main flex flex-col">
       <slot />
-      <!-- <dataTemp v-for="item in data.list" :key="item.id" :data="item" /> -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// import dataTemp from './dataTemp.vue'
-// import type { KeyDataObj } from '@/types/dashboard.ts'
-
-// const props = defineProps<{
-//   data: KeyDataObj
-// }>()
-
 defineProps<{
+  flex?: number | 0
   title: string
 }>()
 </script>
@@ -34,9 +22,10 @@ defineProps<{
   --corner-width: 0.02rem;
 
   overflow: hidden;
-  padding: 0.26rem 0.26rem 0.3rem;
+  padding: 0.2rem 0.2rem 0.2rem;
   border: 1px solid rgba(0, 150, 255, 0.2);
   border-radius: 0.1rem;
+  flex: var(--flex);
 
   background:
     /* 左上 */
@@ -61,15 +50,14 @@ defineProps<{
 
   // 模块头部
   .module-header {
-    padding-bottom: 0.4rem;
+    padding-bottom: 0.26rem;
 
     .title {
       position: relative;
-      font-size: 0.28rem;
+      font-size: 0.22rem;
       font-weight: 500;
-      line-height: 0.35rem;
+      line-height: 0.22rem;
       color: #fff;
-
       letter-spacing: 0.05rem;
 
       text-shadow:
@@ -104,11 +92,7 @@ defineProps<{
 
   // 模块内容
   .module-main {
-    &.data-list {
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.12rem;
-    }
+    flex: 1;
   }
 }
 </style>

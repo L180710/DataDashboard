@@ -1,7 +1,74 @@
 <template>
   <header class="header flex space-x align-center">
-    <div class="header-left">2026-08-28 16:45:40 星期四</div>
-    <div class="header-center">数据可视化</div>
+    <div class="header-left">2026-08-28 16:45:40</div>
+    <svg
+      class="header-center"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1920 100"
+      width="1920"
+      height="100"
+    >
+      <defs>
+        <!-- 主横线渐变 -->
+        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2c78b8" stop-opacity="0.15" />
+          <stop offset="25%" stop-color="#4facfe" stop-opacity="0.9" />
+          <stop offset="50%" stop-color="#66e6ff" stop-opacity="1" />
+          <stop offset="75%" stop-color="#4facfe" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#2c78b8" stop-opacity="0.15" />
+        </linearGradient>
+        <!-- 中间标题光晕 -->
+        <radialGradient id="titleGlow">
+          <stop offset="0%" stop-color="#43dfff" stop-opacity="0.28" />
+          <stop offset="100%" stop-color="#43dfff" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <!-- 主线 -->
+      <polyline
+        points="0,28 600,28 650,78 1270,78 1320,28 1920,28"
+        fill="none"
+        stroke="url(#lineGradient)"
+        stroke-width="4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <!-- 标题背后的光 -->
+      <!-- <ellipse cx="960" cy="42" rx="250" ry="45" fill="url(#titleGlow)" /> -->
+      <text
+        x="960"
+        y="36"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-family="Arial, Microsoft YaHei, sans-serif"
+        font-size="42"
+        font-weight="600"
+        letter-spacing="6"
+        fill="#a9a9a9"
+      >
+        数据可视化
+      </text>
+      <polyline
+        points="290,53 490,53 520,78"
+        fill="none"
+        stroke="#4facfe"
+        stroke-width="2"
+        opacity="0.65"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <circle cx="520" cy="78" r="3.5" fill="#59dcff" />
+      <polyline
+        points="1630,53 1430,53 1400,78"
+        fill="none"
+        stroke="#4facfe"
+        stroke-width="2"
+        opacity="0.65"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <circle cx="1400" cy="78" r="3.5" fill="#59dcff" />
+    </svg>
+
     <div class="header-right">全国</div>
   </header>
 </template>
@@ -11,42 +78,22 @@
 <style lang="less" scoped>
 .header {
   position: relative;
-  height: 12vh;
   justify-content: space-between;
   column-gap: 10px;
-  padding: 0 0.3rem;
+  padding: 0.3rem 0.3rem 0.2rem;
   color: #fff;
   flex-shrink: 0;
 
   .header-left,
   .header-right {
-    font-size: 0.26rem;
+    padding-top: 0.4rem;
+    font-size: 0.22rem;
     opacity: 0.6;
   }
 
   .header-center {
     position: absolute;
     width: 100%;
-    text-align: center;
-    font-size: 0.4rem;
-    font-weight: 500;
-    opacity: 0.9;
-    padding-bottom: 0.2rem;
-
-    background:
-      linear-gradient(90deg, @corner-color, @corner-color) bottom / 50% 1px no-repeat,
-      linear-gradient(-120deg, transparent 49.5%, @corner-color 50%, transparent 50%) left top / 48%
-        100% no-repeat,
-      linear-gradient(120deg, transparent 49.5%, @corner-color 50%, transparent 50%) right top / 48%
-        100% no-repeat,
-      linear-gradient(90deg, @corner-color, @corner-color) top left 19% / 5% 1px no-repeat,
-      linear-gradient(90deg, @corner-color, @corner-color) top right 19% / 5% 1px no-repeat,
-      linear-gradient(-120deg, transparent 49.5%, @corner-color 50%, transparent 50%) left -3% top /
-        48% 100% no-repeat,
-      linear-gradient(120deg, transparent 49.5%, @corner-color 50%, transparent 50%) right -3% top /
-        48% 100% no-repeat;
-
-    filter: drop-shadow(0 0 5px @corner-color);
   }
 }
 </style>

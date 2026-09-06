@@ -22,7 +22,7 @@ const getOption = (): echarts.EChartsOption => {
       },
       textStyle: {
         color: '#dce8ff',
-        fontSize: remToPx(0.2),
+        fontSize: remToPx(0.18),
       },
 
       data: ['销售额（元）'],
@@ -49,11 +49,11 @@ const getOption = (): echarts.EChartsOption => {
         const data = params[0]
 
         return `
-          <div style="font-size:${remToPx(0.2)};margin-bottom:6px;">
+          <div style="font-size:${remToPx(0.16)};margin-bottom:6px;">
             ${data.axisValue}
           </div>
 
-          <div style="font-size:${remToPx(0.2)};font-weight:bold;">
+          <div style="font-size:${remToPx(0.16)};font-weight:bold;">
             ￥${Number(data.data).toLocaleString()}
           </div>
         `
@@ -61,7 +61,7 @@ const getOption = (): echarts.EChartsOption => {
     },
 
     grid: {
-      top: remToPx(0.8),
+      top: remToPx(0.7),
       left: 0,
       right: 0,
       bottom: 0,
@@ -81,7 +81,7 @@ const getOption = (): echarts.EChartsOption => {
       // x 轴名称
       axisLabel: {
         color: '#a9b8d0',
-        fontSize: remToPx(0.2),
+        fontSize: remToPx(0.16),
         margin: 10,
       },
     },
@@ -93,7 +93,7 @@ const getOption = (): echarts.EChartsOption => {
       interval: 20000,
       axisLabel: {
         color: '#a9b8d0',
-        fontSize: remToPx(0.2),
+        fontSize: remToPx(0.16),
 
         formatter: (value: number) => {
           return value.toLocaleString()
@@ -151,9 +151,4 @@ const getOption = (): echarts.EChartsOption => {
 const { chartRef } = useECharts(getOption)
 </script>
 
-<style lang="less" scoped>
-.chart {
-  width: 100%;
-  height: 3rem;
-}
-</style>
+<style lang="less" scoped></style>
