@@ -60,6 +60,17 @@ const initThree = () => {
   earth = new THREE.Mesh(geometry, material)
   scene.add(earth)
 
+  // 创建大气层
+  const atmosphereGeometry = new THREE.SphereGeometry(1.55, 64, 654)
+  const atmosphereMaterial = new THREE.MeshBasicMaterial({
+    color: 0x1688ff,
+    transparent: true,
+    opacity: 0.15,
+  })
+  const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial)
+
+  scene.add(atmosphere)
+
   // 添加环境光
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
   scene.add(ambientLight)
