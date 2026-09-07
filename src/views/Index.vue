@@ -21,6 +21,7 @@
         <!--今日数据 -->
         <DataList :columns="4" :list="nowDataList" />
         <!-- 地球 -->
+        <!-- <EarthScene /> -->
         <Earth />
         <!-- 最新订单 -->
         <moduleTemp title="最新订单">
@@ -48,6 +49,7 @@ import moduleTemp from '@/components/common/ModuleTemp.vue'
 import DataList from '@/components/DataList.vue'
 import SalesChart from '@/components/SalesChart.vue'
 import OrderChart from '@/components/OrderChart.vue'
+import EarthScene from '@/components/EarthScene.vue'
 import Earth from '@/components/Earth.vue'
 import OrderLatestList from '@/components/OrderLatestList.vue'
 import UserChart from '@/components/UserChart.vue'
@@ -155,7 +157,7 @@ const nowDataList: KeyDataList = [
       width: 30%;
       height: 100%;
       justify-content: space-between;
-      row-gap: 0.1rem;
+      row-gap: 0.15rem;
 
       .module-container {
         color: #fff;
@@ -165,8 +167,14 @@ const nowDataList: KeyDataList = [
     .main-center {
       overflow: hidden;
       justify-content: space-between;
+      row-gap: 0.15rem;
       width: 50%;
     }
   }
+}
+
+.test {
+  border: 1px solid #fff;
+  flex: 1;
 }
 </style>

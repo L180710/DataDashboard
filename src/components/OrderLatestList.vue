@@ -77,6 +77,7 @@ const dataList: OrderLatestList = [
 <style lang="less" scoped>
 .order-list {
   width: 100%;
+  height: max-content;
 
   .list-item {
     display: grid;
