@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as THREE from 'three'
+import { instance } from 'three/tsl'
 
 const containerRef = ref<HTMLDivElement | null>(null)
 let renderer: THREE.WebGLRenderer | null = null
@@ -13,6 +14,8 @@ let camera: THREE.PerspectiveCamera | null = null
 
 let earth: THREE.Mesh | null = null
 let earthTexture: THREE.Texture | null = null
+let atmosphere: THREE.Mesh | null = null
+let stars: THREE.Points | null = null
 
 let animationId = 0
 
@@ -47,9 +50,7 @@ const initThree = () => {
 
   // 创建纹理
   const textureLoader = new THREE.TextureLoader()
-  earthTexture = textureLoader.load('/textures/8k_earth_daymap.jpg')
-  // earthTexture = textureLoader.load('/textures/8k_earth_nightmap.jpg')
-  // earthTexture = textureLoader.load('/textures/2k_earth_nightmap.jpg')
+  earthTexture = textureLoader.load('/textures/8k_earth_nightmap.jpg')
 
   // 创建材质
   const material = new THREE.MeshStandardMaterial({
@@ -60,16 +61,11 @@ const initThree = () => {
   earth = new THREE.Mesh(geometry, material)
   scene.add(earth)
 
-  // 创建大气层
-  const atmosphereGeometry = new THREE.SphereGeometry(1.55, 64, 654)
-  const atmosphereMaterial = new THREE.MeshBasicMaterial({
-    color: 0x1688ff,
-    transparent: true,
-    opacity: 0.15,
-  })
-  const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial)
+  // 生成大气层
+  createAtmosphere()
 
-  scene.add(atmosphere)
+  // 生成星星
+  createStars()
 
   // 添加环境光
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
@@ -83,12 +79,91 @@ const initThree = () => {
   animate()
 }
 
+// 创建大气层
+const createAtmosphere = () => {
+  const geometry = new THREE.SphereGeometry(1.56, 64, 64)
+  const material = new THREE.ShaderMaterial({
+    transparent: true,
+    side: THREE.BackSide,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewDirection;
+
+      void main() {
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        vNormal = normalize(normalMatrix * normal);
+        vViewDirection = normalize(-mvPosition.xyz);
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `,
+
+    fragmentShader: `
+      varying vec3 vNormal;
+      varying vec3 vViewDirection;
+
+      void main() {
+        vec3 normal = normalize(vNormal);
+        vec3 viewDirection = normalize(vViewDirection);
+
+        float intensity = 1.0 - abs(dot(normal, viewDirection));
+        intensity = pow(intensity, 3.0);
+        vec3 color = vec3(0.05, 0.4, 1.0);
+        gl_FragColor = vec4(color, intensity);
+      }
+    `,
+  })
+
+  atmosphere = new THREE.Mesh(geometry, material)
+
+  scene?.add(atmosphere)
+}
+
+// 创建星星
+const createStars = () => {
+  const starCount = 1500
+  const positions = new Float32Array(starCount * 3)
+
+  for (let i = 0; i < starCount; i++) {
+    const radius = THREE.MathUtils.randFloat(10, 30)
+    const theta = Math.random() * Math.PI * 2
+    const phi = Math.acos(2 * Math.random() - 1)
+    const x = radius * Math.sin(phi) * Math.cos(theta)
+    const y = radius * Math.cos(phi)
+    const z = radius * Math.sin(phi) * Math.sin(theta)
+
+    positions[i * 3] = x
+    positions[i * 3 + 1] = y
+    positions[i * 3 + 2] = z
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+  const material = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.04,
+    transparent: true,
+    opacity: 0.8,
+    sizeAttenuation: true,
+    depthWrite: false,
+  })
+
+  stars = new THREE.Points(geometry, material)
+  scene?.add(stars)
+}
+
 // 动画
 const animate = () => {
   animationId = requestAnimationFrame(animate)
 
   if (earth) {
     earth.rotation.y += 0.002
+  }
+
+  if (stars) {
+    stars.rotation.y += 0.00005
   }
 
   if (renderer && scene && camera) {
@@ -121,14 +196,29 @@ onBeforeUnmount(() => {
   cancelAnimationFrame(animationId)
 
   window.removeEventListener('resize', resize)
-  earth?.geometry.dispose()
 
+  // earth
+  earth?.geometry.dispose()
+  earthTexture?.dispose()
   if (earth?.material instanceof THREE.Material) {
     earth.material.dispose()
   }
+
+  // atmosphere
+  atmosphere?.geometry.dispose()
+  if (atmosphere?.material instanceof THREE.Material) {
+    atmosphere.material.dispose()
+  }
+
+  // Stars
+  stars?.geometry.dispose()
+  if (stars?.material instanceof THREE.Material) {
+    stars.material.dispose()
+  }
+
+  // Renderer
   renderer?.dispose()
   renderer?.domElement.remove()
-  earthTexture?.dispose()
 })
 </script>
 
