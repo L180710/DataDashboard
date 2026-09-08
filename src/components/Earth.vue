@@ -5,7 +5,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as THREE from 'three'
-import { instance } from 'three/tsl'
+import { cityList } from '@/data/earth'
+import { createCityLabel } from '@/utils/cityLabel'
+import { lonLatToVector3 } from '@/utils/geo'
+import { createFlightLine } from '@/utils/earthLine'
 
 const containerRef = ref<HTMLDivElement | null>(null)
 let renderer: THREE.WebGLRenderer | null = null
@@ -16,6 +19,10 @@ let earth: THREE.Mesh | null = null
 let earthTexture: THREE.Texture | null = null
 let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
+let cityPoints: THREE.Group | null = null
+let flightLines: THREE.Group | null = null
+let flightCurves: THREE.QuadraticBezierCurve3[] = []
+let flightParticles: THREE.Mesh[] = []
 
 let animationId = 0
 
@@ -61,11 +68,20 @@ const initThree = () => {
   earth = new THREE.Mesh(geometry, material)
   scene.add(earth)
 
-  // 生成大气层
+  // 添加大气层
   createAtmosphere()
 
-  // 生成星星
+  // 添加星星
   createStars()
+
+  // 添加城市组
+  createCityPoints()
+
+  // 添加飞行线
+  createFlightLines()
+
+  // 添加粒子
+  createFlightParticles()
 
   // 添加环境光
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
@@ -154,6 +170,86 @@ const createStars = () => {
   scene?.add(stars)
 }
 
+// 创建城市点修饰
+const createCityPoint = (position: THREE.Vector3, name: string, value: number) => {
+  const group = new THREE.Group()
+
+  // 核心点
+  const coreGeometry = new THREE.SphereGeometry(0.025, 16, 16)
+  const coreMaterial = new THREE.MeshBasicMaterial({ color: 0xffd166 })
+  const core = new THREE.Mesh(coreGeometry, coreMaterial)
+
+  // 光晕
+  const glowGeometry = new THREE.SphereGeometry(0.06, 16, 16)
+  const glowMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffd166,
+    transparent: true,
+    opacity: 0.2,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  })
+  const glow = new THREE.Mesh(glowGeometry, glowMaterial)
+  group.add(core)
+  group.add(glow)
+
+  // 创建城市标签
+  const label = createCityLabel(name, value)
+  label.position.set(0, 0.12, 0)
+  group.add(label)
+
+  group.position.copy(position)
+
+  return group
+}
+
+// 创建城市组
+const createCityPoints = () => {
+  cityPoints = new THREE.Group()
+
+  cityList.forEach((city) => {
+    const position = lonLatToVector3(city.longitude, city.latitude, 1.53)
+
+    const point = createCityPoint(position, city.name, city.value)
+
+    cityPoints!.add(point)
+  })
+  earth?.add(cityPoints)
+}
+
+// 创建飞行线
+const createFlightLines = () => {
+  flightLines = new THREE.Group()
+
+  const beijing = cityList.find((item) => item.name === '北京')
+  const shanghai = cityList.find((item) => item.name === '上海')
+
+  if (!beijing || !shanghai) {
+    return
+  }
+
+  const start = lonLatToVector3(beijing.longitude, beijing.latitude, 1.53)
+  const end = lonLatToVector3(shanghai.longitude, shanghai.latitude, 1.53)
+
+  const { line, curve } = createFlightLine(start, end)
+  flightLines.add(line)
+  flightCurves.push(curve)
+  earth?.add(flightLines)
+}
+
+// 创建粒子
+const createFlightParticles = () => {
+  flightParticles = []
+  const geometry = new THREE.SphereGeometry(0.035, 12, 12)
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+  })
+  flightCurves.forEach(() => {
+    const particle = new THREE.Mesh(geometry, material)
+    flightParticles.push(particle)
+    earth?.add(particle)
+  })
+}
+
 // 动画
 const animate = () => {
   animationId = requestAnimationFrame(animate)
@@ -165,6 +261,25 @@ const animate = () => {
   if (stars) {
     stars.rotation.y += 0.00005
   }
+
+  if (cityPoints) {
+    const time = performance.now() * 0.003
+
+    cityPoints.children.forEach((city, index) => {
+      const scale = 1 + Math.sin(time + index) * 0.2
+      city.scale.setScalar(scale)
+    })
+  }
+
+  // 粒子运动
+  const time = performance.now()
+  flightParticles.forEach((particle, index) => {
+    const curve = flightCurves[index]
+    if (!curve) return
+    const progress = (time * 0.0002) % 1
+    const position = curve.getPointAt(progress)
+    particle.position.copy(position)
+  })
 
   if (renderer && scene && camera) {
     renderer.render(scene, camera)
