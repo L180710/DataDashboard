@@ -20,6 +20,7 @@ let earthTexture: THREE.Texture | null = null
 let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
+let cityLabels: { group: THREE.Group; label: THREE.Sprite }[] = []
 let flightLines: THREE.Group | null = null
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
 let flightParticles: THREE.Mesh[] = []
@@ -199,7 +200,10 @@ const createCityPoint = (position: THREE.Vector3, name: string, value: number) =
 
   group.position.copy(position)
 
-  return group
+  return {
+    group,
+    label,
+  }
 }
 
 // 创建城市组
@@ -209,9 +213,14 @@ const createCityPoints = () => {
   cityList.forEach((city) => {
     const position = lonLatToVector3(city.longitude, city.latitude, 1.53)
 
-    const point = createCityPoint(position, city.name, city.value)
+    const { group, label } = createCityPoint(position, city.name, city.value)
 
-    cityPoints!.add(point)
+    cityPoints!.add(group)
+
+    cityLabels.push({
+      group,
+      label,
+    })
   })
   earth?.add(cityPoints)
 }
@@ -250,12 +259,30 @@ const createFlightParticles = () => {
   })
 }
 
+// 添加正反面判断
+const updateCityLabels = () => {
+  if (!camera) return
+
+  cityLabels.forEach(({ group, label }) => {
+    const worldPosition = new THREE.Vector3()
+    group.getWorldPosition(worldPosition)
+    const normal = worldPosition.clone().normalize()
+    const cameraDirection = camera!.position.clone().sub(worldPosition).normalize()
+    const visible = normal.dot(cameraDirection) > 0.2
+    label.visible = visible
+
+    const distance = camera!.position.distanceTo(worldPosition)
+    const scale = THREE.MathUtils.clamp(2.5 / distance, 0.5, 1.2)
+    label.scale.set(0.65 * scale, 0.25 * scale, 1)
+  })
+}
+
 // 动画
 const animate = () => {
   animationId = requestAnimationFrame(animate)
 
   if (earth) {
-    earth.rotation.y += 0.002
+    // earth.rotation.y += 0.002
   }
 
   if (stars) {
@@ -270,6 +297,9 @@ const animate = () => {
       city.scale.setScalar(scale)
     })
   }
+
+  // 更新城市标签
+  updateCityLabels()
 
   // 粒子运动
   const time = performance.now()

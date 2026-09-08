@@ -14,7 +14,11 @@ export function createCityLabel(name: string, value: number) {
   context.fillStyle = '#ffffff'
   context.textAlign = 'center'
   context.textBaseline = 'middle'
-  context.fillText(`${name} ${value}`, canvas.width / 2, canvas.height / 2)
+  context.fillText(name, canvas.width / 2, 30)
+
+  context.font = '22px Arial'
+  context.fillStyle = '#00d9ff'
+  context.fillText(value.toLocaleString(), canvas.width / 2, 70)
 
   const texture = new THREE.CanvasTexture(canvas)
   const material = new THREE.SpriteMaterial({
