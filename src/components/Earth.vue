@@ -24,6 +24,8 @@ let cityLabels: { group: THREE.Group; label: THREE.Sprite }[] = []
 let flightLines: THREE.Group | null = null
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
 let flightParticles: THREE.Mesh[] = []
+let raycaster = new THREE.Raycaster()
+let mouse = new THREE.Vector2()
 
 let animationId = 0
 
@@ -277,6 +279,34 @@ const updateCityLabels = () => {
   })
 }
 
+// 鼠标事件监听
+const handleMouseMove = (event: MouseEvent) => {
+  if (!containerRef.value) return
+
+  const rect = containerRef.value.getBoundingClientRect()
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+
+  checkIntersection()
+}
+
+// 射线检测
+const checkIntersection = () => {
+  if (!camera || !cityPoints) return
+
+  raycaster.setFromCamera(mouse, camera)
+  const intersects = raycaster.intersectObjects(cityPoints.children, true)
+
+  if (intersects.length === 0) {
+    return
+  }
+
+  const object = intersects[0]!.object
+
+  console.log('命中的对象', object)
+  console.log('父级对象', object.parent)
+}
+
 // 动画
 const animate = () => {
   animationId = requestAnimationFrame(animate)
@@ -334,6 +364,7 @@ const resize = () => {
 onMounted(() => {
   initThree()
   window.addEventListener('resize', resize)
+  containerRef.value?.addEventListener('mousemove', handleMouseMove)
 })
 
 // 在卸载前
@@ -341,6 +372,7 @@ onBeforeUnmount(() => {
   cancelAnimationFrame(animationId)
 
   window.removeEventListener('resize', resize)
+  containerRef.value?.removeEventListener('mousemove', handleMouseMove)
 
   // earth
   earth?.geometry.dispose()
