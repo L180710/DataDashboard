@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as THREE from 'three'
-import { cityList } from '@/data/earth'
+import { type CityPoint, cityList } from '@/data/earth'
 import { createCityLabel } from '@/utils/cityLabel'
 import { lonLatToVector3 } from '@/utils/geo'
 import { createFlightLine } from '@/utils/earthLine'
@@ -21,6 +21,7 @@ let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
 let cityLabels: { group: THREE.Group; label: THREE.Sprite }[] = []
+let hoveredCity: THREE.Group | null = null
 let flightLines: THREE.Group | null = null
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
 let flightParticles: THREE.Mesh[] = []
@@ -174,13 +175,14 @@ const createStars = () => {
 }
 
 // 创建城市点修饰
-const createCityPoint = (position: THREE.Vector3, name: string, value: number) => {
+const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   const group = new THREE.Group()
 
   // 核心点
   const coreGeometry = new THREE.SphereGeometry(0.025, 16, 16)
   const coreMaterial = new THREE.MeshBasicMaterial({ color: 0xffd166 })
   const core = new THREE.Mesh(coreGeometry, coreMaterial)
+  core.userData.city = city
 
   // 光晕
   const glowGeometry = new THREE.SphereGeometry(0.06, 16, 16)
@@ -196,11 +198,15 @@ const createCityPoint = (position: THREE.Vector3, name: string, value: number) =
   group.add(glow)
 
   // 创建城市标签
-  const label = createCityLabel(name, value)
+  const label = createCityLabel(city)
   label.position.set(0, 0.12, 0)
   group.add(label)
 
+  // 设置城市位置
   group.position.copy(position)
+
+  // 保存城市数据
+  group.userData.city = city
 
   return {
     group,
@@ -215,7 +221,7 @@ const createCityPoints = () => {
   cityList.forEach((city) => {
     const position = lonLatToVector3(city.longitude, city.latitude, 1.53)
 
-    const { group, label } = createCityPoint(position, city.name, city.value)
+    const { group, label } = createCityPoint(position, city)
 
     cityPoints!.add(group)
 
@@ -295,16 +301,39 @@ const checkIntersection = () => {
   if (!camera || !cityPoints) return
 
   raycaster.setFromCamera(mouse, camera)
+
   const intersects = raycaster.intersectObjects(cityPoints.children, true)
 
   if (intersects.length === 0) {
+    clearHoverCity()
     return
   }
 
   const object = intersects[0]!.object
 
-  console.log('命中的对象', object)
-  console.log('父级对象', object.parent)
+  const cityGroup = object.parent
+  if (!cityGroup) {
+    clearHoverCity()
+    return
+  }
+
+  setHoverCity(cityGroup)
+}
+
+// 设置城市 hover
+const setHoverCity = (cityGroup: THREE.Object3D) => {
+  if (hoveredCity === cityGroup) {
+    return
+  }
+
+  clearHoverCity()
+
+  hoveredCity = cityGroup as THREE.Group
+}
+
+// 取消城市 hover
+const clearHoverCity = () => {
+  hoveredCity = null
 }
 
 // 动画
@@ -323,8 +352,9 @@ const animate = () => {
     const time = performance.now() * 0.003
 
     cityPoints.children.forEach((city, index) => {
-      const scale = 1 + Math.sin(time + index) * 0.2
-      city.scale.setScalar(scale)
+      const breathScale = 1 + Math.sin(time + index) * 0.2
+      const hoverScale = city === hoveredCity ? 1.4 : 1
+      city.scale.setScalar(breathScale * hoverScale)
     })
   }
 

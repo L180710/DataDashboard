@@ -1,6 +1,7 @@
 import * as THREE from 'three'
+import type { CityPoint } from '@/data/earth'
 
-export function createCityLabel(name: string, value: number) {
+export function createCityLabel(city: CityPoint) {
   const canvas = document.createElement('canvas')
   canvas.width = 256
   canvas.height = 80
@@ -14,11 +15,11 @@ export function createCityLabel(name: string, value: number) {
   context.fillStyle = '#ffffff'
   context.textAlign = 'center'
   context.textBaseline = 'middle'
-  context.fillText(name, canvas.width / 2, 30)
+  context.fillText(city.name, canvas.width / 2, 30)
 
   context.font = '22px Arial'
   context.fillStyle = '#00d9ff'
-  context.fillText(value.toLocaleString(), canvas.width / 2, 70)
+  context.fillText(city.value.toLocaleString(), canvas.width / 2, 70)
 
   const texture = new THREE.CanvasTexture(canvas)
   const material = new THREE.SpriteMaterial({
