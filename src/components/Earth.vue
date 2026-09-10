@@ -15,12 +15,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { type CityPoint, cityList } from '@/data/earth'
 import { createCityLabel } from '@/utils/cityLabel'
 import { lonLatToVector3 } from '@/utils/geo'
 import { createFlightLine } from '@/utils/earthLine'
+
+const EARTH_RADIUS = 1.5
+const CITY_RADIUS = 1.53
+const CAMERA_FOCUS_DISTANCE = 3
 
 const containerRef = ref<HTMLDivElement | null>(null)
 const tooltip = ref({
@@ -32,6 +37,7 @@ const tooltip = ref({
 let renderer: THREE.WebGLRenderer | null = null
 let scene: THREE.Scene | null = null
 let camera: THREE.PerspectiveCamera | null = null
+let controls: OrbitControls | null = null
 
 let earth: THREE.Mesh | null = null
 let earthTexture: THREE.Texture | null = null
@@ -47,6 +53,23 @@ let raycaster = new THREE.Raycaster()
 let mouse = new THREE.Vector2()
 
 let animationId = 0
+
+// 相机聚焦动画
+let isFocusing = false
+
+// 相机动画起点
+const cameraStartPosition = new THREE.Vector3()
+const controlsStartTarget = new THREE.Vector3()
+
+// 相机动画终点
+const cameraEndPosition = new THREE.Vector3()
+const controlsEndTarget = new THREE.Vector3()
+
+// 动画开始时间
+let focusStartTime = 0
+
+// 动画持续时间
+const focusDuration = 1200
 
 // 初始化
 const initThree = () => {
@@ -72,7 +95,15 @@ const initThree = () => {
   })
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   renderer.setSize(width, height)
+
   container.appendChild(renderer.domElement)
+
+  // 创建 OrbitControls
+  controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableDamping = true
+  controls.dampingFactor = 0.05
+  controls.minDistance = 2
+  controls.maxDistance = 10
 
   // 创建 Earth 几何体
   const geometry = new THREE.SphereGeometry(1.5, 64, 64)
@@ -354,7 +385,39 @@ const handleClick = () => {
 
   const city = hoveredCity.userData.city as CityPoint
 
-  console.log('点击城市：', city)
+  focusCity(hoveredCity)
+}
+
+// 聚焦城市
+const focusCity = (cityGroup: THREE.Group) => {
+  if (!camera || !controls) return
+
+  // 获取城市的世界坐标
+  const cityWorldPosition = new THREE.Vector3()
+  cityGroup.getWorldPosition(cityWorldPosition)
+
+  // 保存相机当前位置
+  cameraStartPosition.copy(camera.position)
+
+  // 保存 controls 当前 target
+  controlsStartTarget.copy(controls.target)
+
+  // 城市所在方向
+  const direction = cityWorldPosition.clone().normalize()
+
+  // 设置相机最终位置，地球半径为 1.5，这里让相机距离地心约 CAMERA_FOCUS_DISTANCE
+  cameraEndPosition.copy(direction).multiplyScalar(CAMERA_FOCUS_DISTANCE)
+
+  // 最终让 controls 看向城市
+  controlsEndTarget.copy(cityWorldPosition)
+
+  // 记录动画开始时间
+  focusStartTime = performance.now()
+
+  isFocusing = true
+
+  // 动画期间禁止鼠标控制
+  controls.enabled = false
 }
 
 // 射线检测
@@ -467,6 +530,11 @@ const isCityVisible = (cityGroup: THREE.Group) => {
   return normal.dot(cameraDirection) > 0.2
 }
 
+// 缓动函数
+const easeOut = (t: number) => {
+  return 1 - Math.pow(1 - t, 3)
+}
+
 // 动画
 const animate = () => {
   animationId = requestAnimationFrame(animate)
@@ -514,11 +582,6 @@ const animate = () => {
     }
   })
 
-  // 缓动函数
-  const easeOut = (t: number) => {
-    return 1 - Math.pow(1 - t, 3)
-  }
-
   // 更新城市标签
   updateCityLabels()
 
@@ -533,6 +596,28 @@ const animate = () => {
     const position = curve.getPointAt(progress)
     particle.position.copy(position)
   })
+
+  // 执行相机动画
+  if (isFocusing && camera && controls) {
+    const elapsed = now - focusStartTime
+
+    let progress = elapsed / focusDuration
+    if (progress >= 1) {
+      progress = 1
+      isFocusing = false
+      controls.enabled = true
+    }
+
+    // easeOut
+    const easedProgress = easeOut(progress)
+    camera.position.lerpVectors(cameraStartPosition, cameraEndPosition, easedProgress)
+    controls.target.lerpVectors(controlsStartTarget, controlsEndTarget, easedProgress)
+
+    // OrbitControls
+    if (controls) {
+      controls.update()
+    }
+  }
 
   if (renderer && scene && camera) {
     renderer.render(scene, camera)
@@ -569,28 +654,32 @@ onBeforeUnmount(() => {
   containerRef.value?.removeEventListener('mousemove', handleMouseMove)
   containerRef.value?.removeEventListener('click', handleClick)
 
-  // 释放 three.js资源
+  // 释放 earth
   earth?.geometry.dispose()
   earthTexture?.dispose()
   if (earth?.material instanceof THREE.Material) {
     earth.material.dispose()
   }
 
-  // atmosphere
+  // 释放 atmosphere
   atmosphere?.geometry.dispose()
   if (atmosphere?.material instanceof THREE.Material) {
     atmosphere.material.dispose()
   }
 
-  // Stars
+  // 释放 Stars
   stars?.geometry.dispose()
   if (stars?.material instanceof THREE.Material) {
     stars.material.dispose()
   }
 
-  // Renderer
+  // 释放 Renderer
   renderer?.dispose()
   renderer?.domElement.remove()
+
+  // 释放 OrbitControls
+  controls?.dispose()
+  controls = null
 })
 </script>
 
