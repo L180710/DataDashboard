@@ -1,5 +1,17 @@
 <template>
-  <div ref="containerRef" class="three-container"></div>
+  <div ref="containerRef" class="three-container">
+    <div
+      v-if="tooltip.visible"
+      class="city-tooltip"
+      :style="{
+        left: `${tooltip.x}px`,
+        top: `${tooltip.y}px`,
+      }"
+    >
+      <div class="tooltip-name">{{ tooltip.city?.name }}</div>
+      <div class="tooltip-value">数据量：{{ tooltip.city?.value.toLocaleString() }}</div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -11,6 +23,12 @@ import { lonLatToVector3 } from '@/utils/geo'
 import { createFlightLine } from '@/utils/earthLine'
 
 const containerRef = ref<HTMLDivElement | null>(null)
+const tooltip = ref({
+  visible: false,
+  x: 0,
+  y: 0,
+  city: null as CityPoint | null,
+})
 let renderer: THREE.WebGLRenderer | null = null
 let scene: THREE.Scene | null = null
 let camera: THREE.PerspectiveCamera | null = null
@@ -309,15 +327,16 @@ const checkIntersection = () => {
     return
   }
 
-  const object = intersects[0]!.object
+  let current: THREE.Object3D | null = intersects[0]!.object
+  while (current) {
+    if (current.userData.city) {
+      setHoverCity(current)
+      return
+    }
 
-  const cityGroup = object.parent
-  if (!cityGroup) {
-    clearHoverCity()
-    return
+    current = current.parent
   }
-
-  setHoverCity(cityGroup)
+  clearHoverCity()
 }
 
 // 设置城市 hover
@@ -329,11 +348,80 @@ const setHoverCity = (cityGroup: THREE.Object3D) => {
   clearHoverCity()
 
   hoveredCity = cityGroup as THREE.Group
+
+  const city = hoveredCity.userData.city as CityPoint
+
+  tooltip.value.city = city
+  tooltip.value.visible = true
 }
 
 // 取消城市 hover
 const clearHoverCity = () => {
   hoveredCity = null
+
+  tooltip.value.city = null
+  tooltip.value.visible = false
+}
+
+// 3d 转 2d
+const worldToScreen = (position: THREE.Vector3) => {
+  if (!camera || !containerRef.value) {
+    return null
+  }
+
+  const vector = position.clone()
+  vector.project(camera)
+
+  const width = containerRef.value.clientWidth
+  const height = containerRef.value.clientHeight
+
+  const x = ((vector.x + 1) / 2) * width
+  const y = ((1 - vector.y) / 2) * height
+
+  return {
+    x,
+    y,
+  }
+}
+
+// 更新 tooltip 位置
+const updateToolTipPosition = () => {
+  if (!hoveredCity) {
+    return
+  }
+
+  // 判断测试是否在地球正面
+  if (!isCityVisible(hoveredCity)) {
+    tooltip.value.visible = false
+    return
+  }
+
+  const worldPosition = new THREE.Vector3()
+  hoveredCity.getWorldPosition(worldPosition)
+
+  const screenPosition = worldToScreen(worldPosition)
+
+  if (!screenPosition) {
+    return
+  }
+
+  tooltip.value.x = screenPosition.x
+  tooltip.value.y = screenPosition.y
+}
+
+// 判断城市是否在地球正面
+const isCityVisible = (cityGroup: THREE.Group) => {
+  if (!camera) {
+    return false
+  }
+
+  const worldPosition = new THREE.Vector3()
+  cityGroup.getWorldPosition(worldPosition)
+
+  const normal = worldPosition.clone().normalize()
+  const cameraDirection = camera.position.clone().sub(worldPosition).normalize()
+
+  return normal.dot(cameraDirection) > 0.2
 }
 
 // 动画
@@ -341,7 +429,7 @@ const animate = () => {
   animationId = requestAnimationFrame(animate)
 
   if (earth) {
-    // earth.rotation.y += 0.002
+    earth.rotation.y += 0.002
   }
 
   if (stars) {
@@ -360,6 +448,9 @@ const animate = () => {
 
   // 更新城市标签
   updateCityLabels()
+
+  // 更新 Tooltip
+  updateToolTipPosition()
 
   // 粒子运动
   const time = performance.now()
@@ -431,8 +522,33 @@ onBeforeUnmount(() => {
 
 <style lang="less" scoped>
 .three-container {
+  position: relative;
   width: 100%;
   height: 100%;
   flex: 1;
+}
+
+.city-tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 0.1rem 0.15rem;
+  color: #fff;
+  background: rgba(0, 20, 60, 0.9);
+  border: 1px solid #00d9ff;
+  border-radius: 4px;
+  pointer-events: none;
+  transform: translate(10px, -100%);
+  white-space: nowrap;
+
+  .tooltip-name {
+    font-size: 0.18rem;
+    margin-bottom: 0.05rem;
+  }
+  .tooltip-value {
+    font-size: 0.14rem;
+    color: #00d9ff;
+  }
 }
 </style>
