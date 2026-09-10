@@ -38,7 +38,7 @@ let earthTexture: THREE.Texture | null = null
 let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
-let cityLabels: { group: THREE.Group; label: THREE.Sprite }[] = []
+let cityLabels: { group: THREE.Group; label: THREE.Sprite; rings: THREE.Mesh[] }[] = []
 let hoveredCity: THREE.Group | null = null
 let flightLines: THREE.Group | null = null
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
@@ -212,8 +212,38 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
     depthWrite: false,
   })
   const glow = new THREE.Mesh(glowGeometry, glowMaterial)
+
+  // 创建圆环
+  // const ringGeometry = new THREE.RingGeometry(0.05, 0.065, 32)
+  // const ringMaterial = new THREE.MeshBasicMaterial({
+  //   color: 0xffd166,
+  //   transparent: true,
+  //   opacity: 0,
+  //   side: THREE.DoubleSide,
+  //   depthWrite: false,
+  // })
+  // const ring = new THREE.Mesh(ringGeometry, ringMaterial)
+
+  const rings: THREE.Mesh[] = []
+
+  for (let i = 0; i < 3; i++) {
+    const ringGeometry = new THREE.RingGeometry(0.05, 0.065, 32)
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffd166,
+      transparent: true,
+      opacity: 0,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    })
+
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial)
+    group.add(ring)
+    rings.push(ring)
+  }
+
   group.add(core)
   group.add(glow)
+  // group.add(ring)
 
   // 创建城市标签
   const label = createCityLabel(city)
@@ -229,6 +259,7 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   return {
     group,
     label,
+    rings,
   }
 }
 
@@ -239,13 +270,14 @@ const createCityPoints = () => {
   cityList.forEach((city) => {
     const position = lonLatToVector3(city.longitude, city.latitude, 1.53)
 
-    const { group, label } = createCityPoint(position, city)
+    const { group, label, rings } = createCityPoint(position, city)
 
     cityPoints!.add(group)
 
     cityLabels.push({
       group,
       label,
+      rings,
     })
   })
   earth?.add(cityPoints)
@@ -428,16 +460,20 @@ const isCityVisible = (cityGroup: THREE.Group) => {
 const animate = () => {
   animationId = requestAnimationFrame(animate)
 
+  // 当前时间
+  const now = performance.now()
+
   if (earth) {
-    earth.rotation.y += 0.002
+    // earth.rotation.y += 0.002
   }
 
   if (stars) {
     stars.rotation.y += 0.00005
   }
 
+  // 城市点：呼吸 + Hover 放大
   if (cityPoints) {
-    const time = performance.now() * 0.003
+    const time = now * 0.003
 
     cityPoints.children.forEach((city, index) => {
       const breathScale = 1 + Math.sin(time + index) * 0.2
@@ -446,18 +482,43 @@ const animate = () => {
     })
   }
 
+  // 城市 hover 雷达波
+  cityLabels.forEach(({ group, rings }, index) => {
+    if (group === hoveredCity) {
+      rings.forEach((ring, ringIndex) => {
+        const material = ring.material as THREE.MeshBasicMaterial
+        const progress = (now * 0.001 + index * 0.3 + ringIndex * 0.33) % 1
+
+        // 缓动后的进度
+        const easedProgress = 1 - Math.pow(1 - progress, 3)
+        const scale = 1 + easedProgress * 4
+        ring.scale.setScalar(scale)
+        material.opacity = 1 - progress
+      })
+    } else {
+      rings.forEach((ring) => {
+        const material = ring.material as THREE.MeshBasicMaterial
+        material.opacity = 0
+      })
+    }
+  })
+
+  // 缓动函数
+  const easeOut = (t: number) => {
+    return 1 - Math.pow(1 - t, 3)
+  }
+
   // 更新城市标签
   updateCityLabels()
 
   // 更新 Tooltip
   updateToolTipPosition()
 
-  // 粒子运动
-  const time = performance.now()
+  // 飞行粒子运动
   flightParticles.forEach((particle, index) => {
     const curve = flightCurves[index]
     if (!curve) return
-    const progress = (time * 0.0002) % 1
+    const progress = (now * 0.0002) % 1
     const position = curve.getPointAt(progress)
     particle.position.copy(position)
   })
