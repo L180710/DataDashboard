@@ -346,6 +346,17 @@ const handleMouseMove = (event: MouseEvent) => {
   checkIntersection()
 }
 
+// 点击事件
+const handleClick = () => {
+  if (!hoveredCity) {
+    return
+  }
+
+  const city = hoveredCity.userData.city as CityPoint
+
+  console.log('点击城市：', city)
+}
+
 // 射线检测
 const checkIntersection = () => {
   if (!camera || !cityPoints) return
@@ -547,6 +558,7 @@ onMounted(() => {
   initThree()
   window.addEventListener('resize', resize)
   containerRef.value?.addEventListener('mousemove', handleMouseMove)
+  containerRef.value?.addEventListener('click', handleClick)
 })
 
 // 在卸载前
@@ -555,8 +567,9 @@ onBeforeUnmount(() => {
 
   window.removeEventListener('resize', resize)
   containerRef.value?.removeEventListener('mousemove', handleMouseMove)
+  containerRef.value?.removeEventListener('click', handleClick)
 
-  // earth
+  // 释放 three.js资源
   earth?.geometry.dispose()
   earthTexture?.dispose()
   if (earth?.material instanceof THREE.Material) {
