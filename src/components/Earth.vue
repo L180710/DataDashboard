@@ -46,8 +46,16 @@ let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
 let cityLabels: { group: THREE.Group; label: THREE.Sprite; rings: THREE.Mesh[] }[] = []
+
+// 鼠标现在指向的城市
 let hoveredCity: THREE.Group | null = null
+
+// 当前镜头聚焦城市
 let focusingCity: THREE.Group | null = null
+
+// 聚焦城市当前的世界坐标
+const currentCityWorldPosition = new THREE.Vector3()
+
 let flightLines: THREE.Group | null = null
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
 let flightParticles: THREE.Mesh[] = []
@@ -59,19 +67,25 @@ let animationId = 0
 // 相机聚焦动画
 let isFocusing = false
 
+// 当前是否已经完成城市聚焦
+let isFocused = false
+
 // 相机动画起点
 const cameraStartPosition = new THREE.Vector3()
 const controlsStartTarget = new THREE.Vector3()
 
 // 相机动画终点
 const cameraEndPosition = new THREE.Vector3()
-const controlsEndTarget = new THREE.Vector3()
 
 // 动画开始时间
 let focusStartTime = 0
 
 // 动画持续时间
 const focusDuration = 1200
+
+// Earth 旋转动画
+const earthStartQuaternion = new THREE.Quaternion()
+const earthEndQuaternion = new THREE.Quaternion()
 
 // 初始化
 const initThree = () => {
@@ -389,21 +403,41 @@ const handleClick = () => {
 
   console.log('点击城市：', city)
 
-  focusingCity = hoveredCity
-
   focusCity(hoveredCity)
 }
 
 // 聚焦城市
 const focusCity = (cityGroup: THREE.Group) => {
-  if (!camera || !controls) return
+  if (!camera || !controls || !earth) return
 
   // 当前正在聚集的城市
   focusingCity = cityGroup
+  isFocused = false
 
   // 获取城市的世界坐标
   const cityWorldPosition = new THREE.Vector3()
   cityGroup.getWorldPosition(cityWorldPosition)
+
+  // 城市方向
+  const cityDirection = cityWorldPosition.clone().normalize()
+
+  // 相机方向
+  const cameraDirection = camera.position.clone().normalize()
+
+  // 计算需要补充的旋转
+  const alignmentQuaternion = new THREE.Quaternion()
+  alignmentQuaternion.setFromUnitVectors(cityDirection, cameraDirection)
+
+  // 计算 Earth 的目标旋转
+  // const targetQuaternion = new THREE.Quaternion()
+  // targetQuaternion.setFromUnitVectors(cityDirection, cameraDirection)
+  const targetQuaternion = alignmentQuaternion.clone().multiply(earth.quaternion)
+
+  // 保存 Earth 当前旋转
+  earthStartQuaternion.copy(earth.quaternion)
+
+  // 保存 Earth 目标旋转
+  earthEndQuaternion.copy(targetQuaternion)
 
   // 保存相机当前位置
   cameraStartPosition.copy(camera.position)
@@ -412,13 +446,13 @@ const focusCity = (cityGroup: THREE.Group) => {
   controlsStartTarget.copy(controls.target)
 
   // 城市所在方向
-  const direction = cityWorldPosition.clone().normalize()
+  // const direction = cityWorldPosition.clone().normalize()
 
   // 设置相机最终位置，地球半径为 1.5，这里让相机距离地心约 CAMERA_FOCUS_DISTANCE
-  cameraEndPosition.copy(direction).multiplyScalar(CAMERA_FOCUS_DISTANCE)
+  // cameraEndPosition.copy(direction).multiplyScalar(CAMERA_FOCUS_DISTANCE)
+  cameraEndPosition.copy(cameraDirection).multiplyScalar(CAMERA_FOCUS_DISTANCE)
 
   // 最终让 controls 看向城市
-  controlsEndTarget.copy(cityWorldPosition)
 
   // 记录动画开始时间
   focusStartTime = performance.now()
@@ -427,6 +461,15 @@ const focusCity = (cityGroup: THREE.Group) => {
 
   // 动画期间禁止鼠标控制
   controls.enabled = false
+}
+
+// 更新 Earth 聚焦
+const updateEarthFocus = (progress: number) => {
+  if (!earth) return
+
+  const easedProgress = easeOut(progress)
+
+  earth.quaternion.slerpQuaternions(earthStartQuaternion, earthEndQuaternion, easedProgress)
 }
 
 // 射线检测
@@ -610,6 +653,8 @@ const animate = () => {
   // 相机聚焦
   updateCameraFocus(now)
 
+  controls?.update()
+
   if (renderer && scene && camera) {
     renderer.render(scene, camera)
   }
@@ -617,7 +662,7 @@ const animate = () => {
 
 // 更新相机聚焦
 const updateCameraFocus = (now: number) => {
-  if (!isFocusing || !camera || !controls) {
+  if (!isFocusing || !camera || !controls || !earth || !focusingCity) {
     return
   }
 
@@ -632,27 +677,29 @@ const updateCameraFocus = (now: number) => {
   // easeOut
   const easedProgress = easeOut(progress)
 
-  // 相机移动
-  camera.position.lerpVectors(cameraStartPosition, cameraEndPosition, easedProgress)
+  // Earth 旋转
+  earth.quaternion.slerpQuaternions(earthStartQuaternion, earthEndQuaternion, easedProgress)
+
+  // 获取城市旋转后的世界坐标
+  focusingCity.getWorldPosition(currentCityWorldPosition)
 
   // target 移动
-  controls.target.lerpVectors(controlsStartTarget, controlsEndTarget, easedProgress)
-  // 当 earth 绕着 y 轴移动时，这部分要改
-  // if (focusingCity) {
-  //   const cityWorldPosition = new THREE.Vector3()
-  //   focusingCity.getWorldPosition(cityWorldPosition)
-  //   controls.target.lerpVectors(controlsStartTarget, cityWorldPosition, easedProgress)
-  // }
+  controls.target.copy(currentCityWorldPosition)
 
-  // 更新 OrbitControls
-  controls.update()
+  // 相机移动
+  camera.position.lerpVectors(cameraStartPosition, cameraEndPosition, easedProgress)
 
   // 动画结束
   if (progress >= 1) {
     isFocusing = false
     camera.position.copy(cameraEndPosition)
-    controls.target.copy(controlsEndTarget)
+
+    if (focusingCity) {
+      focusingCity.getWorldPosition(currentCityWorldPosition)
+      controls.target.copy(currentCityWorldPosition)
+    }
     controls.enabled = true
+    isFocused = true
   }
 }
 
