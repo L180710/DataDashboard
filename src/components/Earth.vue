@@ -45,7 +45,13 @@ let earthTexture: THREE.Texture | null = null
 let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
-let cityLabels: { group: THREE.Group; label: THREE.Sprite; rings: THREE.Mesh[] }[] = []
+let cityLabels: {
+  group: THREE.Group
+  label: THREE.Sprite
+  rings: THREE.Mesh[]
+  core: THREE.Mesh
+  glow: THREE.Mesh
+}[] = []
 
 // 鼠标现在指向的城市
 let hoveredCity: THREE.Group | null = null
@@ -260,17 +266,6 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   })
   const glow = new THREE.Mesh(glowGeometry, glowMaterial)
 
-  // 创建圆环
-  // const ringGeometry = new THREE.RingGeometry(0.05, 0.065, 32)
-  // const ringMaterial = new THREE.MeshBasicMaterial({
-  //   color: 0xffd166,
-  //   transparent: true,
-  //   opacity: 0,
-  //   side: THREE.DoubleSide,
-  //   depthWrite: false,
-  // })
-  // const ring = new THREE.Mesh(ringGeometry, ringMaterial)
-
   const rings: THREE.Mesh[] = []
 
   for (let i = 0; i < 3; i++) {
@@ -290,7 +285,6 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
 
   group.add(core)
   group.add(glow)
-  // group.add(ring)
 
   // 创建城市标签
   const label = createCityLabel(city)
@@ -307,6 +301,8 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
     group,
     label,
     rings,
+    core,
+    glow,
   }
 }
 
@@ -317,7 +313,7 @@ const createCityPoints = () => {
   cityList.forEach((city) => {
     const position = lonLatToVector3(city.longitude, city.latitude, CITY_RADIUS)
 
-    const { group, label, rings } = createCityPoint(position, city)
+    const { group, label, rings, core, glow } = createCityPoint(position, city)
 
     cityPoints!.add(group)
 
@@ -325,6 +321,8 @@ const createCityPoints = () => {
       group,
       label,
       rings,
+      core,
+      glow,
     })
   })
   earth?.add(cityPoints)
@@ -382,6 +380,32 @@ const updateCityLabels = () => {
   })
 }
 
+// 城市聚集视觉更新
+const updateCityFocusVisuals = () => {
+  cityLabels.forEach(({ group, core, glow }) => {
+    const isFocusedCity = group === focusingCity
+
+    const coreMaterial = core.material as THREE.MeshBasicMaterial
+    const glowMaterial = glow.material as THREE.MeshBasicMaterial
+
+    if (isFocusedCity) {
+      // 当前聚焦城市
+      coreMaterial.color.set(0x00ffff)
+      glowMaterial.color.set(0x00ffff)
+
+      glow.scale.setScalar(1.4)
+    } else {
+      // 其它城市
+      coreMaterial.color.set(0xffd166)
+
+      glowMaterial.color.set(0xffd166)
+      glowMaterial.opacity = 0.12
+
+      glow.scale.setScalar(1)
+    }
+  })
+}
+
 // 鼠标事件监听
 const handleMouseMove = (event: MouseEvent) => {
   if (!containerRef.value) return
@@ -396,6 +420,7 @@ const handleMouseMove = (event: MouseEvent) => {
 // 点击事件
 const handleClick = () => {
   if (!hoveredCity) {
+    clearHoverCity()
     return
   }
 
@@ -408,7 +433,14 @@ const handleClick = () => {
 
 // 聚焦城市
 const focusCity = (cityGroup: THREE.Group) => {
-  if (!camera || !controls || !earth) return
+  if (!camera || !controls || !earth) {
+    return
+  }
+
+  // 如果已经聚焦当前城市，则不重复执行聚焦动画
+  if (focusingCity === cityGroup && isFocused) {
+    return
+  }
 
   // 当前正在聚集的城市
   focusingCity = cityGroup
@@ -429,8 +461,6 @@ const focusCity = (cityGroup: THREE.Group) => {
   alignmentQuaternion.setFromUnitVectors(cityDirection, cameraDirection)
 
   // 计算 Earth 的目标旋转
-  // const targetQuaternion = new THREE.Quaternion()
-  // targetQuaternion.setFromUnitVectors(cityDirection, cameraDirection)
   const targetQuaternion = alignmentQuaternion.clone().multiply(earth.quaternion)
 
   // 保存 Earth 当前旋转
@@ -445,14 +475,8 @@ const focusCity = (cityGroup: THREE.Group) => {
   // 保存 controls 当前 target
   controlsStartTarget.copy(controls.target)
 
-  // 城市所在方向
-  // const direction = cityWorldPosition.clone().normalize()
-
-  // 设置相机最终位置，地球半径为 1.5，这里让相机距离地心约 CAMERA_FOCUS_DISTANCE
-  // cameraEndPosition.copy(direction).multiplyScalar(CAMERA_FOCUS_DISTANCE)
+  // 设置相机最终位置
   cameraEndPosition.copy(cameraDirection).multiplyScalar(CAMERA_FOCUS_DISTANCE)
-
-  // 最终让 controls 看向城市
 
   // 记录动画开始时间
   focusStartTime = performance.now()
@@ -463,13 +487,13 @@ const focusCity = (cityGroup: THREE.Group) => {
   controls.enabled = false
 }
 
-// 更新 Earth 聚焦
-const updateEarthFocus = (progress: number) => {
-  if (!earth) return
-
-  const easedProgress = easeOut(progress)
-
-  earth.quaternion.slerpQuaternions(earthStartQuaternion, earthEndQuaternion, easedProgress)
+// 用户手动操作 OrbitControls
+const handleControlsStart = () => {
+  // 如果不是聚焦动画过程中触发的，就说明用户正在主动操作地球
+  if (!isFocusing) {
+    isFocused = false
+    focusingCity = null
+  }
 }
 
 // 射线检测
@@ -638,6 +662,9 @@ const animate = () => {
   // 更新城市标签
   updateCityLabels()
 
+  // 更新城市聚焦视觉
+  updateCityFocusVisuals()
+
   // 更新 Tooltip
   updateToolTipPosition()
 
@@ -723,6 +750,8 @@ onMounted(() => {
   window.addEventListener('resize', resize)
   containerRef.value?.addEventListener('mousemove', handleMouseMove)
   containerRef.value?.addEventListener('click', handleClick)
+
+  controls?.addEventListener('start', handleControlsStart)
 })
 
 // 在卸载前
@@ -757,6 +786,7 @@ onBeforeUnmount(() => {
   renderer?.domElement.remove()
 
   // 释放 OrbitControls
+  controls?.removeEventListener('start', handleControlsStart)
   controls?.dispose()
   controls = null
 })

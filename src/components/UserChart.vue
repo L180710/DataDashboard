@@ -32,7 +32,7 @@ const getOption = (): echarts.EChartsOption => {
     graphic: [
       {
         type: 'text',
-        top: '18%',
+        top: '12%',
         left: '55%',
         style: {
           text: '年龄分布',
@@ -48,7 +48,7 @@ const getOption = (): echarts.EChartsOption => {
       {
         left: '55.5%',
         right: '12%',
-        top: '30%',
+        top: '22%',
         bottom: '0',
         containLabel: true,
       },
@@ -81,7 +81,7 @@ const getOption = (): echarts.EChartsOption => {
       {
         type: 'pie',
         center: ['26%', '56%'],
-        radius: ['30%', '60%'],
+        radius: ['26%', '60%'],
         padAngle: 1,
         label: {
           show: false,
