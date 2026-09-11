@@ -24,8 +24,9 @@ import { lonLatToVector3 } from '@/utils/geo'
 import { createFlightLine } from '@/utils/earthLine'
 
 const EARTH_RADIUS = 1.5
+const ATMOSPHERE_RADIUS = 1.56
 const CITY_RADIUS = 1.53
-const CAMERA_FOCUS_DISTANCE = 3
+const CAMERA_FOCUS_DISTANCE = 3.2
 
 const containerRef = ref<HTMLDivElement | null>(null)
 const tooltip = ref({
@@ -46,6 +47,7 @@ let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
 let cityLabels: { group: THREE.Group; label: THREE.Sprite; rings: THREE.Mesh[] }[] = []
 let hoveredCity: THREE.Group | null = null
+let focusingCity: THREE.Group | null = null
 let flightLines: THREE.Group | null = null
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
 let flightParticles: THREE.Mesh[] = []
@@ -106,7 +108,7 @@ const initThree = () => {
   controls.maxDistance = 10
 
   // 创建 Earth 几何体
-  const geometry = new THREE.SphereGeometry(1.5, 64, 64)
+  const geometry = new THREE.SphereGeometry(EARTH_RADIUS, 64, 64)
 
   // 创建纹理
   const textureLoader = new THREE.TextureLoader()
@@ -150,7 +152,7 @@ const initThree = () => {
 
 // 创建大气层
 const createAtmosphere = () => {
-  const geometry = new THREE.SphereGeometry(1.56, 64, 64)
+  const geometry = new THREE.SphereGeometry(ATMOSPHERE_RADIUS, 64, 64)
   const material = new THREE.ShaderMaterial({
     transparent: true,
     side: THREE.BackSide,
@@ -299,7 +301,7 @@ const createCityPoints = () => {
   cityPoints = new THREE.Group()
 
   cityList.forEach((city) => {
-    const position = lonLatToVector3(city.longitude, city.latitude, 1.53)
+    const position = lonLatToVector3(city.longitude, city.latitude, CITY_RADIUS)
 
     const { group, label, rings } = createCityPoint(position, city)
 
@@ -325,8 +327,8 @@ const createFlightLines = () => {
     return
   }
 
-  const start = lonLatToVector3(beijing.longitude, beijing.latitude, 1.53)
-  const end = lonLatToVector3(shanghai.longitude, shanghai.latitude, 1.53)
+  const start = lonLatToVector3(beijing.longitude, beijing.latitude, CITY_RADIUS)
+  const end = lonLatToVector3(shanghai.longitude, shanghai.latitude, CITY_RADIUS)
 
   const { line, curve } = createFlightLine(start, end)
   flightLines.add(line)
@@ -385,12 +387,19 @@ const handleClick = () => {
 
   const city = hoveredCity.userData.city as CityPoint
 
+  console.log('点击城市：', city)
+
+  focusingCity = hoveredCity
+
   focusCity(hoveredCity)
 }
 
 // 聚焦城市
 const focusCity = (cityGroup: THREE.Group) => {
   if (!camera || !controls) return
+
+  // 当前正在聚集的城市
+  focusingCity = cityGroup
 
   // 获取城市的世界坐标
   const cityWorldPosition = new THREE.Vector3()
@@ -542,6 +551,7 @@ const animate = () => {
   // 当前时间
   const now = performance.now()
 
+  // 要支持地球转动，暂时关闭
   if (earth) {
     // earth.rotation.y += 0.002
   }
@@ -597,30 +607,52 @@ const animate = () => {
     particle.position.copy(position)
   })
 
-  // 执行相机动画
-  if (isFocusing && camera && controls) {
-    const elapsed = now - focusStartTime
-
-    let progress = elapsed / focusDuration
-    if (progress >= 1) {
-      progress = 1
-      isFocusing = false
-      controls.enabled = true
-    }
-
-    // easeOut
-    const easedProgress = easeOut(progress)
-    camera.position.lerpVectors(cameraStartPosition, cameraEndPosition, easedProgress)
-    controls.target.lerpVectors(controlsStartTarget, controlsEndTarget, easedProgress)
-
-    // OrbitControls
-    if (controls) {
-      controls.update()
-    }
-  }
+  // 相机聚焦
+  updateCameraFocus(now)
 
   if (renderer && scene && camera) {
     renderer.render(scene, camera)
+  }
+}
+
+// 更新相机聚焦
+const updateCameraFocus = (now: number) => {
+  if (!isFocusing || !camera || !controls) {
+    return
+  }
+
+  const elapsed = now - focusStartTime
+
+  let progress = elapsed / focusDuration
+
+  if (progress >= 1) {
+    progress = 1
+  }
+
+  // easeOut
+  const easedProgress = easeOut(progress)
+
+  // 相机移动
+  camera.position.lerpVectors(cameraStartPosition, cameraEndPosition, easedProgress)
+
+  // target 移动
+  controls.target.lerpVectors(controlsStartTarget, controlsEndTarget, easedProgress)
+  // 当 earth 绕着 y 轴移动时，这部分要改
+  // if (focusingCity) {
+  //   const cityWorldPosition = new THREE.Vector3()
+  //   focusingCity.getWorldPosition(cityWorldPosition)
+  //   controls.target.lerpVectors(controlsStartTarget, cityWorldPosition, easedProgress)
+  // }
+
+  // 更新 OrbitControls
+  controls.update()
+
+  // 动画结束
+  if (progress >= 1) {
+    isFocusing = false
+    camera.position.copy(cameraEndPosition)
+    controls.target.copy(controlsEndTarget)
+    controls.enabled = true
   }
 }
 
