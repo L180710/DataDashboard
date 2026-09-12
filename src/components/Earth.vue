@@ -51,6 +51,7 @@ let cityLabels: {
   rings: THREE.Mesh[]
   core: THREE.Mesh
   glow: THREE.Mesh
+  pillar: THREE.Mesh
 }[] = []
 
 // 鼠标现在指向的城市
@@ -283,8 +284,32 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
     rings.push(ring)
   }
 
+  // 城市光柱
+  const pillarHeight = 0.35
+  const pillarGeometry = new THREE.CylinderGeometry(0.012, 0.025, pillarHeight, 8, 1, true)
+
+  // 默认 CylinderGeometry 是以中心为原点
+  // 向上移动一般，让光柱的底部位于城市位置
+  pillarGeometry.translate(0, pillarHeight / 2, 0)
+
+  const pillarMaterial = new THREE.MeshBasicMaterial({
+    color: 0x00ffff,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  })
+  const pillar = new THREE.Mesh(pillarGeometry, pillarMaterial)
+
+  // 让光柱反光和地球表面的法线一直
+  const radialDirection = position.clone().normalize()
+
+  pillar.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), radialDirection)
+
   group.add(core)
   group.add(glow)
+  group.add(pillar)
 
   // 创建城市标签
   const label = createCityLabel(city)
@@ -303,6 +328,7 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
     rings,
     core,
     glow,
+    pillar,
   }
 }
 
@@ -313,7 +339,7 @@ const createCityPoints = () => {
   cityList.forEach((city) => {
     const position = lonLatToVector3(city.longitude, city.latitude, CITY_RADIUS)
 
-    const { group, label, rings, core, glow } = createCityPoint(position, city)
+    const { group, label, rings, core, glow, pillar } = createCityPoint(position, city)
 
     cityPoints!.add(group)
 
@@ -323,6 +349,7 @@ const createCityPoints = () => {
       rings,
       core,
       glow,
+      pillar,
     })
   })
   earth?.add(cityPoints)
@@ -382,18 +409,22 @@ const updateCityLabels = () => {
 
 // 城市聚集视觉更新
 const updateCityFocusVisuals = () => {
-  cityLabels.forEach(({ group, core, glow }) => {
+  cityLabels.forEach(({ group, core, glow, pillar }) => {
     const isFocusedCity = group === focusingCity
 
     const coreMaterial = core.material as THREE.MeshBasicMaterial
     const glowMaterial = glow.material as THREE.MeshBasicMaterial
+    const pillarMaterial = pillar.material as THREE.MeshBasicMaterial
 
     if (isFocusedCity) {
       // 当前聚焦城市
       coreMaterial.color.set(0x00ffff)
       glowMaterial.color.set(0x00ffff)
+      glowMaterial.opacity = 0.5
 
       glow.scale.setScalar(1.4)
+
+      pillarMaterial.opacity = 0.8
     } else {
       // 其它城市
       coreMaterial.color.set(0xffd166)
@@ -402,6 +433,8 @@ const updateCityFocusVisuals = () => {
       glowMaterial.opacity = 0.12
 
       glow.scale.setScalar(1)
+
+      pillarMaterial.opacity = 0
     }
   })
 }
