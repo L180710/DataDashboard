@@ -35,6 +35,7 @@ const tooltip = ref({
   y: 0,
   city: null as CityPoint | null,
 })
+
 let renderer: THREE.WebGLRenderer | null = null
 let scene: THREE.Scene | null = null
 let camera: THREE.PerspectiveCamera | null = null
@@ -45,6 +46,7 @@ let earthTexture: THREE.Texture | null = null
 let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
+let cityCores: THREE.Mesh[] = []
 let cityLabels: {
   group: THREE.Group
   label: THREE.Sprite
@@ -59,6 +61,9 @@ let hoveredCity: THREE.Group | null = null
 
 // 当前镜头聚焦城市
 let focusingCity: THREE.Group | null = null
+
+// 点击选中的城市
+const selectedCity = ref<CityPoint | null>(null)
 
 // 聚焦城市当前的世界坐标
 const currentCityWorldPosition = new THREE.Vector3()
@@ -255,6 +260,7 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   const coreMaterial = new THREE.MeshBasicMaterial({ color: 0xffd166 })
   const core = new THREE.Mesh(coreGeometry, coreMaterial)
   core.userData.city = city
+  core.userData.clickable = true
 
   // 光晕
   const glowGeometry = new THREE.SphereGeometry(0.06, 16, 16)
@@ -266,6 +272,7 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
     depthWrite: false,
   })
   const glow = new THREE.Mesh(glowGeometry, glowMaterial)
+  glow.userData.clickable = false
 
   const rings: THREE.Mesh[] = []
 
@@ -280,6 +287,7 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
     })
 
     const ring = new THREE.Mesh(ringGeometry, ringMaterial)
+    ring.userData.clickable = false
     group.add(ring)
     rings.push(ring)
   }
@@ -292,15 +300,55 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   // 向上移动一般，让光柱的底部位于城市位置
   pillarGeometry.translate(0, pillarHeight / 2, 0)
 
-  const pillarMaterial = new THREE.MeshBasicMaterial({
-    color: 0x00ffff,
+  const pillarMaterial = new THREE.ShaderMaterial({
+    // color: 0x00ffff,
     transparent: true,
-    opacity: 0,
+    // opacity: 0,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     side: THREE.DoubleSide,
+    uniforms: {
+      uColor: {
+        value: new THREE.Color(0x00ffff),
+      },
+      uOpacity: {
+        value: 0,
+      },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+
+      void main () {
+        vUv = uv;
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uColor;
+      uniform float uOpacity;
+
+      varying vec2 vUv;
+
+      void main() {
+        // 垂直方向渐变
+        float heightGradient = 1.0 - vUv.y;
+
+        // 水平方向渐变
+        float edge = abs(vUv.x - 0.5) * 2.0;
+
+        // 中心亮、边缘淡
+        float sideGradient = 1.0 - smoothstep(0.0, 1.0, edge);
+
+        // 最终透明度
+        float alpha = heightGradient * sideGradient * uOpacity;
+
+        gl_FragColor = vec4(uColor, alpha);
+      }
+    `,
   })
   const pillar = new THREE.Mesh(pillarGeometry, pillarMaterial)
+  pillar.userData.clickable = false
 
   // 让光柱反光和地球表面的法线一直
   const radialDirection = position.clone().normalize()
@@ -314,6 +362,7 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   // 创建城市标签
   const label = createCityLabel(city)
   label.position.set(0, 0.12, 0)
+  label.userData.clickable = false
   group.add(label)
 
   // 设置城市位置
@@ -342,6 +391,8 @@ const createCityPoints = () => {
     const { group, label, rings, core, glow, pillar } = createCityPoint(position, city)
 
     cityPoints!.add(group)
+
+    cityCores.push(core)
 
     cityLabels.push({
       group,
@@ -414,7 +465,7 @@ const updateCityFocusVisuals = (time: number) => {
 
     const coreMaterial = core.material as THREE.MeshBasicMaterial
     const glowMaterial = glow.material as THREE.MeshBasicMaterial
-    const pillarMaterial = pillar.material as THREE.MeshBasicMaterial
+    const pillarMaterial = pillar.material as THREE.ShaderMaterial
 
     if (isFocusedCity) {
       // 当前聚焦城市
@@ -425,7 +476,9 @@ const updateCityFocusVisuals = (time: number) => {
 
       // 光柱呼
       const pulse = (Math.sin(time * 0.004) + 1) / 2
-      pillarMaterial.opacity = 0.8
+
+      pillarMaterial.uniforms.uOpacity!.value = 0.45 + pulse * 0.4
+
       // 光柱高度轻微变化
       pillar.scale.y = 0.85 + pulse * 0.3
     } else {
@@ -436,7 +489,7 @@ const updateCityFocusVisuals = (time: number) => {
       glowMaterial.opacity = 0.12
       glow.scale.setScalar(1)
 
-      pillarMaterial.opacity = 0
+      pillarMaterial.uniforms.uOpacity!.value = 0
       pillar.scale.y = 1
     }
   })
@@ -464,7 +517,11 @@ const handleClick = () => {
 
   console.log('点击城市：', city)
 
+  selectedCity.value = city
+
   focusCity(hoveredCity)
+
+  tooltip.value.visible = false
 }
 
 // 聚焦城市
@@ -525,36 +582,36 @@ const focusCity = (cityGroup: THREE.Group) => {
 
 // 用户手动操作 OrbitControls
 const handleControlsStart = () => {
-  // 如果不是聚焦动画过程中触发的，就说明用户正在主动操作地球
-  if (!isFocusing) {
-    isFocused = false
-    focusingCity = null
+  if (isFocusing) {
+    return
   }
+  isFocused = false
+  focusingCity = null
 }
 
 // 射线检测
 const checkIntersection = () => {
-  if (!camera || !cityPoints) return
+  if (!camera) return
 
   raycaster.setFromCamera(mouse, camera)
 
-  const intersects = raycaster.intersectObjects(cityPoints.children, true)
+  const intersects = raycaster.intersectObjects(cityCores, false)
 
   if (intersects.length === 0) {
     clearHoverCity()
     return
   }
 
-  let current: THREE.Object3D | null = intersects[0]!.object
-  while (current) {
-    if (current.userData.city) {
-      setHoverCity(current)
-      return
-    }
+  const core = intersects[0]!.object
 
-    current = current.parent
+  const cityGroup = core.parent
+
+  if (!cityGroup) {
+    clearHoverCity()
+    return
   }
-  clearHoverCity()
+
+  setHoverCity(cityGroup)
 }
 
 // 设置城市 hover
