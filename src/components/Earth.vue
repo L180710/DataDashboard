@@ -408,7 +408,7 @@ const updateCityLabels = () => {
 }
 
 // 城市聚集视觉更新
-const updateCityFocusVisuals = () => {
+const updateCityFocusVisuals = (time: number) => {
   cityLabels.forEach(({ group, core, glow, pillar }) => {
     const isFocusedCity = group === focusingCity
 
@@ -421,20 +421,23 @@ const updateCityFocusVisuals = () => {
       coreMaterial.color.set(0x00ffff)
       glowMaterial.color.set(0x00ffff)
       glowMaterial.opacity = 0.5
-
       glow.scale.setScalar(1.4)
 
+      // 光柱呼
+      const pulse = (Math.sin(time * 0.004) + 1) / 2
       pillarMaterial.opacity = 0.8
+      // 光柱高度轻微变化
+      pillar.scale.y = 0.85 + pulse * 0.3
     } else {
       // 其它城市
       coreMaterial.color.set(0xffd166)
 
       glowMaterial.color.set(0xffd166)
       glowMaterial.opacity = 0.12
-
       glow.scale.setScalar(1)
 
       pillarMaterial.opacity = 0
+      pillar.scale.y = 1
     }
   })
 }
@@ -696,7 +699,7 @@ const animate = () => {
   updateCityLabels()
 
   // 更新城市聚焦视觉
-  updateCityFocusVisuals()
+  updateCityFocusVisuals(now)
 
   // 更新 Tooltip
   updateToolTipPosition()
