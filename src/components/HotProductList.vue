@@ -5,7 +5,7 @@
       <div class="data">商品名称</div>
       <div class="data">销售额 (元)</div>
     </li>
-    <li class="list-item" v-for="item in hotProductList" :key="item.id">
+    <li class="list-item" v-for="item in list" :key="item.id">
       <div class="data item-order">{{ item.id }}</div>
       <div class="data item-name-ratio">
         <div class="item-name">{{ item.productName }}</div>
@@ -18,44 +18,10 @@
 
 <script setup lang="ts">
 import type { HotProductList } from '@/types/dashboard'
-// 热门商品列表
-const hotProductList: HotProductList = [
-  {
-    id: '1',
-    order: 1,
-    productName: '智能手机',
-    price: 125680,
-    ratio: 100,
-  },
-  {
-    id: '2',
-    order: 2,
-    productName: '笔记本电脑',
-    price: 98765,
-    ratio: 86.88,
-  },
-  {
-    id: '3',
-    order: 3,
-    productName: '无线耳机',
-    price: 76543,
-    ratio: 67.8,
-  },
-  {
-    id: '4',
-    order: 4,
-    productName: '智能手表',
-    price: 56321,
-    ratio: 54.0,
-  },
-  {
-    id: '5',
-    order: 5,
-    productName: '平板电脑',
-    price: 45678,
-    ratio: 33.8,
-  },
-]
+
+defineProps<{
+  list: HotProductList
+}>()
 </script>
 
 <style lang="less" scoped>

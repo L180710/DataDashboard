@@ -8,7 +8,7 @@
       <div class="data">时间</div>
       <div class="data">状态</div>
     </li>
-    <li class="list-item" v-for="item in dataList" :key="item.id">
+    <li class="list-item" v-for="item in list" :key="item.id">
       <div class="data">{{ item.orderNum }}</div>
       <div class="data">{{ item.userName }}</div>
       <div class="data">{{ item.productName }}</div>
@@ -25,53 +25,10 @@
 
 <script setup lang="ts">
 import type { OrderLatestList } from '@/types/dashboard.ts'
-const dataList: OrderLatestList = [
-  {
-    id: '1',
-    orderNum: 'ORD20260901',
-    userName: '张三',
-    productName: '高性能机械键盘',
-    price: 399.0,
-    time: '2026-09-01',
-    state: 0, // 待发货
-  },
-  {
-    id: '2',
-    orderNum: 'ORD20260902',
-    userName: '李四',
-    productName: '无线降噪耳机',
-    price: 899.0,
-    time: '2026-09-02',
-    state: 1, // 已发货
-  },
-  {
-    id: '3',
-    orderNum: 'ORD20260903',
-    userName: '王五',
-    productName: '27英寸4K显示器',
-    price: 2199.0,
-    time: '2026-09-03',
-    state: 2, // 已完成
-  },
-  {
-    id: '4',
-    orderNum: 'ORD20260904',
-    userName: '赵六',
-    productName: '人体工学办公椅',
-    price: 1580.0,
-    time: '2026-09-04',
-    state: 1, // 已发货
-  },
-  {
-    id: '5',
-    orderNum: 'ORD20260905',
-    userName: '孙七',
-    productName: '智能手表Pro Max',
-    price: 2599.0,
-    time: '2026-09-05',
-    state: 0, // 待发货
-  },
-]
+
+defineProps<{
+  list: OrderLatestList
+}>()
 </script>
 
 <style lang="less" scoped>

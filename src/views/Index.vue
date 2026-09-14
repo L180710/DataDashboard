@@ -24,7 +24,7 @@
         <Earth @select-city="handleSelectCity" />
         <!-- 最新订单 -->
         <moduleTemp title="最新订单">
-          <OrderLatestList />
+          <OrderLatestList :list="orderLatestList" />
         </moduleTemp>
       </section>
       <aside class="main-right flex flex-col">
@@ -32,7 +32,7 @@
           <UserChart />
         </moduleTemp>
         <moduleTemp title="热门商品TOP5">
-          <HotProductList />
+          <HotProductList :list="hotProductList" />
         </moduleTemp>
         <moduleTemp title="渠道来源占比" :flex="1">
           <ChannelChart />
@@ -80,6 +80,16 @@ const keyDataList = computed(() => {
 // 今日数据
 const nowDataList = computed(() => {
   return currentDashboardData.value?.todayData ?? []
+})
+
+// 最新订单
+const orderLatestList = computed(() => {
+  return currentDashboardData.value?.latestOrders ?? []
+})
+
+// 热门商品 TOP 5
+const hotProductList = computed(() => {
+  return currentDashboardData.value?.hotProductData ?? []
 })
 </script>
 
