@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper flex flex-col">
-    <Header />
+    <Header :selectedCity="selectedCity" />
     <main class="main flex space-x">
       <aside class="main-left flex flex-col">
         <!-- 核心指标 -->
@@ -21,7 +21,7 @@
         <!--今日数据 -->
         <DataList :columns="4" :list="nowDataList" />
         <!-- 地球 -->
-        <Earth />
+        <Earth @select-city="handleSelectCity" />
         <!-- 最新订单 -->
         <moduleTemp title="最新订单">
           <OrderLatestList />
@@ -43,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import Header from '@/components/Header.vue'
 import moduleTemp from '@/components/common/ModuleTemp.vue'
 import DataList from '@/components/DataList.vue'
@@ -53,87 +54,33 @@ import OrderLatestList from '@/components/OrderLatestList.vue'
 import UserChart from '@/components/UserChart.vue'
 import HotProductList from '@/components/HotProductList.vue'
 import ChannelChart from '@/components/ChannelChart.vue'
-import type { KeyDataList } from '@/types/dashboard.ts'
+import type { CityPoint } from '@/data/earth'
+import { dashboardData } from '@/data/dashboard'
+
+// 选中城市
+const selectedCity = ref<CityPoint | null>(null)
+
+// 选中城市操作
+const handleSelectCity = (city: CityPoint) => {
+  selectedCity.value = city
+
+  // console.log('父组件收到城市：', city)
+}
+
+const currentDashboardData = computed(() => {
+  const cityId = selectedCity.value?.id ?? 'national'
+  return dashboardData.find((item) => item.cityId === cityId)
+})
 
 // 核心指标数据
-const keyDataList: KeyDataList = [
-  {
-    id: '1',
-    icon: 'zongyonghushu',
-    title: '用户总数',
-    account: 128681,
-    diff: 3,
-    status: 1,
-    color: '#6fadea',
-  },
-  {
-    id: '2',
-    icon: 'dingdanshu',
-    title: '总订单数',
-    account: 128999,
-    diff: 2.3,
-    status: 1,
-    color: '#725bce',
-  },
-  {
-    id: '3',
-    icon: 'xiaoshouguanli',
-    title: '总销售额',
-    account: 8999,
-    diff: 1,
-    status: 0,
-    color: '#d6aa59',
-  },
-  {
-    id: '4',
-    icon: 'zhuanhuashuai',
-    title: '转化率',
-    account: 35.6,
-    diff: 3.2,
-    status: 1,
-    color: '#89d1b5',
-  },
-]
+const keyDataList = computed(() => {
+  return currentDashboardData.value?.keyData ?? []
+})
 
 // 今日数据
-const nowDataList: KeyDataList = [
-  {
-    id: '1',
-    icon: 'fangketou',
-    title: '今日访问量',
-    account: 1726,
-    diff: 3,
-    status: 1,
-    color: '#6fadea',
-  },
-  {
-    id: '2',
-    icon: 'dingdanshuju',
-    title: '今日订单数',
-    account: 126,
-    diff: 2.3,
-    status: 1,
-    color: '#d19a56',
-  },
-  {
-    id: '3',
-    icon: 'xiaoshouliang',
-    title: '今日销售额',
-    account: 8999,
-    diff: 1,
-    status: 0,
-    color: '#dfc181',
-  },
-  {
-    id: '4',
-    icon: 'cengci',
-    title: '新增用户数',
-    account: 89,
-    diff: 3.2,
-    status: 1,
-    color: '#73b4d7',
-  },
-]
+const nowDataList = computed(() => {
+  return currentDashboardData.value?.todayData ?? []
+})
 </script>
 
 <style lang="less" scoped>

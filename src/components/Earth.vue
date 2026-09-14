@@ -23,6 +23,10 @@ import { createCityLabel } from '@/utils/cityLabel'
 import { lonLatToVector3 } from '@/utils/geo'
 import { createFlightLine } from '@/utils/earthLine'
 
+const emit = defineEmits<{
+  selectCity: [city: CityPoint]
+}>()
+
 const EARTH_RADIUS = 1.5
 const ATMOSPHERE_RADIUS = 1.56
 const CITY_RADIUS = 1.53
@@ -515,9 +519,9 @@ const handleClick = () => {
 
   const city = hoveredCity.userData.city as CityPoint
 
-  console.log('点击城市：', city)
-
   selectedCity.value = city
+
+  emit('selectCity', city)
 
   focusCity(hoveredCity)
 

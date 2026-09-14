@@ -36,3 +36,16 @@ interface HotProductItem {
 }
 
 export type HotProductList = HotProductItem[]
+
+// 控制板数据
+export interface DashboardData {
+  cityId: string
+  keyData: KeyDataList
+  salesTrend: null
+  orderTrend: null
+  todayData: KeyDataList
+  latestOrders: OrderLatestList
+  userStatistics: null
+  hotProductData: HotProductList
+  channelStatistics: null
+}

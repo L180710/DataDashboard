@@ -69,11 +69,17 @@
       <circle cx="1400" cy="78" r="3.5" fill="#59dcff" />
     </svg>
 
-    <div class="header-right">全国</div>
+    <div class="header-right">数据范围：{{ selectedCity ? selectedCity.name : '全国' }}</div>
   </header>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { CityPoint } from '@/data/earth'
+
+defineProps<{
+  selectedCity: CityPoint | null
+}>()
+</script>
 
 <style lang="less" scoped>
 .header {
