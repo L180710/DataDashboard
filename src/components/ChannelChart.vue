@@ -3,9 +3,19 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
+import type { ChannelStatistics } from '@/types/dashboard'
+
+const props = defineProps<{
+  channelStatistics: ChannelStatistics
+}>()
+
+const legendPercentage = computed(() => {
+  return
+})
 
 const getOption = (): echarts.EChartsOption => {
   return {
@@ -24,13 +34,14 @@ const getOption = (): echarts.EChartsOption => {
         fontSize: remToPx(0.14),
       },
       formatter: (name: string) => {
-        const percentageMap: Record<string, string> = {
-          直接访问: '35%',
-          搜索引擎: '30%',
-          社交媒体: '20%',
-          广告投放: '10%',
-          其他: '5%',
-        }
+        const total = props.channelStatistics.reduce((sum, item) => sum + item.value, 0)
+        const percentageMap = props.channelStatistics.reduce<Record<string, string>>(
+          (map, item) => {
+            map[item.name] = `${((item.value / total) * 100).toFixed(0)}%`
+            return map
+          },
+          {},
+        )
         return `${name}  ${percentageMap[name] || ''}`
       },
     },
@@ -61,13 +72,7 @@ const getOption = (): echarts.EChartsOption => {
           borderColor: '#040c28',
           borderRadius: 2,
         },
-        data: [
-          { value: 45038, name: '直接访问' },
-          { value: 38604, name: '搜索引擎' },
-          { value: 25736, name: '社交媒体' },
-          { value: 12868, name: '广告投放' },
-          { value: 6434, name: '其他' },
-        ],
+        data: props.channelStatistics,
       },
     ],
   }

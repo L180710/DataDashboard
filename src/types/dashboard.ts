@@ -42,6 +42,18 @@ interface HotProductItem {
 }
 export type HotProductList = HotProductItem[]
 
+// 用户统计
+interface StatisticsItem {
+  name: string
+  value: number
+}
+export interface UserStatistics {
+  gender: StatisticsItem[]
+  age: StatisticsItem[]
+}
+// 渠道来源
+export type ChannelStatistics = StatisticsItem[]
+
 // 控制板数据
 export interface DashboardData {
   cityId: string
@@ -50,7 +62,7 @@ export interface DashboardData {
   orderTrend: OrderTrendList
   todayData: KeyDataList
   latestOrders: OrderLatestList
-  userStatistics: null
+  userStatistics: UserStatistics
   hotProductData: HotProductList
-  channelStatistics: null
+  channelStatistics: ChannelStatistics
 }

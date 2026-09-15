@@ -31,11 +31,9 @@ defineProps<{
     grid-template-columns: 0.8fr 3fr 1fr;
     align-items: center;
     gap: 0.1rem;
-    // padding: 0.08rem 0 0;
-    padding: 0 0 0.08rem;
+    padding: 0 0 0.2rem;
     font-size: 0.14rem;
     &.list-header {
-      // padding: 0 0 0.1rem;
       font-size: 0.16rem;
     }
 

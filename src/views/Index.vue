@@ -29,13 +29,13 @@
       </section>
       <aside class="main-right flex flex-col">
         <moduleTemp title="用户统计" :flex="1.2">
-          <UserChart />
+          <UserChart :user-statistics="userStatistics" />
         </moduleTemp>
         <moduleTemp title="热门商品TOP5">
           <HotProductList :list="hotProductList" />
         </moduleTemp>
         <moduleTemp title="渠道来源占比" :flex="1">
-          <ChannelChart />
+          <ChannelChart :channel-statistics="channelStatistics" />
         </moduleTemp>
       </aside>
     </main>
@@ -97,9 +97,24 @@ const orderLatestList = computed(() => {
   return currentDashboardData.value?.latestOrders ?? []
 })
 
+// 用户统计
+const userStatistics = computed(() => {
+  return (
+    currentDashboardData.value?.userStatistics ?? {
+      gender: [],
+      age: [],
+    }
+  )
+})
+
 // 热门商品 TOP 5
 const hotProductList = computed(() => {
   return currentDashboardData.value?.hotProductData ?? []
+})
+
+// 渠道来源
+const channelStatistics = computed(() => {
+  return currentDashboardData.value?.channelStatistics ?? []
 })
 
 // 返回全国

@@ -3,9 +3,31 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
+import type { UserStatistics } from '@/types/dashboard'
+
+const props = withDefaults(
+  defineProps<{
+    userStatistics: UserStatistics
+  }>(),
+  {
+    userStatistics: () => ({
+      gender: [],
+      age: [],
+    }),
+  },
+)
+
+const nameArr = computed(() => {
+  return props.userStatistics.age.map((item) => item.name)
+})
+
+const valueArr = computed(() => {
+  return props.userStatistics.age.map((item) => item.value)
+})
 
 const getOption = (): echarts.EChartsOption => {
   return {
@@ -23,7 +45,10 @@ const getOption = (): echarts.EChartsOption => {
         fontSize: remToPx(0.16),
       },
       formatter: (name: string) => {
-        const dataMap: Record<string, string> = { 男: '60%', 女: '40%' }
+        const dataMap: Record<string, string> = {
+          男: `${props.userStatistics.gender[0]!.value}%`,
+          女: `${props.userStatistics.gender[1]!.value}%`,
+        }
         return `${name} ${dataMap[name] || ''}`
       },
       data: ['男', '女'],
@@ -65,7 +90,7 @@ const getOption = (): echarts.EChartsOption => {
       {
         type: 'category',
         gridIndex: 1,
-        data: ['18-24岁', '25-34岁', '35-44岁', '45-54岁', '55岁以上'],
+        data: nameArr.value,
         position: 'left',
         axisLine: { show: false },
         axisTick: { show: false },
@@ -98,10 +123,7 @@ const getOption = (): echarts.EChartsOption => {
           borderColor: '#040c28',
           borderRadius: 2,
         },
-        data: [
-          { value: 60, name: '男' },
-          { value: 40, name: '女' },
-        ],
+        data: props.userStatistics.gender,
       },
       {
         type: 'bar',
@@ -122,7 +144,7 @@ const getOption = (): echarts.EChartsOption => {
           fontSize: remToPx(0.14),
           formatter: '{c}%',
         },
-        data: [24, 38, 22, 10, 6],
+        data: valueArr.value,
       },
     ],
   }

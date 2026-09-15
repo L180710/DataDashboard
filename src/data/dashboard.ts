@@ -1,4 +1,10 @@
-import type { DashboardData, SalesTrendList, OrderTrendList } from '@/types/dashboard'
+import type {
+  DashboardData,
+  SalesTrendList,
+  OrderTrendList,
+  UserStatistics,
+  ChannelStatistics,
+} from '@/types/dashboard'
 import { getLast7Days } from '@/utils/date'
 
 // 近 7 天
@@ -12,8 +18,8 @@ const orderData = [1200, 3200, 2800, 4500, 3800, 4200, 5000]
 const saleTrendData: SalesTrendList = []
 // 订单趋势数据
 const orderTrendData: OrderTrendList = []
-
-const setValue = (lastDays: string[]) => {
+// 设置柱状图数据
+const setBarValue = (lastDays: string[]) => {
   for (let i = 0; i < lastDays.length; i++) {
     saleTrendData.push({
       date: lastDays[i]!,
@@ -26,10 +32,31 @@ const setValue = (lastDays: string[]) => {
     })
   }
 }
+setBarValue(last7Days)
 
-setValue(last7Days)
+// 设置用户统计数据
+const userStatisticsData: UserStatistics = {
+  gender: [
+    { name: '男', value: 68 },
+    { name: '女', value: 32 },
+  ],
+  age: [
+    { name: '18-24岁', value: 22 },
+    { name: '25-34岁', value: 38 },
+    { name: '35-44岁', value: 24 },
+    { name: '45-54岁', value: 10 },
+    { name: '55岁以上', value: 6 },
+  ],
+}
 
-console.log()
+// 设置渠道来源数据
+const channelStatistics: ChannelStatistics = [
+  { name: '直接访问', value: 45038 },
+  { name: '搜索引擎', value: 38604 },
+  { name: '社交媒体', value: 25736 },
+  { name: '广告投放', value: 12868 },
+  { name: '其他', value: 6434 },
+]
 
 export const dashboardData: DashboardData[] = [
   {
@@ -159,7 +186,7 @@ export const dashboardData: DashboardData[] = [
         state: 0,
       },
     ],
-    userStatistics: null,
+    userStatistics: userStatisticsData,
     hotProductData: [
       { id: '1', order: 1, productName: '智能手机', price: 125680, ratio: 100 },
       { id: '2', order: 2, productName: '笔记本电脑', price: 98765, ratio: 86.88 },
@@ -167,7 +194,7 @@ export const dashboardData: DashboardData[] = [
       { id: '4', order: 4, productName: '智能手表', price: 56321, ratio: 54.0 },
       { id: '5', order: 5, productName: '平板电脑', price: 45678, ratio: 33.8 },
     ],
-    channelStatistics: null,
+    channelStatistics: channelStatistics,
   },
 
   {
@@ -297,7 +324,7 @@ export const dashboardData: DashboardData[] = [
         state: 2,
       },
     ],
-    userStatistics: null,
+    userStatistics: userStatisticsData,
     hotProductData: [
       { id: '1', order: 1, productName: '5G旗舰手机', price: 98650, ratio: 100 },
       { id: '2', order: 2, productName: '超薄商务本', price: 76540, ratio: 92.4 },
@@ -305,7 +332,7 @@ export const dashboardData: DashboardData[] = [
       { id: '4', order: 4, productName: '运动智能手表', price: 43210, ratio: 48.2 },
       { id: '5', order: 5, productName: '二合一平板', price: 32150, ratio: 26.7 },
     ],
-    channelStatistics: null,
+    channelStatistics: channelStatistics,
   },
 
   {
@@ -435,7 +462,7 @@ export const dashboardData: DashboardData[] = [
         state: 0,
       },
     ],
-    userStatistics: null,
+    userStatistics: userStatisticsData,
     hotProductData: [
       { id: '1', order: 1, productName: '折叠屏手机', price: 145230, ratio: 100 },
       { id: '2', order: 2, productName: '游戏笔记本', price: 112340, ratio: 78.6 },
@@ -443,6 +470,6 @@ export const dashboardData: DashboardData[] = [
       { id: '4', order: 4, productName: '商务智能手表', price: 65430, ratio: 41.3 },
       { id: '5', order: 5, productName: '绘画平板', price: 52310, ratio: 28.9 },
     ],
-    channelStatistics: null,
+    channelStatistics: channelStatistics,
   },
 ]
