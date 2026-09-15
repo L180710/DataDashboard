@@ -9,7 +9,7 @@
       }"
     >
       <div class="tooltip-name">{{ tooltip.city?.name }}</div>
-      <div class="tooltip-value">数据量：{{ tooltip.city?.value.toLocaleString() }}</div>
+      <div class="tooltip-value">数据量：{{ tooltip?.city?.value?.toLocaleString() }}</div>
     </div>
   </div>
 </template>
@@ -17,15 +17,33 @@
 <script setup lang="ts">
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { type CityPoint, cityList } from '@/data/earth'
 import { createCityLabel } from '@/utils/cityLabel'
 import { lonLatToVector3 } from '@/utils/geo'
 import { createFlightLine } from '@/utils/earthLine'
 
+// 向父组件发送事件
 const emit = defineEmits<{
   selectCity: [city: CityPoint]
 }>()
+
+// 接收父组件传递数据
+const props = defineProps<{
+  selectedCity: CityPoint | null
+}>()
+
+// 监听 selectedCity 变化，全国则重置地球视图
+watch(
+  () => props.selectedCity,
+  (city) => {
+    if (city === null) {
+      console.log('城市为全国')
+
+      resetEarthView()
+    }
+  },
+)
 
 const EARTH_RADIUS = 1.5
 const ATMOSPHERE_RADIUS = 1.56
@@ -85,6 +103,18 @@ let isFocusing = false
 
 // 当前是否已经完成城市聚焦
 let isFocused = false
+
+// 是否返回全国状态
+let isResetting = false
+
+// 全国状态下 camera 的位置
+const defaultCameraPosition = new THREE.Vector3()
+
+// 全国状态下 OrbitControls 看向
+const defaultControlsTarget = new THREE.Vector3()
+
+// 全国状态下地球的旋转状态
+const defaultEarthQuaternion = new THREE.Quaternion()
 
 // 相机动画起点
 const cameraStartPosition = new THREE.Vector3()
@@ -152,6 +182,11 @@ const initThree = () => {
   // 创建 Mesh
   earth = new THREE.Mesh(geometry, material)
   scene.add(earth)
+
+  // 保存全国初始状态
+  defaultCameraPosition.copy(camera.position)
+  defaultControlsTarget.copy(controls.target)
+  defaultEarthQuaternion.copy(earth.quaternion)
 
   // 添加大气层
   createAtmosphere()
@@ -813,17 +848,35 @@ const updateCameraFocus = (now: number) => {
   // 相机移动
   camera.position.lerpVectors(cameraStartPosition, cameraEndPosition, easedProgress)
 
+  // 根据不同动画处理 controls.target
+  if (isResetting) {
+    controls.target.lerpVectors(controlsStartTarget, defaultControlsTarget, easedProgress)
+  } else {
+    focusingCity.getWorldPosition(currentCityWorldPosition)
+    controls.target.copy(currentCityWorldPosition)
+  }
+
   // 动画结束
   if (progress >= 1) {
     isFocusing = false
     camera.position.copy(cameraEndPosition)
 
-    if (focusingCity) {
-      focusingCity.getWorldPosition(currentCityWorldPosition)
-      controls.target.copy(currentCityWorldPosition)
+    if (isResetting) {
+      earth.quaternion.copy(defaultEarthQuaternion)
+      controls.target.copy(defaultControlsTarget)
+
+      isResetting = false
+      isFocused = false
+      focusingCity = null
+    } else {
+      if (focusingCity) {
+        focusingCity.getWorldPosition(currentCityWorldPosition)
+        controls.target.copy(currentCityWorldPosition)
+      }
+      isFocused = true
     }
+
     controls.enabled = true
-    isFocused = true
   }
 }
 
@@ -839,6 +892,24 @@ const resize = () => {
   camera.aspect = width / height
   camera.updateProjectionMatrix()
   renderer.setSize(width, height)
+}
+
+// 返回全国状态
+const resetEarthView = () => {
+  if (!camera || !controls || !earth) return
+
+  cameraStartPosition.copy(camera.position)
+  controlsStartTarget.copy(controls.target)
+  earthStartQuaternion.copy(earth.quaternion)
+
+  cameraEndPosition.copy(defaultCameraPosition)
+  earthEndQuaternion.copy(defaultEarthQuaternion)
+  focusStartTime = performance.now()
+
+  isFocusing = true
+  isResetting = true
+
+  controls.enabled = false
 }
 
 // 挂载

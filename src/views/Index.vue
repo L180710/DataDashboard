@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper flex flex-col">
-    <Header :selectedCity="selectedCity" />
+    <Header :selectedCity="selectedCity" @reset="handleResetNational" />
     <main class="main flex space-x">
       <aside class="main-left flex flex-col">
         <!-- 核心指标 -->
@@ -21,7 +21,7 @@
         <!--今日数据 -->
         <DataList :columns="4" :list="nowDataList" />
         <!-- 地球 -->
-        <Earth @select-city="handleSelectCity" />
+        <Earth :selectedCity="selectedCity" @select-city="handleSelectCity" />
         <!-- 最新订单 -->
         <moduleTemp title="最新订单">
           <OrderLatestList :list="orderLatestList" />
@@ -91,6 +91,11 @@ const orderLatestList = computed(() => {
 const hotProductList = computed(() => {
   return currentDashboardData.value?.hotProductData ?? []
 })
+
+// 返回全国
+const handleResetNational = () => {
+  selectedCity.value = null
+}
 </script>
 
 <style lang="less" scoped>

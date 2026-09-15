@@ -69,16 +69,29 @@
       <circle cx="1400" cy="78" r="3.5" fill="#59dcff" />
     </svg>
 
-    <div class="header-right">数据范围：{{ selectedCity ? selectedCity.name : '全国' }}</div>
+    <div class="header-right">
+      {{ selectedCity ? selectedCity.name : '全国' }}
+      <span v-if="selectedCity" class="reset-btn" @click="handleReset">[ 全国 ]</span>
+    </div>
   </header>
 </template>
 
 <script setup lang="ts">
 import type { CityPoint } from '@/data/earth'
 
+// 接收父组件的属性
 defineProps<{
   selectedCity: CityPoint | null
 }>()
+
+// 向父组件发送事件
+const emit = defineEmits<{
+  reset: []
+}>()
+
+const handleReset = () => {
+  emit('reset')
+}
 </script>
 
 <style lang="less" scoped>
@@ -87,19 +100,27 @@ defineProps<{
   justify-content: space-between;
   column-gap: 10px;
   padding: 0.3rem 0.3rem 0.2rem;
-  color: #fff;
+  color: #e3e6f1;
   flex-shrink: 0;
 
   .header-left,
   .header-right {
     padding-top: 0.4rem;
     font-size: 0.22rem;
-    opacity: 0.6;
   }
 
   .header-center {
     position: absolute;
     width: 100%;
+    pointer-events: none;
+  }
+
+  .reset-btn {
+    padding-left: 6px;
+    cursor: pointer;
+    &:hover {
+      color: #fff;
+    }
   }
 }
 </style>
