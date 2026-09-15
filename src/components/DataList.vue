@@ -1,4 +1,3 @@
-<!-- 单项数据模型 -->
 <template>
   <div class="data-list" :style="{ 'grid-template-columns': `repeat(${columns}, 1fr)` }">
     <div class="data-item" v-for="item in list" :key="item.id" :style="{ '--color': item.color }">

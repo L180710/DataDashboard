@@ -10,11 +10,18 @@ export interface KeyDataItem {
   status: 0 | 1 // 0 降低，1 上升
   color: string
 }
-
 export type KeyDataList = KeyDataItem[]
 
+// 销售趋势、订单数趋势
+export interface OrderDataItem {
+  date: string
+  value: number
+}
+export type OrderTrendList = OrderDataItem[]
+export type SalesTrendList = OrderDataItem[]
+
 // 最新订单
-interface OrderRencentItem {
+export interface OrderRencentItem {
   id: string
   orderNum: string
   userName: string
@@ -23,7 +30,6 @@ interface OrderRencentItem {
   time: string
   state: 0 | 1 | 2 // 0 待发货，1 已发货，2 已完成
 }
-
 export type OrderLatestList = OrderRencentItem[]
 
 // 热门商品
@@ -34,15 +40,14 @@ interface HotProductItem {
   price: number
   ratio: number
 }
-
 export type HotProductList = HotProductItem[]
 
 // 控制板数据
 export interface DashboardData {
   cityId: string
   keyData: KeyDataList
-  salesTrend: null
-  orderTrend: null
+  salesTrend: SalesTrendList
+  orderTrend: OrderTrendList
   todayData: KeyDataList
   latestOrders: OrderLatestList
   userStatistics: null

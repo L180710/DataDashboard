@@ -1,7 +1,37 @@
-import type { DashboardData } from '@/types/dashboard'
+import type { DashboardData, SalesTrendList, OrderTrendList } from '@/types/dashboard'
+import { getLast7Days } from '@/utils/date'
+
+// 近 7 天
+const last7Days = getLast7Days()
+
+// 销售数值
+const saleData = [26000, 40000, 59000, 50000, 72000, 65000, 82000]
+// 订单趋势
+const orderData = [1200, 3200, 2800, 4500, 3800, 4200, 5000]
+// 销售趋势数据
+const saleTrendData: SalesTrendList = []
+// 订单趋势数据
+const orderTrendData: OrderTrendList = []
+
+const setValue = (lastDays: string[]) => {
+  for (let i = 0; i < lastDays.length; i++) {
+    saleTrendData.push({
+      date: lastDays[i]!,
+      value: saleData[i]!,
+    })
+
+    orderTrendData.push({
+      date: lastDays[i]!,
+      value: orderData[i]!,
+    })
+  }
+}
+
+setValue(last7Days)
+
+console.log()
 
 export const dashboardData: DashboardData[] = [
-  // ==================== 全国 ====================
   {
     cityId: 'national',
     keyData: [
@@ -42,8 +72,8 @@ export const dashboardData: DashboardData[] = [
         color: '#89d1b5',
       },
     ],
-    salesTrend: null,
-    orderTrend: null,
+    salesTrend: saleTrendData,
+    orderTrend: orderTrendData,
     todayData: [
       {
         id: '1',
@@ -140,7 +170,6 @@ export const dashboardData: DashboardData[] = [
     channelStatistics: null,
   },
 
-  // ==================== 北京 ====================
   {
     cityId: 'beijing',
     keyData: [
@@ -181,8 +210,8 @@ export const dashboardData: DashboardData[] = [
         color: '#89d1b5',
       },
     ],
-    salesTrend: null,
-    orderTrend: null,
+    salesTrend: saleTrendData,
+    orderTrend: orderTrendData,
     todayData: [
       {
         id: '1',
@@ -279,7 +308,6 @@ export const dashboardData: DashboardData[] = [
     channelStatistics: null,
   },
 
-  // ==================== 深圳 ====================
   {
     cityId: 'shenzhen',
     keyData: [
@@ -320,8 +348,8 @@ export const dashboardData: DashboardData[] = [
         color: '#89d1b5',
       },
     ],
-    salesTrend: null,
-    orderTrend: null,
+    salesTrend: saleTrendData,
+    orderTrend: orderTrendData,
     todayData: [
       {
         id: '1',

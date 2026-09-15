@@ -10,11 +10,11 @@
         </moduleTemp>
         <!-- 销售额趋势 -->
         <moduleTemp title="销售额趋势" :flex="1">
-          <SalesChart />
+          <SalesChart :sale-trend-list="saleTrendList" />
         </moduleTemp>
         <!-- 订单数趋势 -->
         <moduleTemp title="订单数趋势" :flex="1">
-          <OrderChart />
+          <OrderChart :order-trend-list="orderTrendList" />
         </moduleTemp>
       </aside>
       <section class="main-center flex flex-col">
@@ -75,6 +75,16 @@ const currentDashboardData = computed(() => {
 // 核心指标数据
 const keyDataList = computed(() => {
   return currentDashboardData.value?.keyData ?? []
+})
+
+// 销售趋势
+const saleTrendList = computed(() => {
+  return currentDashboardData.value?.salesTrend ?? []
+})
+
+// 订单趋势
+const orderTrendList = computed(() => {
+  return currentDashboardData.value?.orderTrend ?? []
 })
 
 // 今日数据

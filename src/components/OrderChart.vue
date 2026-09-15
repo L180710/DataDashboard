@@ -3,9 +3,25 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
+import type { OrderTrendList } from '@/types/dashboard'
+
+const props = defineProps<{
+  orderTrendList: OrderTrendList
+}>()
+
+// 日期
+const dateArr = computed(() => {
+  return props.orderTrendList.map((item) => item.date)
+})
+
+// 数值
+const valueArr = computed(() => {
+  return props.orderTrendList.map((item) => item.value)
+})
 
 const getOption = (): echarts.EChartsOption => {
   return {
@@ -66,7 +82,7 @@ const getOption = (): echarts.EChartsOption => {
 
     xAxis: {
       type: 'category',
-      data: ['08-16', '08-17', '08-18', '08-19', '08-20', '08-21', '08-22'],
+      data: dateArr.value,
       axisLabel: {
         color: '#a9b8d0',
         fontSize: remToPx(0.16),
@@ -121,7 +137,7 @@ const getOption = (): echarts.EChartsOption => {
           },
         ]),
         // 数据
-        data: [1200, 3200, 2800, 4500, 3800, 4200, 5000],
+        data: valueArr.value,
       },
     ],
   }
