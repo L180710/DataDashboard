@@ -425,7 +425,7 @@ const createCityPoints = () => {
   cityPoints = new THREE.Group()
 
   cityList.forEach((city) => {
-    const position = lonLatToVector3(city.longitude, city.latitude, CITY_RADIUS)
+    const position = lonLatToVector3(city.longitude!, city.latitude!, CITY_RADIUS)
 
     const { group, label, rings, core, glow, pillar } = createCityPoint(position, city)
 
@@ -456,8 +456,8 @@ const createFlightLines = () => {
     return
   }
 
-  const start = lonLatToVector3(beijing.longitude, beijing.latitude, CITY_RADIUS)
-  const end = lonLatToVector3(shanghai.longitude, shanghai.latitude, CITY_RADIUS)
+  const start = lonLatToVector3(beijing.longitude!, beijing.latitude!, CITY_RADIUS)
+  const end = lonLatToVector3(shanghai.longitude!, shanghai.latitude!, CITY_RADIUS)
 
   const { line, curve } = createFlightLine(start, end)
   flightLines.add(line)
