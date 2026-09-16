@@ -19,8 +19,9 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { type CityPoint, cityList } from '@/data/earth'
-import { createCityLabel } from '@/utils/cityLabel'
 import { lonLatToVector3 } from '@/utils/geo'
+import { createGeoJsonFeature, type GeoJSONFeaturesCollection } from '@/utils/geoJson'
+import { createCityLabel } from '@/utils/cityLabel'
 import { createFlightLine } from '@/utils/earthLine'
 
 // 向父组件发送事件
@@ -89,6 +90,9 @@ const CHINA_CENTER = {
   longitude: 104,
   latitude: 35,
 }
+
+// 中国地图
+let chinaMap: THREE.Group | null = null
 
 // 鼠标现在指向的城市
 let hoveredCity: THREE.Group | null = null
@@ -217,6 +221,9 @@ const initThree = () => {
 
   // 添加粒子
   createFlightParticles()
+
+  // 添加中国地图
+  loadChinaMap()
 
   // 添加环境光
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
@@ -947,6 +954,20 @@ const orientEarthToChina = () => {
   rotation.setFromUnitVectors(chinaDirection, cameraDirection)
 
   earth.quaternion.copy(rotation)
+}
+
+// 加载中国地图
+const loadChinaMap = async () => {
+  const response = await fetch('/geojson/china_province_full.geojson')
+  const data = (await response.json()) as GeoJSONFeaturesCollection
+
+  chinaMap = new THREE.Group()
+
+  data.features.forEach((feature) => {
+    const province = createGeoJsonFeature(feature)
+    chinaMap!.add(province)
+  })
+  earth?.add(chinaMap)
 }
 
 // 挂载

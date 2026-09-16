@@ -54,7 +54,7 @@ defineProps<{
 
     .data {
       overflow: hidden;
-      padding: 0.18rem 0.2rem;
+      padding: 0.1rem 0.2rem;
       font-size: 0.14rem;
       text-overflow: ellipsis;
       white-space: nowrap;

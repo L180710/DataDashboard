@@ -10,8 +10,8 @@ export const cityList: CityPoint[] = [
   {
     id: 'beijing',
     name: '北京',
-    longitude: 116.4,
-    latitude: 39.9,
+    longitude: 116.405285,
+    latitude: 39.904989,
     value: 12568,
   },
   // {

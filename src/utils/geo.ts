@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 
+// 将经纬度转换成球面坐标
 export function lonLatToVector3(
   longtitude: number,
   latitude: number,
