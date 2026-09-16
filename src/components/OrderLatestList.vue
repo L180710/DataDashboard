@@ -4,7 +4,7 @@
       <div class="data">订单号</div>
       <div class="data">用户</div>
       <div class="data">商品</div>
-      <div class="data">金额（元）</div>
+      <div class="data">金额(元)</div>
       <div class="data">时间</div>
       <div class="data">状态</div>
     </li>
@@ -54,22 +54,31 @@ defineProps<{
 
     .data {
       overflow: hidden;
-      padding: 0.1rem 0.2rem;
+      padding: 0.18rem 0.2rem;
       font-size: 0.14rem;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
 
-    .state0 {
-      color: rgb(234, 42, 8);
-    }
+      &:nth-child(4) {
+        text-align: right;
+      }
 
-    .state1 {
-      color: rgb(245, 200, 36);
-    }
+      &:nth-child(5),
+      &:nth-child(6) {
+        text-align: center;
+      }
 
-    .state2 {
-      color: rgb(34 197 94);
+      .state0 {
+        color: rgb(234, 42, 8);
+      }
+
+      .state1 {
+        color: rgb(245, 200, 36);
+      }
+
+      .state2 {
+        color: rgb(34 197 94);
+      }
     }
   }
 }

@@ -38,7 +38,8 @@ defineProps<{
     }
 
     .item-order {
-      align-self: self-end;
+      // align-self: self-end;
+      align-self: center;
       width: 0.3rem;
       height: 0.3rem;
       margin: 0 auto;
@@ -91,7 +92,7 @@ defineProps<{
       .item-name {
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 2.5;
+        line-height: 2.8;
       }
 
       .item-ratio {
