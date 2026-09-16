@@ -20,9 +20,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { type CityPoint, cityList } from '@/data/earth'
 import { lonLatToVector3 } from '@/utils/geo'
-import { createGeoJsonFeature, type GeoJSONFeaturesCollection } from '@/utils/geoJson'
 import { createCityLabel } from '@/utils/cityLabel'
 import { createFlightLine } from '@/utils/earthLine'
+import { createChinaFills } from '@/utils/chinaGeo'
 
 // 向父组件发送事件
 const emit = defineEmits<{
@@ -93,6 +93,9 @@ const CHINA_CENTER = {
 
 // 中国地图
 let chinaMap: THREE.Group | null = null
+
+// 填充中国地图
+let chinaFillGroup: THREE.Group | null = null
 
 // 鼠标现在指向的城市
 let hoveredCity: THREE.Group | null = null
@@ -223,7 +226,7 @@ const initThree = () => {
   createFlightParticles()
 
   // 添加中国地图
-  loadChinaMap()
+  void loadChinaMap()
 
   // 添加环境光
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
@@ -958,16 +961,23 @@ const orientEarthToChina = () => {
 
 // 加载中国地图
 const loadChinaMap = async () => {
-  const response = await fetch('/geojson/china_province_full.geojson')
-  const data = (await response.json()) as GeoJSONFeaturesCollection
+  try {
+    const response = await fetch('/geojson/china_province_full.geojson')
 
-  chinaMap = new THREE.Group()
+    if (!response.ok) {
+      throw new Error('中国 GeoJSON 加载失败')
+    }
 
-  data.features.forEach((feature) => {
-    const province = createGeoJsonFeature(feature)
-    chinaMap!.add(province)
-  })
-  earth?.add(chinaMap)
+    const geojson = await response.json()
+
+    const GEO_RADIUS = EARTH_RADIUS + 0.008
+
+    chinaFillGroup = createChinaFills(geojson, GEO_RADIUS)
+
+    earth?.add(chinaFillGroup)
+  } catch (error) {
+    console.error('中国 GeoJSON 加载失败：', error)
+  }
 }
 
 // 挂载
@@ -1006,6 +1016,23 @@ onBeforeUnmount(() => {
   if (stars?.material instanceof THREE.Material) {
     stars.material.dispose()
   }
+
+  // 释放中国 GeoJSON 填充
+  chinaFillGroup?.traverse((object) => {
+    if (object instanceof THREE.Mesh) {
+      object.geometry.dispose()
+
+      if (Array.isArray(object.material)) {
+        object.material.forEach((material) => {
+          material.dispose()
+        })
+      } else {
+        object.material.dispose()
+      }
+    }
+  })
+
+  chinaFillGroup = null
 
   // 释放 Renderer
   renderer?.dispose()
