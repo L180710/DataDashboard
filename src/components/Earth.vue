@@ -45,9 +45,15 @@ watch(
   },
 )
 
+// 地球半径
 const EARTH_RADIUS = 1.5
+// 大气层半径
 const ATMOSPHERE_RADIUS = 1.56
+// GEOJSON 省界半径
+const GEOJSON_RADIUS = 1.51
+// 城市半径
 const CITY_RADIUS = 1.53
+// 相机聚焦半径
 const CAMERA_FOCUS_DISTANCE = 3.2
 
 const containerRef = ref<HTMLDivElement | null>(null)
@@ -77,6 +83,12 @@ let cityLabels: {
   glow: THREE.Mesh
   pillar: THREE.Mesh
 }[] = []
+
+// 中国经纬度
+const CHINA_CENTER = {
+  longitude: 104,
+  latitude: 35,
+}
 
 // 鼠标现在指向的城市
 let hoveredCity: THREE.Group | null = null
@@ -182,6 +194,9 @@ const initThree = () => {
   // 创建 Mesh
   earth = new THREE.Mesh(geometry, material)
   scene.add(earth)
+
+  // 先让地球朝向中国
+  orientEarthToChina()
 
   // 保存全国初始状态
   defaultCameraPosition.copy(camera.position)
@@ -910,6 +925,28 @@ const resetEarthView = () => {
   isResetting = true
 
   controls.enabled = false
+}
+
+// 让地球方向朝向中国
+const orientEarthToChina = () => {
+  if (!earth || !camera) return
+
+  // 中国中心在 Earth 局部坐标中的方向
+  const chinaDirection = lonLatToVector3(
+    CHINA_CENTER.longitude,
+    CHINA_CENTER.latitude,
+    1,
+  ).normalize()
+
+  // 摄像机所在方向
+  const cameraDirection = camera.position.clone().normalize()
+
+  // 计算旋转
+  const rotation = new THREE.Quaternion()
+
+  rotation.setFromUnitVectors(chinaDirection, cameraDirection)
+
+  earth.quaternion.copy(rotation)
 }
 
 // 挂载
