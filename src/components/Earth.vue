@@ -973,9 +973,8 @@ const loadChinaMap = async () => {
 
     const geojson = await response.json()
 
-    chinaFillGroup = createChinaFills(geojson, EARTH_RADIUS + 0.008)
-
-    chinaBoundaryGroup = createChinaBoundaries(geojson, EARTH_RADIUS + 0.015)
+    chinaFillGroup = createChinaFills(geojson, GEOJSON_RADIUS + 0.01)
+    chinaBoundaryGroup = createChinaBoundaries(geojson, GEOJSON_RADIUS)
 
     earth?.add(chinaFillGroup)
     earth?.add(chinaBoundaryGroup)

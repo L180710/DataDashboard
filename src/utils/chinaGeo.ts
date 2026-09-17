@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { lonLatToVector3 } from './geo'
+import { Earcut } from 'three/src/extras/Earcut.js'
 
 // 根据一个 Polygen 创建球面填充
 function createPolygonMesh(coordinates: [number, number][][], radius: number): THREE.Mesh | null {
