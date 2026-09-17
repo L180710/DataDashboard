@@ -64,7 +64,7 @@ function createPolygonMesh(coordinates: [number, number][][], radius: number): T
   const material = new THREE.MeshBasicMaterial({
     color: 0x168cff,
     transparent: true,
-    opacity: 0.18,
+    opacity: 0.28,
 
     // 地球表面上的地图可以从背面看到
     side: THREE.DoubleSide,
@@ -122,6 +122,70 @@ export function createChinaFills(geojson: any, radius: number): THREE.Group {
     meshes.forEach((mesh) => {
       group.add(mesh)
     })
+  })
+
+  return group
+}
+
+// 创建两层线
+function createPolygonBoundary(coordinates: [number, number][], radius: number): THREE.Group {
+  const group = new THREE.Group()
+
+  const points = coordinates.map(([longitude, latitude]) => {
+    return lonLatToVector3(longitude, latitude, radius)
+  })
+
+  const geometry = new THREE.BufferGeometry().setFromPoints(points)
+
+  // 外层：比较粗、比较透明
+  const glowMaterial = new THREE.LineBasicMaterial({
+    color: 0x168cff,
+    transparent: true,
+    opacity: 0.3,
+    depthWrite: false,
+  })
+
+  const glowLine = new THREE.Line(geometry, glowMaterial)
+
+  // 内层：比较细、比较亮
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color: 0x4db8ff,
+    transparent: true,
+    opacity: 0.4,
+    depthWrite: false,
+  })
+
+  const line = new THREE.Line(geometry, lineMaterial)
+
+  // 外层稍微粗一点
+  glowLine.scale.setScalar(1.002)
+
+  group.add(glowLine)
+  group.add(line)
+
+  return group
+}
+
+// 创建中国边界
+export function createChinaBoundaries(geojson: any, radius: number): THREE.Group {
+  const group = new THREE.Group()
+
+  geojson.features.forEach((feature: any) => {
+    const { type, coordinates } = feature.geometry
+
+    if (type === 'Polygon') {
+      const polygonGroup = createPolygonBoundary(coordinates[0], radius)
+
+      group.add(polygonGroup)
+    }
+
+    if (type === 'MultiPolygon') {
+      coordinates.forEach((polygon: [number, number][][]) => {
+        const polygonGroup = createPolygonBoundary(polygon[0]!, radius)
+
+        group.add(polygonGroup)
+      })
+    }
   })
 
   return group

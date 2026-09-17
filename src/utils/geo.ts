@@ -7,7 +7,7 @@ export function lonLatToVector3(
   radius: number,
 ): THREE.Vector3 {
   const phi = THREE.MathUtils.degToRad(90 - latitude)
-  const theta = THREE.MathUtils.degToRad(longtitude)
+  const theta = THREE.MathUtils.degToRad(180 - longtitude)
   const x = radius * Math.sin(phi) * Math.cos(theta)
   const y = radius * Math.cos(phi)
   const z = radius * Math.sin(phi) * Math.sin(theta)

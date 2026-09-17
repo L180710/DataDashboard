@@ -22,7 +22,7 @@ import { type CityPoint, cityList } from '@/data/earth'
 import { lonLatToVector3 } from '@/utils/geo'
 import { createCityLabel } from '@/utils/cityLabel'
 import { createFlightLine } from '@/utils/earthLine'
-import { createChinaFills } from '@/utils/chinaGeo'
+import { createChinaFills, createChinaBoundaries } from '@/utils/chinaGeo'
 
 // 向父组件发送事件
 const emit = defineEmits<{
@@ -96,6 +96,9 @@ let chinaMap: THREE.Group | null = null
 
 // 填充中国地图
 let chinaFillGroup: THREE.Group | null = null
+
+// 中国边界
+let chinaBoundaryGroup: THREE.Group | null
 
 // 鼠标现在指向的城市
 let hoveredCity: THREE.Group | null = null
@@ -191,7 +194,7 @@ const initThree = () => {
 
   // 创建纹理
   const textureLoader = new THREE.TextureLoader()
-  earthTexture = textureLoader.load('/textures/8k_earth_nightmap.jpg')
+  earthTexture = textureLoader.load('/textures/8k_stars_milky_way.jpg')
 
   // 创建材质
   const material = new THREE.MeshStandardMaterial({
@@ -970,11 +973,12 @@ const loadChinaMap = async () => {
 
     const geojson = await response.json()
 
-    const GEO_RADIUS = EARTH_RADIUS + 0.008
+    chinaFillGroup = createChinaFills(geojson, EARTH_RADIUS + 0.008)
 
-    chinaFillGroup = createChinaFills(geojson, GEO_RADIUS)
+    chinaBoundaryGroup = createChinaBoundaries(geojson, EARTH_RADIUS + 0.015)
 
     earth?.add(chinaFillGroup)
+    earth?.add(chinaBoundaryGroup)
   } catch (error) {
     console.error('中国 GeoJSON 加载失败：', error)
   }
