@@ -14,13 +14,13 @@ export const cityList: CityPoint[] = [
     latitude: 39.904989,
     value: 12568,
   },
-  // {
-  //   id: 'shanghai',
-  //   name: '上海',
-  //   longitude: 121.5,
-  //   latitude: 31.2,
-  //   value: 9845,
-  // },
+  {
+    id: 'shanghai',
+    name: '上海',
+    longitude: 121.5,
+    latitude: 31.2,
+    value: 9845,
+  },
   // {
   //   id: 'guangzhou',
   //   name: '广州',

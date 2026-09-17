@@ -22,7 +22,7 @@ import { type CityPoint, cityList } from '@/data/earth'
 import { lonLatToVector3 } from '@/utils/geo'
 import { createCityLabel } from '@/utils/cityLabel'
 import { createFlightLine } from '@/utils/earthLine'
-import { createChinaFills, createChinaBoundaries } from '@/utils/chinaGeo'
+import { createChinaFills, createChinaBoundaries, boundaryGlowMaterials } from '@/utils/chinaGeo'
 
 // 向父组件发送事件
 const emit = defineEmits<{
@@ -778,6 +778,11 @@ const animate = () => {
   // 当前时间
   const now = performance.now()
 
+  const opacity = 0.2 + Math.sin(now * 0.002) * 0.1
+  boundaryGlowMaterials.forEach((material) => {
+    material.opacity = opacity
+  })
+
   // 要支持地球转动，暂时关闭
   if (earth) {
     // earth.rotation.y += 0.002
@@ -974,7 +979,7 @@ const loadChinaMap = async () => {
     const geojson = await response.json()
 
     chinaFillGroup = createChinaFills(geojson, GEOJSON_RADIUS)
-    chinaBoundaryGroup = createChinaBoundaries(geojson, GEOJSON_RADIUS)
+    chinaBoundaryGroup = createChinaBoundaries(geojson, GEOJSON_RADIUS + 0.015)
 
     earth?.add(chinaFillGroup)
     earth?.add(chinaBoundaryGroup)
@@ -1032,6 +1037,22 @@ onBeforeUnmount(() => {
       } else {
         object.material.dispose()
       }
+    }
+  })
+
+  // 释放中国边界
+  boundaryGlowMaterials.length = 0
+  chinaBoundaryGroup?.traverse((object) => {
+    const line = object as THREE.Line
+
+    line.geometry?.dispose()
+
+    if (Array.isArray(line.material)) {
+      line.material.forEach((material) => {
+        material.dispose()
+      })
+    } else {
+      line.material?.dispose()
     }
   })
 

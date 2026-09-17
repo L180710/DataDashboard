@@ -1,6 +1,9 @@
 import * as THREE from 'three'
 import { lonLatToVector3 } from './geo'
 
+// 保存所有省份的 glow 材质
+export const boundaryGlowMaterials: THREE.LineBasicMaterial[] = []
+
 // 根据一个 Polygen 创建球面填充
 function createPolygonMesh(coordinates: [number, number][][], radius: number): THREE.Mesh | null {
   const outerRing = coordinates[0]
@@ -145,6 +148,8 @@ function createPolygonBoundary(coordinates: [number, number][], radius: number):
     depthWrite: false,
   })
 
+  boundaryGlowMaterials.push(glowMaterial)
+
   const glowLine = new THREE.Line(geometry, glowMaterial)
 
   // 内层：比较细、比较亮
@@ -168,6 +173,8 @@ function createPolygonBoundary(coordinates: [number, number][], radius: number):
 
 // 创建中国边界
 export function createChinaBoundaries(geojson: any, radius: number): THREE.Group {
+  boundaryGlowMaterials.length = 0
+
   const group = new THREE.Group()
 
   geojson.features.forEach((feature: any) => {
