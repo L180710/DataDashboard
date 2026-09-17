@@ -51,7 +51,7 @@ const EARTH_RADIUS = 1.5
 // 大气层半径
 const ATMOSPHERE_RADIUS = 1.56
 // GEOJSON 省界半径
-const GEOJSON_RADIUS = 1.51
+const GEOJSON_RADIUS = 1.52
 // 城市半径
 const CITY_RADIUS = 1.53
 // 相机聚焦半径
@@ -973,7 +973,7 @@ const loadChinaMap = async () => {
 
     const geojson = await response.json()
 
-    chinaFillGroup = createChinaFills(geojson, GEOJSON_RADIUS + 0.01)
+    chinaFillGroup = createChinaFills(geojson, GEOJSON_RADIUS)
     chinaBoundaryGroup = createChinaBoundaries(geojson, GEOJSON_RADIUS)
 
     earth?.add(chinaFillGroup)
