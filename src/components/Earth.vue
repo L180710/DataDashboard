@@ -76,7 +76,7 @@ let atmosphere: THREE.Mesh | null = null
 let stars: THREE.Points | null = null
 let cityPoints: THREE.Group | null = null
 let cityCores: THREE.Mesh[] = []
-let cityLabels: {
+let cityMarkers: {
   group: THREE.Group
   label: THREE.Sprite
   rings: THREE.Mesh[]
@@ -112,6 +112,7 @@ const selectedCity = ref<CityPoint | null>(null)
 // 聚焦城市当前的世界坐标
 const currentCityWorldPosition = new THREE.Vector3()
 
+// 连线数组
 let flightLines: THREE.Group | null = null
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
 let flightParticles: THREE.Mesh[] = []
@@ -155,8 +156,16 @@ const focusDuration = 1200
 const earthStartQuaternion = new THREE.Quaternion()
 const earthEndQuaternion = new THREE.Quaternion()
 
+// 城市之间的链接
+const cityConnections = [
+  ['北京', '上海'],
+  ['北京', '广州'],
+  ['北京', '成都'],
+  ['北京', '深圳'],
+]
+
 // 初始化
-const initThree = () => {
+const initThree = async () => {
   if (!containerRef.value) return
 
   const container = containerRef.value
@@ -219,7 +228,7 @@ const initThree = () => {
   // 添加星星
   createStars()
 
-  // 添加城市组
+  // 添加城市
   createCityPoints()
 
   // 添加飞行线
@@ -229,7 +238,7 @@ const initThree = () => {
   createFlightParticles()
 
   // 添加中国地图
-  void loadChinaMap()
+  await loadChinaMap()
 
   // 添加环境光
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
@@ -461,7 +470,7 @@ const createCityPoints = () => {
 
     cityCores.push(core)
 
-    cityLabels.push({
+    cityMarkers.push({
       group,
       label,
       rings,
@@ -473,23 +482,31 @@ const createCityPoints = () => {
   earth?.add(cityPoints)
 }
 
+// 获取城市点
+const getCityPoint = (name: string) => {
+  return cityList.find((city) => city.name === name)
+}
+
 // 创建飞行线
 const createFlightLines = () => {
   flightLines = new THREE.Group()
 
-  const beijing = cityList.find((item) => item.name === '北京')
-  const shanghai = cityList.find((item) => item.name === '上海')
+  cityConnections.forEach(([startName, endName]) => {
+    const startCity = getCityPoint(startName!)
+    const endCity = getCityPoint(endName!)
 
-  if (!beijing || !shanghai) {
-    return
-  }
+    if (!startCity || !endCity) {
+      return
+    }
 
-  const start = lonLatToVector3(beijing.longitude!, beijing.latitude!, CITY_RADIUS)
-  const end = lonLatToVector3(shanghai.longitude!, shanghai.latitude!, CITY_RADIUS)
+    const start = lonLatToVector3(startCity.longitude!, startCity.latitude!, CITY_RADIUS)
+    const end = lonLatToVector3(endCity.longitude!, endCity.latitude!, CITY_RADIUS)
 
-  const { line, curve } = createFlightLine(start, end)
-  flightLines.add(line)
-  flightCurves.push(curve)
+    const { line, curve } = createFlightLine(start, end)
+    flightLines!.add(line)
+    flightCurves.push(curve)
+  })
+
   earth?.add(flightLines)
 }
 
@@ -511,7 +528,7 @@ const createFlightParticles = () => {
 const updateCityLabels = () => {
   if (!camera) return
 
-  cityLabels.forEach(({ group, label }) => {
+  cityMarkers.forEach(({ group, label }) => {
     const worldPosition = new THREE.Vector3()
     group.getWorldPosition(worldPosition)
     const normal = worldPosition.clone().normalize()
@@ -527,7 +544,7 @@ const updateCityLabels = () => {
 
 // 城市聚集视觉更新
 const updateCityFocusVisuals = (time: number) => {
-  cityLabels.forEach(({ group, core, glow, pillar }) => {
+  cityMarkers.forEach(({ group, core, glow, pillar }) => {
     const isFocusedCity = group === focusingCity
 
     const coreMaterial = core.material as THREE.MeshBasicMaterial
@@ -778,7 +795,7 @@ const animate = () => {
   // 当前时间
   const now = performance.now()
 
-  const opacity = 0.2 + Math.sin(now * 0.002) * 0.1
+  const opacity = 0.15 + Math.sin(now * 0.002) * 0.1
   boundaryGlowMaterials.forEach((material) => {
     material.opacity = opacity
   })
@@ -804,7 +821,7 @@ const animate = () => {
   }
 
   // 城市 hover 雷达波
-  cityLabels.forEach(({ group, rings }, index) => {
+  cityMarkers.forEach(({ group, rings }, index) => {
     if (group === hoveredCity) {
       rings.forEach((ring, ringIndex) => {
         const material = ring.material as THREE.MeshBasicMaterial
@@ -979,7 +996,7 @@ const loadChinaMap = async () => {
     const geojson = await response.json()
 
     chinaFillGroup = createChinaFills(geojson, GEOJSON_RADIUS)
-    chinaBoundaryGroup = createChinaBoundaries(geojson, GEOJSON_RADIUS + 0.015)
+    chinaBoundaryGroup = createChinaBoundaries(geojson, GEOJSON_RADIUS)
 
     earth?.add(chinaFillGroup)
     earth?.add(chinaBoundaryGroup)

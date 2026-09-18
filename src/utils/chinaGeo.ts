@@ -144,7 +144,7 @@ function createPolygonBoundary(coordinates: [number, number][], radius: number):
   const glowMaterial = new THREE.LineBasicMaterial({
     color: 0x168cff,
     transparent: true,
-    opacity: 0.3,
+    opacity: 0.1,
     depthWrite: false,
   })
 
@@ -156,7 +156,7 @@ function createPolygonBoundary(coordinates: [number, number][], radius: number):
   const lineMaterial = new THREE.LineBasicMaterial({
     color: 0x4db8ff,
     transparent: true,
-    opacity: 0.4,
+    opacity: 0.11,
     depthWrite: false,
   })
 
