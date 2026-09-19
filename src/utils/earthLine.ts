@@ -15,7 +15,7 @@ export function createFlightLine(start: THREE.Vector3, end: THREE.Vector3) {
   const material = new THREE.LineBasicMaterial({
     color: 0x00d9ff,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.45,
     depthWrite: false,
   })
   // 创建 line

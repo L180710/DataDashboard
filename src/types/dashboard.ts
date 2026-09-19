@@ -33,7 +33,7 @@ export interface OrderRencentItem {
 export type OrderLatestList = OrderRencentItem[]
 
 // 热门商品
-interface HotProductItem {
+export interface HotProductItem {
   id: string
   order: number
   productName: string
@@ -43,7 +43,7 @@ interface HotProductItem {
 export type HotProductList = HotProductItem[]
 
 // 用户统计
-interface StatisticsItem {
+export interface StatisticsItem {
   name: string
   value: number
 }
@@ -65,4 +65,12 @@ export interface DashboardData {
   userStatistics: UserStatistics
   hotProductData: HotProductList
   channelStatistics: ChannelStatistics
+}
+
+// state 状态
+export interface DashboardState {
+  selectedCityId: string
+  dashboardData: DashboardData | null
+  loading: boolean
+  error: string | null
 }

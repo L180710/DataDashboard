@@ -179,7 +179,7 @@ const initThree = async () => {
 
   // 创建 Camera
   camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-  camera.position.set(0, 0, 5)
+  camera.position.set(0, 0, 3.6)
 
   // 创建 Renderer
   renderer = new THREE.WebGLRenderer({
@@ -316,7 +316,7 @@ const createStars = () => {
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
   const material = new THREE.PointsMaterial({
     color: 0xffffff,
-    size: 0.04,
+    size: 0.06,
     transparent: true,
     opacity: 0.8,
     sizeAttenuation: true,
@@ -332,14 +332,14 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   const group = new THREE.Group()
 
   // 核心点
-  const coreGeometry = new THREE.SphereGeometry(0.025, 16, 16)
+  const coreGeometry = new THREE.SphereGeometry(0.01, 8, 8)
   const coreMaterial = new THREE.MeshBasicMaterial({ color: 0xffd166 })
   const core = new THREE.Mesh(coreGeometry, coreMaterial)
   core.userData.city = city
   core.userData.clickable = true
 
   // 光晕
-  const glowGeometry = new THREE.SphereGeometry(0.06, 16, 16)
+  const glowGeometry = new THREE.SphereGeometry(0.06, 6, 6)
   const glowMaterial = new THREE.MeshBasicMaterial({
     color: 0xffd166,
     transparent: true,
@@ -353,7 +353,7 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   const rings: THREE.Mesh[] = []
 
   for (let i = 0; i < 3; i++) {
-    const ringGeometry = new THREE.RingGeometry(0.05, 0.065, 32)
+    const ringGeometry = new THREE.RingGeometry(0.01, 0.015, 32)
     const ringMaterial = new THREE.MeshBasicMaterial({
       color: 0xffd166,
       transparent: true,
@@ -377,9 +377,8 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
   pillarGeometry.translate(0, pillarHeight / 2, 0)
 
   const pillarMaterial = new THREE.ShaderMaterial({
-    // color: 0x00ffff,
     transparent: true,
-    // opacity: 0,
+    opacity: 0,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     side: THREE.DoubleSide,
@@ -513,7 +512,7 @@ const createFlightLines = () => {
 // 创建粒子
 const createFlightParticles = () => {
   flightParticles = []
-  const geometry = new THREE.SphereGeometry(0.035, 12, 12)
+  const geometry = new THREE.SphereGeometry(0.005, 8, 8)
   const material = new THREE.MeshBasicMaterial({
     color: 0xffffff,
   })
@@ -531,14 +530,18 @@ const updateCityLabels = () => {
   cityMarkers.forEach(({ group, label }) => {
     const worldPosition = new THREE.Vector3()
     group.getWorldPosition(worldPosition)
+
     const normal = worldPosition.clone().normalize()
     const cameraDirection = camera!.position.clone().sub(worldPosition).normalize()
-    const visible = normal.dot(cameraDirection) > 0.2
+
+    const visible = normal.dot(cameraDirection) > 0.35
     label.visible = visible
 
     const distance = camera!.position.distanceTo(worldPosition)
-    const scale = THREE.MathUtils.clamp(2.5 / distance, 0.5, 1.2)
-    label.scale.set(0.65 * scale, 0.25 * scale, 1)
+    // const scale = THREE.MathUtils.clamp(2.5 / distance, 0.5, 1.2)
+    // label.scale.set(0.65 * scale, 0.25 * scale, 1)
+    const scale = THREE.MathUtils.clamp(1 / distance, 0.1, 0.8)
+    label.scale.set(0.55 * scale, 0.21 * scale, 1)
   })
 }
 

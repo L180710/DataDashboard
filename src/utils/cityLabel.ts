@@ -11,15 +11,15 @@ export function createCityLabel(city: CityPoint) {
     throw new Error('无法创建 Canvas 2D 上下文')
   }
   context.clearRect(0, 0, canvas.width, canvas.height)
-  context.font = 'bold 28px Arial'
+  context.font = 'bold 24px Arial'
   context.fillStyle = '#ffffff'
   context.textAlign = 'center'
   context.textBaseline = 'middle'
   context.fillText(city.name, canvas.width / 2, 30)
 
-  context.font = '22px Arial'
+  context.font = '18px Arial'
   context.fillStyle = '#00d9ff'
-  context.fillText(city.value.toLocaleString(), canvas.width / 2, 70)
+  context.fillText(city.value!.toLocaleString(), canvas.width / 2, 70)
 
   const texture = new THREE.CanvasTexture(canvas)
   const material = new THREE.SpriteMaterial({
