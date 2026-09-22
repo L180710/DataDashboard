@@ -1,4 +1,4 @@
-import type { City, CityConnection } from '../types/city.js'
+import type { City, CityConnection } from '../../../shared/types/city.js'
 import { cities, cityConnections } from '../data/cities.js'
 
 // 获取所有城市

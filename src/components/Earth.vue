@@ -39,8 +39,6 @@ watch(
   () => props.selectedCity,
   (city) => {
     if (city === null) {
-      console.log('城市为全国')
-
       resetEarthView()
     }
   },
@@ -90,9 +88,6 @@ const CHINA_CENTER = {
   longitude: 104,
   latitude: 35,
 }
-
-// 中国地图
-let chinaMap: THREE.Group | null = null
 
 // 填充中国地图
 let chinaFillGroup: THREE.Group | null = null

@@ -1,4 +1,4 @@
-import type { City, CityConnection } from '../types/city.js'
+import type { City, CityConnection } from '../../../shared/types/city.js'
 
 export const cities: City[] = [
   {

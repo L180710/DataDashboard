@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import type { OrderLatestList } from '@/types/dashboard.ts'
+import type { OrderLatestList } from '../../shared/types/dashboard'
 
 defineProps<{
   list: OrderLatestList

@@ -1,14 +1,12 @@
-// import type { IconName } from './icon.js'
-
-// 核心指标
-export interface KeyDataItem {
+// 核心指标、今日数据
+export interface DataItem {
   id: string
   title: string
   account: number
   diff: number
   status: 0 | 1 // 0 降低，1 上升
 }
-export type KeyDataList = KeyDataItem[]
+export type DataList = DataItem[]
 
 // 销售趋势、订单数趋势
 export interface OrderDataItem {
@@ -55,10 +53,10 @@ export type ChannelStatistics = StatisticsItem[]
 // 控制板数据
 export interface DashboardData {
   cityId: string
-  keyData: KeyDataList
+  keyData: DataList
   salesTrend: SalesTrendList
   orderTrend: OrderTrendList
-  todayData: KeyDataList
+  todayData: DataList
   latestOrders: OrderLatestList
   userStatistics: UserStatistics
   hotProductData: HotProductList

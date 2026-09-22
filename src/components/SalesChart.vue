@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
-import type { SalesTrendList } from '@/types/dashboard'
+import type { SalesTrendList } from '../../shared/types/dashboard'
 
 // 接收父组件传入参数
 const props = defineProps<{

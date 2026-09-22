@@ -4,7 +4,7 @@ import type {
   OrderTrendList,
   UserStatistics,
   ChannelStatistics,
-} from '../types/dashboard.js'
+} from '../../../shared/types/dashboard.js'
 import { getLast7Days } from '../utils/date.js'
 
 // 近 7 天
@@ -63,28 +63,28 @@ export const dashboardData: DashboardData[] = [
     cityId: 'national',
     keyData: [
       {
-        id: '1',
+        id: 'user',
         title: '用户总数',
         account: 128681,
         diff: 3,
         status: 1,
       },
       {
-        id: '2',
+        id: 'order',
         title: '总订单数',
         account: 128999,
         diff: 2.3,
         status: 1,
       },
       {
-        id: '3',
+        id: 'sale',
         title: '总销售额',
         account: 8999,
         diff: 1,
         status: 0,
       },
       {
-        id: '4',
+        id: 'rate',
         title: '转化率',
         account: 35.6,
         diff: 3.2,
@@ -95,30 +95,28 @@ export const dashboardData: DashboardData[] = [
     orderTrend: orderTrendData,
     todayData: [
       {
-        id: '1',
+        id: 'userTotal',
         title: '今日访问量',
         account: 1726,
         diff: 3,
         status: 1,
       },
       {
-        id: '2',
+        id: 'orderTotal',
         title: '今日订单数',
         account: 126,
         diff: 2.3,
         status: 1,
       },
       {
-        id: '3',
-
+        id: 'saleTotal',
         title: '今日销售额',
         account: 8999,
         diff: 1,
         status: 0,
       },
       {
-        id: '4',
-
+        id: 'newUserTotal',
         title: '新增用户数',
         account: 89,
         diff: 3.2,
@@ -187,72 +185,64 @@ export const dashboardData: DashboardData[] = [
     cityId: 'beijing',
     keyData: [
       {
-        id: '1',
-
+        id: 'user',
         title: '用户总数',
-        account: 86342,
-        diff: 4.5,
+        account: 128681,
+        diff: 3,
         status: 1,
       },
       {
-        id: '2',
-
+        id: 'order',
         title: '总订单数',
-        account: 75218,
-        diff: 1.8,
+        account: 128999,
+        diff: 2.3,
         status: 1,
       },
       {
-        id: '3',
-
+        id: 'sale',
         title: '总销售额',
-        account: 5623,
-        diff: 2.4,
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '4',
-
+        id: 'rate',
         title: '转化率',
-        account: 28.4,
-        diff: -1.2,
-        status: 0,
+        account: 35.6,
+        diff: 3.2,
+        status: 1,
       },
     ],
     salesTrend: saleTrendData,
     orderTrend: orderTrendData,
     todayData: [
       {
-        id: '1',
-
+        id: 'userTotal',
         title: '今日访问量',
-        account: 1284,
-        diff: 5.2,
+        account: 1726,
+        diff: 3,
         status: 1,
       },
       {
-        id: '2',
-
+        id: 'orderTotal',
         title: '今日订单数',
-        account: 98,
-        diff: -0.8,
-        status: 0,
-      },
-      {
-        id: '3',
-
-        title: '今日销售额',
-        account: 6234,
-        diff: 3.6,
+        account: 126,
+        diff: 2.3,
         status: 1,
       },
       {
-        id: '4',
-
-        title: '新增用户数',
-        account: 56,
-        diff: -2.1,
+        id: 'saleTotal',
+        title: '今日销售额',
+        account: 8999,
+        diff: 1,
         status: 0,
+      },
+      {
+        id: 'newUserTotal',
+        title: '新增用户数',
+        account: 89,
+        diff: 3.2,
+        status: 1,
       },
     ],
     latestOrders: [
@@ -317,35 +307,31 @@ export const dashboardData: DashboardData[] = [
     cityId: 'shenzhen',
     keyData: [
       {
-        id: '1',
-
+        id: 'user',
         title: '用户总数',
-        account: 97654,
-        diff: -2.1,
+        account: 128681,
+        diff: 3,
+        status: 1,
+      },
+      {
+        id: 'order',
+        title: '总订单数',
+        account: 128999,
+        diff: 2.3,
+        status: 1,
+      },
+      {
+        id: 'sale',
+        title: '总销售额',
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '2',
-
-        title: '总订单数',
-        account: 88342,
-        diff: 5.6,
-        status: 1,
-      },
-      {
-        id: '3',
-
-        title: '总销售额',
-        account: 7245,
-        diff: 4.8,
-        status: 1,
-      },
-      {
-        id: '4',
-
+        id: 'rate',
         title: '转化率',
-        account: 42.8,
-        diff: 2.6,
+        account: 35.6,
+        diff: 3.2,
         status: 1,
       },
     ],
@@ -353,35 +339,31 @@ export const dashboardData: DashboardData[] = [
     orderTrend: orderTrendData,
     todayData: [
       {
-        id: '1',
-
+        id: 'userTotal',
         title: '今日访问量',
-        account: 2158,
-        diff: -3.4,
-        status: 0,
-      },
-      {
-        id: '2',
-
-        title: '今日订单数',
-        account: 168,
-        diff: 4.2,
+        account: 1726,
+        diff: 3,
         status: 1,
       },
       {
-        id: '3',
-
+        id: 'orderTotal',
+        title: '今日订单数',
+        account: 126,
+        diff: 2.3,
+        status: 1,
+      },
+      {
+        id: 'saleTotal',
         title: '今日销售额',
-        account: 10236,
-        diff: -1.5,
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '4',
-
+        id: 'newUserTotal',
         title: '新增用户数',
-        account: 134,
-        diff: 6.8,
+        account: 89,
+        diff: 3.2,
         status: 1,
       },
     ],
@@ -447,35 +429,31 @@ export const dashboardData: DashboardData[] = [
     cityId: 'shanghai',
     keyData: [
       {
-        id: '1',
-
+        id: 'user',
         title: '用户总数',
-        account: 97654,
-        diff: -2.1,
+        account: 128681,
+        diff: 3,
+        status: 1,
+      },
+      {
+        id: 'order',
+        title: '总订单数',
+        account: 128999,
+        diff: 2.3,
+        status: 1,
+      },
+      {
+        id: 'sale',
+        title: '总销售额',
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '2',
-
-        title: '总订单数',
-        account: 88342,
-        diff: 5.6,
-        status: 1,
-      },
-      {
-        id: '3',
-
-        title: '总销售额',
-        account: 7245,
-        diff: 4.8,
-        status: 1,
-      },
-      {
-        id: '4',
-
+        id: 'rate',
         title: '转化率',
-        account: 42.8,
-        diff: 2.6,
+        account: 35.6,
+        diff: 3.2,
         status: 1,
       },
     ],
@@ -483,35 +461,31 @@ export const dashboardData: DashboardData[] = [
     orderTrend: orderTrendData,
     todayData: [
       {
-        id: '1',
-
+        id: 'userTotal',
         title: '今日访问量',
-        account: 2158,
-        diff: -3.4,
-        status: 0,
-      },
-      {
-        id: '2',
-
-        title: '今日订单数',
-        account: 168,
-        diff: 4.2,
+        account: 1726,
+        diff: 3,
         status: 1,
       },
       {
-        id: '3',
-
+        id: 'orderTotal',
+        title: '今日订单数',
+        account: 126,
+        diff: 2.3,
+        status: 1,
+      },
+      {
+        id: 'saleTotal',
         title: '今日销售额',
-        account: 10236,
-        diff: -1.5,
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '4',
-
+        id: 'newUserTotal',
         title: '新增用户数',
-        account: 134,
-        diff: 6.8,
+        account: 89,
+        diff: 3.2,
         status: 1,
       },
     ],
@@ -576,35 +550,31 @@ export const dashboardData: DashboardData[] = [
     cityId: 'guangzhou',
     keyData: [
       {
-        id: '1',
-
+        id: 'user',
         title: '用户总数',
-        account: 97654,
-        diff: -2.1,
+        account: 128681,
+        diff: 3,
+        status: 1,
+      },
+      {
+        id: 'order',
+        title: '总订单数',
+        account: 128999,
+        diff: 2.3,
+        status: 1,
+      },
+      {
+        id: 'sale',
+        title: '总销售额',
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '2',
-
-        title: '总订单数',
-        account: 88342,
-        diff: 5.6,
-        status: 1,
-      },
-      {
-        id: '3',
-
-        title: '总销售额',
-        account: 7245,
-        diff: 4.8,
-        status: 1,
-      },
-      {
-        id: '4',
-
+        id: 'rate',
         title: '转化率',
-        account: 42.8,
-        diff: 2.6,
+        account: 35.6,
+        diff: 3.2,
         status: 1,
       },
     ],
@@ -705,35 +675,31 @@ export const dashboardData: DashboardData[] = [
     cityId: 'chengdu',
     keyData: [
       {
-        id: '1',
-
+        id: 'user',
         title: '用户总数',
-        account: 97654,
-        diff: -2.1,
+        account: 128681,
+        diff: 3,
+        status: 1,
+      },
+      {
+        id: 'order',
+        title: '总订单数',
+        account: 128999,
+        diff: 2.3,
+        status: 1,
+      },
+      {
+        id: 'sale',
+        title: '总销售额',
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '2',
-
-        title: '总订单数',
-        account: 88342,
-        diff: 5.6,
-        status: 1,
-      },
-      {
-        id: '3',
-
-        title: '总销售额',
-        account: 7245,
-        diff: 4.8,
-        status: 1,
-      },
-      {
-        id: '4',
-
+        id: 'rate',
         title: '转化率',
-        account: 42.8,
-        diff: 2.6,
+        account: 35.6,
+        diff: 3.2,
         status: 1,
       },
     ],
@@ -741,35 +707,31 @@ export const dashboardData: DashboardData[] = [
     orderTrend: orderTrendData,
     todayData: [
       {
-        id: '1',
-
+        id: 'userTotal',
         title: '今日访问量',
-        account: 2158,
-        diff: -3.4,
-        status: 0,
-      },
-      {
-        id: '2',
-
-        title: '今日订单数',
-        account: 168,
-        diff: 4.2,
+        account: 1726,
+        diff: 3,
         status: 1,
       },
       {
-        id: '3',
-
+        id: 'orderTotal',
+        title: '今日订单数',
+        account: 126,
+        diff: 2.3,
+        status: 1,
+      },
+      {
+        id: 'saleTotal',
         title: '今日销售额',
-        account: 10236,
-        diff: -1.5,
+        account: 8999,
+        diff: 1,
         status: 0,
       },
       {
-        id: '4',
-
+        id: 'newUserTotal',
         title: '新增用户数',
-        account: 134,
-        diff: 6.8,
+        account: 89,
+        diff: 3.2,
         status: 1,
       },
     ],

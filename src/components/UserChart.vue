@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
-import type { UserStatistics } from '@/types/dashboard'
+import type { UserStatistics } from '../../shared/types/dashboard'
 
 const props = withDefaults(
   defineProps<{

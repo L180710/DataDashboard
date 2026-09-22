@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HotProductList } from '@/types/dashboard'
+import type { HotProductList } from '../../shared/types/dashboard.js'
 
 defineProps<{
   list: HotProductList

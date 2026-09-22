@@ -16,11 +16,11 @@
 
 <script setup lang="ts">
 import Icon from './Icon.vue'
-import type { KeyDataList } from '@/types/dashboard.ts'
+import type { DataListItem } from '@/types/dataList.ts'
 
-defineProps<{
+const props = defineProps<{
   columns: number
-  list: KeyDataList
+  list: DataListItem[]
 }>()
 </script>
 

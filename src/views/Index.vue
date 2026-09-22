@@ -3,39 +3,43 @@
     <Header :selectedCity="selectedCity" @reset="handleResetNational" />
     <main class="main flex space-x">
       <aside class="main-left flex flex-col">
-        <!-- 核心指标 -->
         <moduleTemp title="核心指标">
-          <!-- <KeyDataCard /> -->
-          <DataList :columns="2" :list="keyDataList" />
+          <DataList v-if="dashboardData" :columns="2" :list="keyDataList" />
         </moduleTemp>
-        <!-- 销售额趋势 -->
+
         <moduleTemp title="销售额趋势" :flex="1">
-          <SalesChart :sale-trend-list="saleTrendList" />
+          <SalesChart v-if="dashboardData" :sale-trend-list="dashboardData?.salesTrend!" />
         </moduleTemp>
-        <!-- 订单数趋势 -->
+
         <moduleTemp title="订单数趋势" :flex="1">
-          <OrderChart :order-trend-list="orderTrendList" />
+          <OrderChart v-if="dashboardData" :order-trend-list="dashboardData?.orderTrend!" />
         </moduleTemp>
       </aside>
+
       <section class="main-center flex flex-col">
-        <!--今日数据 -->
-        <DataList :columns="4" :list="nowDataList" />
-        <!-- 地球 -->
-        <Earth :selectedCity="selectedCity" @select-city="handleSelectCity" />
-        <!-- 最新订单 -->
+        <DataList v-if="dashboardData" :columns="4" :list="todayDataList" />
+
+        <Earth v-if="dashboardData" :selectedCity="selectedCity" @select-city="handleSelectCity" />
+
         <moduleTemp title="最新订单">
-          <OrderLatestList :list="orderLatestList" />
+          <OrderLatestList v-if="dashboardData" :list="dashboardData?.latestOrders!" />
         </moduleTemp>
       </section>
+
       <aside class="main-right flex flex-col">
         <moduleTemp title="用户统计" :flex="1.2">
-          <UserChart :user-statistics="userStatistics" />
+          <UserChart v-if="dashboardData" :user-statistics="dashboardData?.userStatistics!" />
         </moduleTemp>
+
         <moduleTemp title="热门商品TOP5">
-          <HotProductList :list="hotProductList" />
+          <HotProductList v-if="dashboardData" :list="dashboardData?.hotProductData!" />
         </moduleTemp>
+
         <moduleTemp title="渠道来源占比" :flex="1">
-          <ChannelChart :channel-statistics="channelStatistics" />
+          <ChannelChart
+            v-if="dashboardData"
+            :channel-statistics="dashboardData?.channelStatistics!"
+          />
         </moduleTemp>
       </aside>
     </main>
@@ -43,7 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDashboardStore } from '@/stores/dashboard'
 import Header from '@/components/Header.vue'
 import moduleTemp from '@/components/common/ModuleTemp.vue'
 import DataList from '@/components/DataList.vue'
@@ -54,72 +60,38 @@ import OrderLatestList from '@/components/OrderLatestList.vue'
 import UserChart from '@/components/UserChart.vue'
 import HotProductList from '@/components/HotProductList.vue'
 import ChannelChart from '@/components/ChannelChart.vue'
+import { createDataList } from '@/utils/data/DataList'
 import type { CityPoint } from '@/data/earth'
-import { dashboardData } from '@/data/dashboard'
+
+const dashboardStore = useDashboardStore()
+const { selectedCityId, dashboardData, loading, error } = storeToRefs(dashboardStore)
+
+onMounted(async () => {
+  await dashboardStore.fetchDashboard('national')
+})
 
 // 选中城市
 const selectedCity = ref<CityPoint | null>(null)
 
 // 选中城市操作
-const handleSelectCity = (city: CityPoint) => {
+const handleSelectCity = async (city: CityPoint) => {
   selectedCity.value = city
-
-  // console.log('父组件收到城市：', city)
+  await dashboardStore.fetchDashboard(city.id!)
 }
 
-const currentDashboardData = computed(() => {
-  const cityId = selectedCity.value?.id ?? 'national'
-  return dashboardData.find((item) => item.cityId === cityId)
-})
-
-// 核心指标数据
+// 核心指标
 const keyDataList = computed(() => {
-  return currentDashboardData.value?.keyData ?? []
-})
-
-// 销售趋势
-const saleTrendList = computed(() => {
-  return currentDashboardData.value?.salesTrend ?? []
-})
-
-// 订单趋势
-const orderTrendList = computed(() => {
-  return currentDashboardData.value?.orderTrend ?? []
+  return createDataList(dashboardData.value?.keyData!, 'key')
 })
 
 // 今日数据
-const nowDataList = computed(() => {
-  return currentDashboardData.value?.todayData ?? []
-})
-
-// 最新订单
-const orderLatestList = computed(() => {
-  return currentDashboardData.value?.latestOrders ?? []
-})
-
-// 用户统计
-const userStatistics = computed(() => {
-  return (
-    currentDashboardData.value?.userStatistics ?? {
-      gender: [],
-      age: [],
-    }
-  )
-})
-
-// 热门商品 TOP 5
-const hotProductList = computed(() => {
-  return currentDashboardData.value?.hotProductData ?? []
-})
-
-// 渠道来源
-const channelStatistics = computed(() => {
-  return currentDashboardData.value?.channelStatistics ?? []
+const todayDataList = computed(() => {
+  return createDataList(dashboardData.value?.todayData!, 'today')
 })
 
 // 返回全国
-const handleResetNational = () => {
-  selectedCity.value = null
+const handleResetNational = async () => {
+  await dashboardStore.fetchDashboard('national')
 }
 </script>
 

@@ -1,4 +1,4 @@
-import type { DashboardData } from '../types/dashboard.js'
+import type { DashboardData } from '../../../shared/types/dashboard.js'
 import { dashboardData } from '../data/dashboard.js'
 
 // 根据 CityId 获取对应城市数据
