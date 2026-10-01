@@ -18,20 +18,21 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { type CityPoint, cityList } from '@/data/earth'
 import { lonLatToVector3 } from '@/utils/geo'
 import { createCityLabel } from '@/utils/cityLabel'
 import { createFlightLine } from '@/utils/earthLine'
 import { createChinaFills, createChinaBoundaries, boundaryGlowMaterials } from '@/utils/chinaGeo'
+import type { City } from '../../shared/types/city'
+import { getCities } from '@/api/city'
 
 // 向父组件发送事件
 const emit = defineEmits<{
-  selectCity: [city: CityPoint]
+  selectCity: [city: City]
 }>()
 
 // 接收父组件传递数据
 const props = defineProps<{
-  selectedCity: CityPoint | null
+  selectedCity: City | null
 }>()
 
 // 监听 selectedCity 变化，全国则重置地球视图
@@ -60,7 +61,7 @@ const tooltip = ref({
   visible: false,
   x: 0,
   y: 0,
-  city: null as CityPoint | null,
+  city: null as City | null,
 })
 
 let renderer: THREE.WebGLRenderer | null = null
@@ -102,7 +103,7 @@ let hoveredCity: THREE.Group | null = null
 let focusingCity: THREE.Group | null = null
 
 // 点击选中的城市
-const selectedCity = ref<CityPoint | null>(null)
+const selectedCity = ref<City | null>(null)
 
 // 聚焦城市当前的世界坐标
 const currentCityWorldPosition = new THREE.Vector3()
@@ -150,6 +151,9 @@ const focusDuration = 1200
 // Earth 旋转动画
 const earthStartQuaternion = new THREE.Quaternion()
 const earthEndQuaternion = new THREE.Quaternion()
+
+// 所有城市
+let cityList = ref<City[]>([])
 
 // 城市之间的链接
 const cityConnections = [
@@ -227,7 +231,7 @@ const initThree = async () => {
   createCityPoints()
 
   // 添加飞行线
-  createFlightLines()
+  // createFlightLines()
 
   // 添加粒子
   createFlightParticles()
@@ -323,7 +327,7 @@ const createStars = () => {
 }
 
 // 创建城市点修饰
-const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
+const createCityPoint = (position: THREE.Vector3, city: City) => {
   const group = new THREE.Group()
 
   // 核心点
@@ -452,10 +456,12 @@ const createCityPoint = (position: THREE.Vector3, city: CityPoint) => {
 }
 
 // 创建城市组
-const createCityPoints = () => {
+const createCityPoints = async () => {
   cityPoints = new THREE.Group()
 
-  cityList.forEach((city) => {
+  cityList.value = await getCities()
+
+  cityList.value.forEach((city) => {
     const position = lonLatToVector3(city.longitude!, city.latitude!, CITY_RADIUS)
 
     const { group, label, rings, core, glow, pillar } = createCityPoint(position, city)
@@ -474,11 +480,12 @@ const createCityPoints = () => {
     })
   })
   earth?.add(cityPoints)
+  createFlightLines()
 }
 
 // 获取城市点
 const getCityPoint = (name: string) => {
-  return cityList.find((city) => city.name === name)
+  return cityList.value.find((city: City) => city.name === name)
 }
 
 // 创建飞行线
@@ -595,7 +602,7 @@ const handleClick = () => {
     return
   }
 
-  const city = hoveredCity.userData.city as CityPoint
+  const city = hoveredCity.userData.city as City
 
   selectedCity.value = city
 
@@ -706,7 +713,7 @@ const setHoverCity = (cityGroup: THREE.Object3D) => {
 
   hoveredCity = cityGroup as THREE.Group
 
-  const city = hoveredCity.userData.city as CityPoint
+  const city = hoveredCity.userData.city as City
 
   tooltip.value.city = city
   tooltip.value.visible = true

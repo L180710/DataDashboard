@@ -3,11 +3,12 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "types": ["node"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "dist",
     "rootDir": ".."
   },
-  "include": ["src", "../shared", "../src/types/dataList.ts"]
+  "include": ["src", "prisma", "../shared", "../src/types/dataList.ts"]
 }

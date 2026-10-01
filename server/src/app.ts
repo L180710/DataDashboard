@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
-import cityRouter from './routes/city.js'
+// import cityRouter from './routes/city.js'
+import cityRouter from './routes/city2.js'
 import dashboardRouter from './routes/dashboard.js'
 
 const app = express()

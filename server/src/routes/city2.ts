@@ -1,11 +1,12 @@
 import { Router } from 'express'
-import { prisma } from '../lib/prisma.js'
+// import { prisma } from '../lib/prisma.js'
+import { getCityList } from '../services/city.service.js'
 
 const router = Router()
 
 router.get('/', async (_req, res) => {
   try {
-    const cities = await prisma.city.findMany()
+    const cities = await getCityList()
     res.json(cities)
   } catch (error) {
     console.log(error)
