@@ -7,13 +7,98 @@ datasource db {
   provider = "mysql"
 }
 
+// 城市
 model City {
   id        Int      @id @default(autoincrement())
   cityId    String   @unique
   name      String
+  cfg       String
   longitude Float
   latitude  Float
+  scale     Float    @default(1.0)
   value     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  keyData       KeyData[]
+  salesTrend    SalesTrend[]
+  orderTrend    OrderTrend[]
+  todayData     TodayData[]
+  latestOrder   LatestOrder[]
+}
+
+// 核心指标
+model KeyData {
+  id       Int    @id @default(autoincrement())
+
+  cityId   String
+  metricId String
+
+  title    String
+
+  account  Float
+  diff     Float
+  status   Int
+
+  city City @relation(fields: [cityId], references: [cityId])
+
+  @@unique([cityId, metricId])
+}
+
+//销售趋势
+model SalesTrend {
+  id       Int        @id  @default(autoincrement())
+
+  cityId   String
+  date     DateTime
+  value    Float
+
+  city     City    @relation(fields: [cityId], references: [cityId])
+
+  @@unique([cityId, date])
+}
+
+// 订单趋势
+model OrderTrend {
+  id        Int        @id  @default(autoincrement())
+
+  cityId    String
+  date      DateTime
+  value     Float
+
+  city      City  @relation(fields: [cityId], references: [cityId])
+
+  @@unique([cityId, date])
+}
+
+// 今日数据
+model TodayData {
+  id       Int    @id @default(autoincrement())
+
+  cityId   String
+  metricId String
+
+  title    String
+
+  account  Float
+  diff     Float
+  status   Int
+
+  city City @relation(fields: [cityId], references: [cityId])
+
+  @@unique([cityId, metricId])
+}
+
+// 最新订单
+model LatestOrder {
+  id            Int       @id @default(autoincrement())
+  orderId       String    @unique
+  cityId        String
+  userName      String
+  productName   String
+  amount        Float
+  status        Int
+  createdAt      DateTime   @default(now())
+
+  city          City       @relation(fields: [cityId], references: [cityId])
+
+  @@index([cityId, createdAt])
 }

@@ -51,7 +51,12 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  City: 'City'
+  City: 'City',
+  KeyData: 'KeyData',
+  SalesTrend: 'SalesTrend',
+  OrderTrend: 'OrderTrend',
+  TodayData: 'TodayData',
+  LatestOrder: 'LatestOrder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -74,14 +79,74 @@ export const CityScalarFieldEnum = {
   id: 'id',
   cityId: 'cityId',
   name: 'name',
+  cfg: 'cfg',
   longitude: 'longitude',
   latitude: 'latitude',
-  value: 'value',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  scale: 'scale',
+  value: 'value'
 } as const
 
 export type CityScalarFieldEnum = (typeof CityScalarFieldEnum)[keyof typeof CityScalarFieldEnum]
+
+
+export const KeyDataScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title',
+  account: 'account',
+  diff: 'diff',
+  status: 'status'
+} as const
+
+export type KeyDataScalarFieldEnum = (typeof KeyDataScalarFieldEnum)[keyof typeof KeyDataScalarFieldEnum]
+
+
+export const SalesTrendScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  date: 'date',
+  value: 'value'
+} as const
+
+export type SalesTrendScalarFieldEnum = (typeof SalesTrendScalarFieldEnum)[keyof typeof SalesTrendScalarFieldEnum]
+
+
+export const OrderTrendScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  date: 'date',
+  value: 'value'
+} as const
+
+export type OrderTrendScalarFieldEnum = (typeof OrderTrendScalarFieldEnum)[keyof typeof OrderTrendScalarFieldEnum]
+
+
+export const TodayDataScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title',
+  account: 'account',
+  diff: 'diff',
+  status: 'status'
+} as const
+
+export type TodayDataScalarFieldEnum = (typeof TodayDataScalarFieldEnum)[keyof typeof TodayDataScalarFieldEnum]
+
+
+export const LatestOrderScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  cityId: 'cityId',
+  userName: 'userName',
+  productName: 'productName',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type LatestOrderScalarFieldEnum = (typeof LatestOrderScalarFieldEnum)[keyof typeof LatestOrderScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -94,8 +159,51 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 export const CityOrderByRelevanceFieldEnum = {
   cityId: 'cityId',
-  name: 'name'
+  name: 'name',
+  cfg: 'cfg'
 } as const
 
 export type CityOrderByRelevanceFieldEnum = (typeof CityOrderByRelevanceFieldEnum)[keyof typeof CityOrderByRelevanceFieldEnum]
+
+
+export const KeyDataOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title'
+} as const
+
+export type KeyDataOrderByRelevanceFieldEnum = (typeof KeyDataOrderByRelevanceFieldEnum)[keyof typeof KeyDataOrderByRelevanceFieldEnum]
+
+
+export const SalesTrendOrderByRelevanceFieldEnum = {
+  cityId: 'cityId'
+} as const
+
+export type SalesTrendOrderByRelevanceFieldEnum = (typeof SalesTrendOrderByRelevanceFieldEnum)[keyof typeof SalesTrendOrderByRelevanceFieldEnum]
+
+
+export const OrderTrendOrderByRelevanceFieldEnum = {
+  cityId: 'cityId'
+} as const
+
+export type OrderTrendOrderByRelevanceFieldEnum = (typeof OrderTrendOrderByRelevanceFieldEnum)[keyof typeof OrderTrendOrderByRelevanceFieldEnum]
+
+
+export const TodayDataOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title'
+} as const
+
+export type TodayDataOrderByRelevanceFieldEnum = (typeof TodayDataOrderByRelevanceFieldEnum)[keyof typeof TodayDataOrderByRelevanceFieldEnum]
+
+
+export const LatestOrderOrderByRelevanceFieldEnum = {
+  orderId: 'orderId',
+  cityId: 'cityId',
+  userName: 'userName',
+  productName: 'productName'
+} as const
+
+export type LatestOrderOrderByRelevanceFieldEnum = (typeof LatestOrderOrderByRelevanceFieldEnum)[keyof typeof LatestOrderOrderByRelevanceFieldEnum]
 

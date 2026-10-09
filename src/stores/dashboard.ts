@@ -1,36 +1,152 @@
+// 这个能正常对接了，把 dashboard.ts 去掉
 import { defineStore } from 'pinia'
-import { getDashboardData } from '@/api/dashboard'
-import type { DashboardData } from '../../shared/types/dashboard'
+import { ref, computed } from 'vue'
+import type { DataItem, TrendItem, OrderRencentItem } from '../../shared/types/dashboard'
+import { createDataList } from '@/utils/data/DataList'
+import {
+  getKeyData,
+  getSalesTrend,
+  getOrderTrend,
+  getTodayData,
+  getLatestOrder,
+} from '@/api/dashboard'
 
-interface DashboardState {
-  selectedCityId: string
-  dashboardData: DashboardData | null
-  loading: boolean
-  error: string | null
-}
+export const useDashboardStore = defineStore('dashboard', () => {
+  // 当前城市
+  const selectedCityId = ref<string | null>(null)
 
-export const useDashboardStore = defineStore('dashboard', {
-  state: (): DashboardState => ({
-    selectedCityId: 'national',
-    dashboardData: null,
-    loading: false,
-    error: null,
-  }),
+  /**  各模块数据 */
+  // 核心指标
+  const keyData = ref<DataItem[] | null>(null)
+  // 核心指标加工后的数据
+  const processedKeyData = computed(() => {
+    if (!keyData.value) return []
+    return createDataList(keyData.value!, 'key')
+  })
 
-  actions: {
-    async fetchDashboard(cityId: string) {
-      this.selectedCityId = cityId
-      this.loading = true
-      this.error = null
+  // 销售趋势
+  const salesTrend = ref<TrendItem[] | null>(null)
 
-      try {
-        this.dashboardData = await getDashboardData(cityId)
-      } catch (error) {
-        this.error = error instanceof Error ? error.message : '获取大屏数据失败'
-        this.dashboardData = null
-      } finally {
-        this.loading = false
+  // 订单趋势
+  const orderTrend = ref<TrendItem[] | null>(null)
+
+  // 今日数据
+  const todayData = ref<DataItem[] | null>(null)
+
+  // 最新订单
+  const latestOrder = ref<OrderRencentItem[] | null>(null)
+
+  // 今日数据加工后数据
+  const processedTodayData = computed(() => {
+    if (!todayData.value) return []
+    return createDataList(todayData.value!, 'today')
+  })
+
+  // 请求状态
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+
+  /**
+   * 切换城市
+   * @param cityId - 城市 ID
+   */
+  const selectCity = (cityId: string) => {
+    selectedCityId.value = cityId
+    getDashboardData(cityId)
+  }
+
+  /**
+   * 根据城市 ID 获取各模块数据
+   * @param cityId - 城市 ID
+   */
+  const getDashboardData = async (cityId: string) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const [
+        keyDataResult,
+        salesTrendResult,
+        orderTrendResult,
+        todayDataResult,
+        latestOrderResult,
+      ] = await Promise.allSettled([
+        getKeyData(cityId),
+        getSalesTrend(cityId),
+        getOrderTrend(cityId),
+        getTodayData(cityId),
+        getLatestOrder(cityId),
+      ])
+
+      // 核心指标
+      if (keyDataResult.status === 'fulfilled') {
+        keyData.value = keyDataResult.value
+      } else {
+        keyData.value = null
+        console.error('核心指标获取失败：', keyDataResult.reason)
       }
-    },
-  },
+
+      // 销售趋势
+      if (salesTrendResult.status === 'fulfilled') {
+        salesTrend.value = salesTrendResult.value
+      } else {
+        salesTrend.value = null
+        console.error('销售趋势获取失败', salesTrendResult.reason)
+      }
+
+      // 订单趋势
+      if (orderTrendResult.status === 'fulfilled') {
+        orderTrend.value = orderTrendResult.value
+      } else {
+        orderTrend.value = null
+        console.error('订单趋势获取失败', orderTrendResult.reason)
+      }
+
+      // 今日数据
+      if (todayDataResult.status === 'fulfilled') {
+        todayData.value = todayDataResult.value
+      } else {
+        todayData.value = null
+        console.error('今日数据获取失败')
+      }
+
+      // 最新订单
+      if (latestOrderResult.status === 'fulfilled') {
+        latestOrder.value = latestOrderResult.value
+      } else {
+        latestOrder.value = null
+        console.error('最新订单数据获取失败')
+      }
+
+      // 如果全部失败，则给全局 error
+      const allFailed = keyDataResult.status === 'rejected'
+      if (allFailed) {
+        error.value = '获取 Dashboard 数据失败'
+      }
+    } catch (err) {
+      console.error(err)
+      error.value = err instanceof Error ? err.message : '获取 Dashboard 数据失败'
+    } finally {
+      loading.value = false
+    }
+  }
+  return {
+    // 城市
+    selectedCityId,
+
+    // 各模块数据
+    keyData,
+    processedKeyData,
+    salesTrend,
+    orderTrend,
+    processedTodayData,
+    latestOrder,
+
+    // 状态
+    loading,
+    error,
+
+    // 方法
+    selectCity,
+  }
 })

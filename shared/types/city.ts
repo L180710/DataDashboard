@@ -1,12 +1,12 @@
 export interface City {
-  id: string
+  id?: string
   cityId: string
   name: string
+  cfg: string
   longitude: number
   latitude: number
-  value: number
-  createdAt: string
-  updatedAt: string
+  scale: number
+  value?: number
 }
 
 export interface CityConnection {

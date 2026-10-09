@@ -1,3 +1,4 @@
+// 应该可删
 import type { DashboardData } from '../../../shared/types/dashboard.js'
 import { dashboardData } from '../data/dashboard.js'
 

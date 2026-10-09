@@ -1,32 +1,32 @@
 <template>
   <div class="wrapper flex flex-col">
-    <Header :selectedCity="selectedCity" @reset="handleResetNational" />
+    <!-- <Header :selectedCity="selectedCity" @reset="handleResetNational" /> -->
     <main class="main flex space-x">
       <aside class="main-left flex flex-col">
         <moduleTemp title="核心指标">
-          <DataList v-if="dashboardData" :columns="2" :list="keyDataList" />
-        </moduleTemp>
-
-        <moduleTemp title="销售额趋势" :flex="1">
-          <SalesChart v-if="dashboardData" :sale-trend-list="dashboardData?.salesTrend!" />
+          <DataList v-if="selectedCityId" :columns="2" :list="processedKeyData" />
         </moduleTemp>
 
         <moduleTemp title="订单数趋势" :flex="1">
-          <OrderChart v-if="dashboardData" :order-trend-list="dashboardData?.orderTrend!" />
+          <OrderChart v-if="orderTrend" :order-trend-list="orderTrend" />
+        </moduleTemp>
+
+        <moduleTemp title="销售额趋势" :flex="1">
+          <SalesChart v-if="salesTrend" :sale-trend-list="salesTrend" />
         </moduleTemp>
       </aside>
 
       <section class="main-center flex flex-col">
-        <DataList v-if="dashboardData" :columns="4" :list="todayDataList" />
+        <DataList v-if="selectedCityId" :columns="4" :list="processedTodayData" />
 
-        <Earth v-if="dashboardData" :selectedCity="selectedCity" @select-city="handleSelectCity" />
+        <!-- <Earth v-if="selectedCityId" :selectedCity="selectedCity" @select-city="handleSelectCity" /> -->
 
         <moduleTemp title="最新订单">
-          <OrderLatestList v-if="dashboardData" :list="dashboardData?.latestOrders!" />
+          <OrderLatestList v-if="latestOrder" :list="latestOrder" />
         </moduleTemp>
       </section>
 
-      <aside class="main-right flex flex-col">
+      <!-- <aside class="main-right flex flex-col">
         <moduleTemp title="用户统计" :flex="1.2">
           <UserChart v-if="dashboardData" :user-statistics="dashboardData?.userStatistics!" />
         </moduleTemp>
@@ -41,13 +41,13 @@
             :channel-statistics="dashboardData?.channelStatistics!"
           />
         </moduleTemp>
-      </aside>
+      </aside> -->
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDashboardStore } from '@/stores/dashboard'
 import Header from '@/components/Header.vue'
@@ -61,38 +61,55 @@ import UserChart from '@/components/UserChart.vue'
 import HotProductList from '@/components/HotProductList.vue'
 import ChannelChart from '@/components/ChannelChart.vue'
 import { createDataList } from '@/utils/data/DataList'
-import type { CityPoint } from '@/data/earth'
+import type { City } from '../../shared/types/city'
 
 const dashboardStore = useDashboardStore()
-const { selectedCityId, dashboardData, loading, error } = storeToRefs(dashboardStore)
 
-onMounted(async () => {
-  await dashboardStore.fetchDashboard('national')
-})
+// 响应状态
+const {
+  selectedCityId,
+  processedKeyData,
+  salesTrend,
+  orderTrend,
+  processedTodayData,
+  latestOrder,
+  loading,
+  error,
+} = storeToRefs(dashboardStore)
+
+// 响应方法
+const { selectCity } = dashboardStore
 
 // 选中城市
-const selectedCity = ref<CityPoint | null>(null)
+const selectedCity = ref<City | null>(null)
+
+onMounted(() => {
+  // todo: 这里暂时默认选中的北京，后面对接完各模块数据后，再处理
+  handleSelectCity({ cityId: 'beijing' })
+})
 
 // 选中城市操作
-const handleSelectCity = async (city: CityPoint) => {
+const handleSelectCity = (city: City) => {
   selectedCity.value = city
-  await dashboardStore.fetchDashboard(city.id!)
+  selectCity(selectedCity.value.cityId)
 }
-
-// 核心指标
-const keyDataList = computed(() => {
-  return createDataList(dashboardData.value?.keyData!, 'key')
-})
 
 // 今日数据
-const todayDataList = computed(() => {
-  return createDataList(dashboardData.value?.todayData!, 'today')
-})
+// const todayDataList = computed(() => {
+//   return createDataList(dashboardData.value?.todayData!, 'today')
+// })
 
-// 返回全国
-const handleResetNational = async () => {
-  await dashboardStore.fetchDashboard('national')
-}
+// // 选中城市操作
+// const handleSelectCity = async (city: City) => {
+//   selectedCity.value = city
+
+//   await dashboardStoreDel.fetchDashboard(city.id!)
+// }
+
+// // 返回全国
+// const handleResetNational = async () => {
+//   await dashboardStoreDel.fetchDashboard('national')
+// }
 </script>
 
 <style lang="less" scoped>

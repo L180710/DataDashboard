@@ -77,11 +77,11 @@
 </template>
 
 <script setup lang="ts">
-import type { CityPoint } from '@/data/earth'
+import type { City } from '../../shared/types/city'
 
 // 接收父组件的属性
 defineProps<{
-  selectedCity: CityPoint | null
+  selectedCity: City | null
 }>()
 
 // 向父组件发送事件

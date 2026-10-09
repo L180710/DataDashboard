@@ -6,7 +6,7 @@ import { keyUIList, todayUIList } from '@/data/dataUIList'
 export const createDataList = (list: DataItem[], typeStr: string): DataListItem[] => {
   return list.map((item) => {
     const lst = typeStr === 'key' ? keyUIList : todayUIList
-    const uiItem = lst[item.id]!
+    const uiItem = lst[item.metricId]!
     return {
       ...item,
       icon: uiItem.icon,

@@ -1,3 +1,11 @@
+// 日期格式化
+export const formatDate = (date: Date) => {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${month}-${day}`
+}
+
+// todo，对接完数据可删
 export const getLast7Days = () => {
   const result: string[] = []
 

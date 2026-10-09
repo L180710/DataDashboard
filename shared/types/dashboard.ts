@@ -1,6 +1,8 @@
 // 核心指标、今日数据
 export interface DataItem {
   id: string
+  cityId: string
+  metricId: string
   title: string
   account: number
   diff: number
@@ -9,22 +11,23 @@ export interface DataItem {
 export type DataList = DataItem[]
 
 // 销售趋势、订单数趋势
-export interface OrderDataItem {
-  date: string
+export interface TrendItem {
+  name: string
   value: number
 }
-export type OrderTrendList = OrderDataItem[]
-export type SalesTrendList = OrderDataItem[]
+export type OrderTrendList = TrendItem[]
+export type SalesTrendList = TrendItem[]
 
 // 最新订单
 export interface OrderRencentItem {
   id: string
-  orderNum: string
+  cityId: string
+  orderId: string
   userName: string
   productName: string
-  price: number
-  time: string
-  state: 0 | 1 | 2 // 0 待发货，1 已发货，2 已完成
+  amount: number
+  createdAt: string
+  status: 0 | 1 | 2 // 0 待发货，1 已发货，2 已完成
 }
 export type OrderLatestList = OrderRencentItem[]
 

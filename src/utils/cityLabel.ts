@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import type { CityPoint } from '@/data/earth'
+import type { City } from '../../shared/types/city'
 
-export function createCityLabel(city: CityPoint) {
+export function createCityLabel(city: City) {
   const canvas = document.createElement('canvas')
   canvas.width = 256
   canvas.height = 80

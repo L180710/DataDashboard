@@ -2,40 +2,18 @@ import type { City, CityConnection } from '../../../shared/types/city.js'
 
 export const cities: City[] = [
   {
-    id: 'beijing',
+    cityId: 'beijing',
     name: '北京',
+    cfg: 'BG',
     longitude: 116.405285,
     latitude: 39.904989,
-    value: 12568,
+    scale: 1.2,
   },
-  {
-    id: 'shanghai',
-    name: '上海',
-    longitude: 121.5,
-    latitude: 31.2,
-    value: 9845,
-  },
-  {
-    id: 'guangzhou',
-    name: '广州',
-    longitude: 113.3,
-    latitude: 23.1,
-    value: 7245,
-  },
-  {
-    id: 'chengdu',
-    name: '成都',
-    longitude: 104.1,
-    latitude: 30.7,
-    value: 5687,
-  },
-  {
-    id: 'shenzhen',
-    name: '深圳',
-    longitude: 114.1,
-    latitude: 22.5,
-    value: 5321,
-  },
+  { cityId: 'shanghai', name: '上海', cfg: 'SH', longitude: 121.5, latitude: 31.2, scale: 1.35 },
+  { cityId: 'guangzhou', name: '广州', cfg: 'GZ', longitude: 113.3, latitude: 23.1, scale: 0.95 },
+  { cityId: 'chengdu', name: '成都', cfg: 'CD', longitude: 104.1, latitude: 30.7, scale: 0.8 },
+  { cityId: 'shenzhen', name: '深圳', cfg: 'SZ', longitude: 114.1, latitude: 22.5, scale: 1.3 },
+  { cityId: 'hangzhou', name: '杭州', cfg: 'HZ', longitude: 120.15, latitude: 30.28, scale: 1.05 },
 ]
 
 export const cityConnections: CityConnection[] = [
@@ -54,5 +32,9 @@ export const cityConnections: CityConnection[] = [
   {
     from: 'beijing',
     to: 'chengdu',
+  },
+  {
+    from: 'beijing',
+    to: 'hangzhou',
   },
 ]

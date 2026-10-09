@@ -30,6 +30,7 @@ export type CityAvgAggregateOutputType = {
   id: number | null
   longitude: number | null
   latitude: number | null
+  scale: number | null
   value: number | null
 }
 
@@ -37,6 +38,7 @@ export type CitySumAggregateOutputType = {
   id: number | null
   longitude: number | null
   latitude: number | null
+  scale: number | null
   value: number | null
 }
 
@@ -44,33 +46,33 @@ export type CityMinAggregateOutputType = {
   id: number | null
   cityId: string | null
   name: string | null
+  cfg: string | null
   longitude: number | null
   latitude: number | null
+  scale: number | null
   value: number | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type CityMaxAggregateOutputType = {
   id: number | null
   cityId: string | null
   name: string | null
+  cfg: string | null
   longitude: number | null
   latitude: number | null
+  scale: number | null
   value: number | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type CityCountAggregateOutputType = {
   id: number
   cityId: number
   name: number
+  cfg: number
   longitude: number
   latitude: number
+  scale: number
   value: number
-  createdAt: number
-  updatedAt: number
   _all: number
 }
 
@@ -79,6 +81,7 @@ export type CityAvgAggregateInputType = {
   id?: true
   longitude?: true
   latitude?: true
+  scale?: true
   value?: true
 }
 
@@ -86,6 +89,7 @@ export type CitySumAggregateInputType = {
   id?: true
   longitude?: true
   latitude?: true
+  scale?: true
   value?: true
 }
 
@@ -93,33 +97,33 @@ export type CityMinAggregateInputType = {
   id?: true
   cityId?: true
   name?: true
+  cfg?: true
   longitude?: true
   latitude?: true
+  scale?: true
   value?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type CityMaxAggregateInputType = {
   id?: true
   cityId?: true
   name?: true
+  cfg?: true
   longitude?: true
   latitude?: true
+  scale?: true
   value?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type CityCountAggregateInputType = {
   id?: true
   cityId?: true
   name?: true
+  cfg?: true
   longitude?: true
   latitude?: true
+  scale?: true
   value?: true
-  createdAt?: true
-  updatedAt?: true
   _all?: true
 }
 
@@ -213,11 +217,11 @@ export type CityGroupByOutputType = {
   id: number
   cityId: string
   name: string
+  cfg: string
   longitude: number
   latitude: number
+  scale: number
   value: number
-  createdAt: Date
-  updatedAt: Date
   _count: CityCountAggregateOutputType | null
   _avg: CityAvgAggregateOutputType | null
   _sum: CitySumAggregateOutputType | null
@@ -247,22 +251,32 @@ export type CityWhereInput = {
   id?: Prisma.IntFilter<"City"> | number
   cityId?: Prisma.StringFilter<"City"> | string
   name?: Prisma.StringFilter<"City"> | string
+  cfg?: Prisma.StringFilter<"City"> | string
   longitude?: Prisma.FloatFilter<"City"> | number
   latitude?: Prisma.FloatFilter<"City"> | number
+  scale?: Prisma.FloatFilter<"City"> | number
   value?: Prisma.IntFilter<"City"> | number
-  createdAt?: Prisma.DateTimeFilter<"City"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"City"> | Date | string
+  keyData?: Prisma.KeyDataListRelationFilter
+  salesTrend?: Prisma.SalesTrendListRelationFilter
+  orderTrend?: Prisma.OrderTrendListRelationFilter
+  todayData?: Prisma.TodayDataListRelationFilter
+  latestOrder?: Prisma.LatestOrderListRelationFilter
 }
 
 export type CityOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  cfg?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
+  scale?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  keyData?: Prisma.KeyDataOrderByRelationAggregateInput
+  salesTrend?: Prisma.SalesTrendOrderByRelationAggregateInput
+  orderTrend?: Prisma.OrderTrendOrderByRelationAggregateInput
+  todayData?: Prisma.TodayDataOrderByRelationAggregateInput
+  latestOrder?: Prisma.LatestOrderOrderByRelationAggregateInput
   _relevance?: Prisma.CityOrderByRelevanceInput
 }
 
@@ -273,22 +287,27 @@ export type CityWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CityWhereInput[]
   NOT?: Prisma.CityWhereInput | Prisma.CityWhereInput[]
   name?: Prisma.StringFilter<"City"> | string
+  cfg?: Prisma.StringFilter<"City"> | string
   longitude?: Prisma.FloatFilter<"City"> | number
   latitude?: Prisma.FloatFilter<"City"> | number
+  scale?: Prisma.FloatFilter<"City"> | number
   value?: Prisma.IntFilter<"City"> | number
-  createdAt?: Prisma.DateTimeFilter<"City"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"City"> | Date | string
+  keyData?: Prisma.KeyDataListRelationFilter
+  salesTrend?: Prisma.SalesTrendListRelationFilter
+  orderTrend?: Prisma.OrderTrendListRelationFilter
+  todayData?: Prisma.TodayDataListRelationFilter
+  latestOrder?: Prisma.LatestOrderListRelationFilter
 }, "id" | "cityId">
 
 export type CityOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  cfg?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
+  scale?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   _count?: Prisma.CityCountOrderByAggregateInput
   _avg?: Prisma.CityAvgOrderByAggregateInput
   _max?: Prisma.CityMaxOrderByAggregateInput
@@ -303,85 +322,105 @@ export type CityScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"City"> | number
   cityId?: Prisma.StringWithAggregatesFilter<"City"> | string
   name?: Prisma.StringWithAggregatesFilter<"City"> | string
+  cfg?: Prisma.StringWithAggregatesFilter<"City"> | string
   longitude?: Prisma.FloatWithAggregatesFilter<"City"> | number
   latitude?: Prisma.FloatWithAggregatesFilter<"City"> | number
+  scale?: Prisma.FloatWithAggregatesFilter<"City"> | number
   value?: Prisma.IntWithAggregatesFilter<"City"> | number
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"City"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"City"> | Date | string
 }
 
 export type CityCreateInput = {
   cityId: string
   name: string
+  cfg: string
   longitude: number
   latitude: number
+  scale?: number
   value?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
 }
 
 export type CityUncheckedCreateInput = {
   id?: number
   cityId: string
   name: string
+  cfg: string
   longitude: number
   latitude: number
+  scale?: number
   value?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
 }
 
 export type CityUpdateInput = {
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
   value?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
 }
 
 export type CityUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
   value?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
 }
 
 export type CityCreateManyInput = {
   id?: number
   cityId: string
   name: string
+  cfg: string
   longitude: number
   latitude: number
+  scale?: number
   value?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type CityUpdateManyMutationInput = {
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
   value?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CityUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   cityId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
   longitude?: Prisma.FloatFieldUpdateOperationsInput | number
   latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
   value?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CityOrderByRelevanceInput = {
@@ -394,17 +433,18 @@ export type CityCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  cfg?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
+  scale?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type CityAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
+  scale?: Prisma.SortOrder
   value?: Prisma.SortOrder
 }
 
@@ -412,29 +452,35 @@ export type CityMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  cfg?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
+  scale?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type CityMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   cityId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  cfg?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
+  scale?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type CitySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
+  scale?: Prisma.SortOrder
   value?: Prisma.SortOrder
+}
+
+export type CityScalarRelationFilter = {
+  is?: Prisma.CityWhereInput
+  isNot?: Prisma.CityWhereInput
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -457,21 +503,528 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type CityCreateNestedOneWithoutKeyDataInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutKeyDataInput, Prisma.CityUncheckedCreateWithoutKeyDataInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutKeyDataInput
+  connect?: Prisma.CityWhereUniqueInput
 }
 
+export type CityUpdateOneRequiredWithoutKeyDataNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutKeyDataInput, Prisma.CityUncheckedCreateWithoutKeyDataInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutKeyDataInput
+  upsert?: Prisma.CityUpsertWithoutKeyDataInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutKeyDataInput, Prisma.CityUpdateWithoutKeyDataInput>, Prisma.CityUncheckedUpdateWithoutKeyDataInput>
+}
+
+export type CityCreateNestedOneWithoutSalesTrendInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutSalesTrendInput, Prisma.CityUncheckedCreateWithoutSalesTrendInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutSalesTrendInput
+  connect?: Prisma.CityWhereUniqueInput
+}
+
+export type CityUpdateOneRequiredWithoutSalesTrendNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutSalesTrendInput, Prisma.CityUncheckedCreateWithoutSalesTrendInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutSalesTrendInput
+  upsert?: Prisma.CityUpsertWithoutSalesTrendInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutSalesTrendInput, Prisma.CityUpdateWithoutSalesTrendInput>, Prisma.CityUncheckedUpdateWithoutSalesTrendInput>
+}
+
+export type CityCreateNestedOneWithoutOrderTrendInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutOrderTrendInput, Prisma.CityUncheckedCreateWithoutOrderTrendInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutOrderTrendInput
+  connect?: Prisma.CityWhereUniqueInput
+}
+
+export type CityUpdateOneRequiredWithoutOrderTrendNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutOrderTrendInput, Prisma.CityUncheckedCreateWithoutOrderTrendInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutOrderTrendInput
+  upsert?: Prisma.CityUpsertWithoutOrderTrendInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutOrderTrendInput, Prisma.CityUpdateWithoutOrderTrendInput>, Prisma.CityUncheckedUpdateWithoutOrderTrendInput>
+}
+
+export type CityCreateNestedOneWithoutTodayDataInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutTodayDataInput, Prisma.CityUncheckedCreateWithoutTodayDataInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutTodayDataInput
+  connect?: Prisma.CityWhereUniqueInput
+}
+
+export type CityUpdateOneRequiredWithoutTodayDataNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutTodayDataInput, Prisma.CityUncheckedCreateWithoutTodayDataInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutTodayDataInput
+  upsert?: Prisma.CityUpsertWithoutTodayDataInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutTodayDataInput, Prisma.CityUpdateWithoutTodayDataInput>, Prisma.CityUncheckedUpdateWithoutTodayDataInput>
+}
+
+export type CityCreateNestedOneWithoutLatestOrderInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutLatestOrderInput, Prisma.CityUncheckedCreateWithoutLatestOrderInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutLatestOrderInput
+  connect?: Prisma.CityWhereUniqueInput
+}
+
+export type CityUpdateOneRequiredWithoutLatestOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutLatestOrderInput, Prisma.CityUncheckedCreateWithoutLatestOrderInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutLatestOrderInput
+  upsert?: Prisma.CityUpsertWithoutLatestOrderInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutLatestOrderInput, Prisma.CityUpdateWithoutLatestOrderInput>, Prisma.CityUncheckedUpdateWithoutLatestOrderInput>
+}
+
+export type CityCreateWithoutKeyDataInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutKeyDataInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutKeyDataInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutKeyDataInput, Prisma.CityUncheckedCreateWithoutKeyDataInput>
+}
+
+export type CityUpsertWithoutKeyDataInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutKeyDataInput, Prisma.CityUncheckedUpdateWithoutKeyDataInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutKeyDataInput, Prisma.CityUncheckedCreateWithoutKeyDataInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutKeyDataInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutKeyDataInput, Prisma.CityUncheckedUpdateWithoutKeyDataInput>
+}
+
+export type CityUpdateWithoutKeyDataInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutKeyDataInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+}
+
+export type CityCreateWithoutSalesTrendInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutSalesTrendInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutSalesTrendInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutSalesTrendInput, Prisma.CityUncheckedCreateWithoutSalesTrendInput>
+}
+
+export type CityUpsertWithoutSalesTrendInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutSalesTrendInput, Prisma.CityUncheckedUpdateWithoutSalesTrendInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutSalesTrendInput, Prisma.CityUncheckedCreateWithoutSalesTrendInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutSalesTrendInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutSalesTrendInput, Prisma.CityUncheckedUpdateWithoutSalesTrendInput>
+}
+
+export type CityUpdateWithoutSalesTrendInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutSalesTrendInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+}
+
+export type CityCreateWithoutOrderTrendInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutOrderTrendInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutOrderTrendInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutOrderTrendInput, Prisma.CityUncheckedCreateWithoutOrderTrendInput>
+}
+
+export type CityUpsertWithoutOrderTrendInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutOrderTrendInput, Prisma.CityUncheckedUpdateWithoutOrderTrendInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutOrderTrendInput, Prisma.CityUncheckedCreateWithoutOrderTrendInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutOrderTrendInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutOrderTrendInput, Prisma.CityUncheckedUpdateWithoutOrderTrendInput>
+}
+
+export type CityUpdateWithoutOrderTrendInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutOrderTrendInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+}
+
+export type CityCreateWithoutTodayDataInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutTodayDataInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutTodayDataInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutTodayDataInput, Prisma.CityUncheckedCreateWithoutTodayDataInput>
+}
+
+export type CityUpsertWithoutTodayDataInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutTodayDataInput, Prisma.CityUncheckedUpdateWithoutTodayDataInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutTodayDataInput, Prisma.CityUncheckedCreateWithoutTodayDataInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutTodayDataInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutTodayDataInput, Prisma.CityUncheckedUpdateWithoutTodayDataInput>
+}
+
+export type CityUpdateWithoutTodayDataInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutTodayDataInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+}
+
+export type CityCreateWithoutLatestOrderInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutLatestOrderInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutLatestOrderInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutLatestOrderInput, Prisma.CityUncheckedCreateWithoutLatestOrderInput>
+}
+
+export type CityUpsertWithoutLatestOrderInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutLatestOrderInput, Prisma.CityUncheckedUpdateWithoutLatestOrderInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutLatestOrderInput, Prisma.CityUncheckedCreateWithoutLatestOrderInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutLatestOrderInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutLatestOrderInput, Prisma.CityUncheckedUpdateWithoutLatestOrderInput>
+}
+
+export type CityUpdateWithoutLatestOrderInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutLatestOrderInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+}
+
+
+/**
+ * Count Type CityCountOutputType
+ */
+
+export type CityCountOutputType = {
+  keyData: number
+  salesTrend: number
+  orderTrend: number
+  todayData: number
+  latestOrder: number
+}
+
+export type CityCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  keyData?: boolean | CityCountOutputTypeCountKeyDataArgs
+  salesTrend?: boolean | CityCountOutputTypeCountSalesTrendArgs
+  orderTrend?: boolean | CityCountOutputTypeCountOrderTrendArgs
+  todayData?: boolean | CityCountOutputTypeCountTodayDataArgs
+  latestOrder?: boolean | CityCountOutputTypeCountLatestOrderArgs
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CityCountOutputType
+   */
+  select?: Prisma.CityCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountKeyDataArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KeyDataWhereInput
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountSalesTrendArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SalesTrendWhereInput
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountOrderTrendArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderTrendWhereInput
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountTodayDataArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TodayDataWhereInput
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountLatestOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LatestOrderWhereInput
+}
 
 
 export type CitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   cityId?: boolean
   name?: boolean
+  cfg?: boolean
   longitude?: boolean
   latitude?: boolean
+  scale?: boolean
   value?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  keyData?: boolean | Prisma.City$keyDataArgs<ExtArgs>
+  salesTrend?: boolean | Prisma.City$salesTrendArgs<ExtArgs>
+  orderTrend?: boolean | Prisma.City$orderTrendArgs<ExtArgs>
+  todayData?: boolean | Prisma.City$todayDataArgs<ExtArgs>
+  latestOrder?: boolean | Prisma.City$latestOrderArgs<ExtArgs>
+  _count?: boolean | Prisma.CityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["city"]>
 
 
@@ -480,27 +1033,41 @@ export type CitySelectScalar = {
   id?: boolean
   cityId?: boolean
   name?: boolean
+  cfg?: boolean
   longitude?: boolean
   latitude?: boolean
+  scale?: boolean
   value?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
 }
 
-export type CityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cityId" | "name" | "longitude" | "latitude" | "value" | "createdAt" | "updatedAt", ExtArgs["result"]["city"]>
+export type CityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cityId" | "name" | "cfg" | "longitude" | "latitude" | "scale" | "value", ExtArgs["result"]["city"]>
+export type CityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  keyData?: boolean | Prisma.City$keyDataArgs<ExtArgs>
+  salesTrend?: boolean | Prisma.City$salesTrendArgs<ExtArgs>
+  orderTrend?: boolean | Prisma.City$orderTrendArgs<ExtArgs>
+  todayData?: boolean | Prisma.City$todayDataArgs<ExtArgs>
+  latestOrder?: boolean | Prisma.City$latestOrderArgs<ExtArgs>
+  _count?: boolean | Prisma.CityCountOutputTypeDefaultArgs<ExtArgs>
+}
 
 export type $CityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "City"
-  objects: {}
+  objects: {
+    keyData: Prisma.$KeyDataPayload<ExtArgs>[]
+    salesTrend: Prisma.$SalesTrendPayload<ExtArgs>[]
+    orderTrend: Prisma.$OrderTrendPayload<ExtArgs>[]
+    todayData: Prisma.$TodayDataPayload<ExtArgs>[]
+    latestOrder: Prisma.$LatestOrderPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     cityId: string
     name: string
+    cfg: string
     longitude: number
     latitude: number
+    scale: number
     value: number
-    createdAt: Date
-    updatedAt: Date
   }, ExtArgs["result"]["city"]>
   composites: {}
 }
@@ -841,6 +1408,11 @@ readonly fields: CityFieldRefs;
  */
 export interface Prisma__CityClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  keyData<T extends Prisma.City$keyDataArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$keyDataArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KeyDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  salesTrend<T extends Prisma.City$salesTrendArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$salesTrendArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesTrendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orderTrend<T extends Prisma.City$orderTrendArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$orderTrendArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderTrendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  todayData<T extends Prisma.City$todayDataArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$todayDataArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TodayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  latestOrder<T extends Prisma.City$latestOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$latestOrderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LatestOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -873,11 +1445,11 @@ export interface CityFieldRefs {
   readonly id: Prisma.FieldRef<"City", 'Int'>
   readonly cityId: Prisma.FieldRef<"City", 'String'>
   readonly name: Prisma.FieldRef<"City", 'String'>
+  readonly cfg: Prisma.FieldRef<"City", 'String'>
   readonly longitude: Prisma.FieldRef<"City", 'Float'>
   readonly latitude: Prisma.FieldRef<"City", 'Float'>
+  readonly scale: Prisma.FieldRef<"City", 'Float'>
   readonly value: Prisma.FieldRef<"City", 'Int'>
-  readonly createdAt: Prisma.FieldRef<"City", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"City", 'DateTime'>
 }
     
 
@@ -894,6 +1466,10 @@ export type CityFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the City
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
   /**
    * Filter, which City to fetch.
    */
@@ -913,6 +1489,10 @@ export type CityFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
+  /**
    * Filter, which City to fetch.
    */
   where: Prisma.CityWhereUniqueInput
@@ -930,6 +1510,10 @@ export type CityFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the City
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
   /**
    * Filter, which City to fetch.
    */
@@ -979,6 +1563,10 @@ export type CityFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
+  /**
    * Filter, which City to fetch.
    */
   where?: Prisma.CityWhereInput
@@ -1026,6 +1614,10 @@ export type CityFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the City
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
   /**
    * Filter, which Cities to fetch.
    */
@@ -1075,6 +1667,10 @@ export type CityCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
+  /**
    * The data needed to create a City.
    */
   data: Prisma.XOR<Prisma.CityCreateInput, Prisma.CityUncheckedCreateInput>
@@ -1103,6 +1699,10 @@ export type CityUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the City
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
   /**
    * The data needed to update a City.
    */
@@ -1144,6 +1744,10 @@ export type CityUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
+  /**
    * The filter to search for the City to update in case it exists.
    */
   where: Prisma.CityWhereUniqueInput
@@ -1170,6 +1774,10 @@ export type CityDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
+  /**
    * Filter which City to delete.
    */
   where: Prisma.CityWhereUniqueInput
@@ -1190,6 +1798,126 @@ export type CityDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * City.keyData
+ */
+export type City$keyDataArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the KeyData
+   */
+  select?: Prisma.KeyDataSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the KeyData
+   */
+  omit?: Prisma.KeyDataOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KeyDataInclude<ExtArgs> | null
+  where?: Prisma.KeyDataWhereInput
+  orderBy?: Prisma.KeyDataOrderByWithRelationInput | Prisma.KeyDataOrderByWithRelationInput[]
+  cursor?: Prisma.KeyDataWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KeyDataScalarFieldEnum | Prisma.KeyDataScalarFieldEnum[]
+}
+
+/**
+ * City.salesTrend
+ */
+export type City$salesTrendArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SalesTrend
+   */
+  select?: Prisma.SalesTrendSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SalesTrend
+   */
+  omit?: Prisma.SalesTrendOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SalesTrendInclude<ExtArgs> | null
+  where?: Prisma.SalesTrendWhereInput
+  orderBy?: Prisma.SalesTrendOrderByWithRelationInput | Prisma.SalesTrendOrderByWithRelationInput[]
+  cursor?: Prisma.SalesTrendWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SalesTrendScalarFieldEnum | Prisma.SalesTrendScalarFieldEnum[]
+}
+
+/**
+ * City.orderTrend
+ */
+export type City$orderTrendArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderTrend
+   */
+  select?: Prisma.OrderTrendSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderTrend
+   */
+  omit?: Prisma.OrderTrendOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderTrendInclude<ExtArgs> | null
+  where?: Prisma.OrderTrendWhereInput
+  orderBy?: Prisma.OrderTrendOrderByWithRelationInput | Prisma.OrderTrendOrderByWithRelationInput[]
+  cursor?: Prisma.OrderTrendWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderTrendScalarFieldEnum | Prisma.OrderTrendScalarFieldEnum[]
+}
+
+/**
+ * City.todayData
+ */
+export type City$todayDataArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TodayData
+   */
+  select?: Prisma.TodayDataSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TodayData
+   */
+  omit?: Prisma.TodayDataOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TodayDataInclude<ExtArgs> | null
+  where?: Prisma.TodayDataWhereInput
+  orderBy?: Prisma.TodayDataOrderByWithRelationInput | Prisma.TodayDataOrderByWithRelationInput[]
+  cursor?: Prisma.TodayDataWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TodayDataScalarFieldEnum | Prisma.TodayDataScalarFieldEnum[]
+}
+
+/**
+ * City.latestOrder
+ */
+export type City$latestOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LatestOrder
+   */
+  select?: Prisma.LatestOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LatestOrder
+   */
+  omit?: Prisma.LatestOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LatestOrderInclude<ExtArgs> | null
+  where?: Prisma.LatestOrderWhereInput
+  orderBy?: Prisma.LatestOrderOrderByWithRelationInput | Prisma.LatestOrderOrderByWithRelationInput[]
+  cursor?: Prisma.LatestOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LatestOrderScalarFieldEnum | Prisma.LatestOrderScalarFieldEnum[]
+}
+
+/**
  * City without action
  */
 export type CityDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1201,4 +1929,8 @@ export type CityDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the City
    */
   omit?: Prisma.CityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CityInclude<ExtArgs> | null
 }

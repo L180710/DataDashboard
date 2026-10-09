@@ -15,12 +15,12 @@ const props = defineProps<{
 
 // 日期
 const dateArr = computed(() => {
-  return props.orderTrendList.map((item) => item.date)
+  return (props.orderTrendList ?? []).map((item) => item.value)
 })
 
 // 数值
 const valueArr = computed(() => {
-  return props.orderTrendList.map((item) => item.value)
+  return (props.orderTrendList ?? []).map((item) => item.value)
 })
 
 const getOption = (): echarts.EChartsOption => {
@@ -93,12 +93,11 @@ const getOption = (): echarts.EChartsOption => {
     yAxis: {
       type: 'value',
       min: 0,
-      max: 5000, // 按要求设置最大值
-      interval: 1000, // 根据 0-5000 调整为 1000 的间隔
+      max: 1500,
+      interval: 300,
       axisLabel: {
         color: '#a9b8d0',
         fontSize: remToPx(0.16),
-
         formatter: (value: number) => {
           return value.toLocaleString()
         },

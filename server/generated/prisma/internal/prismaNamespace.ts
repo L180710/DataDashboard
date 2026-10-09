@@ -397,7 +397,12 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  City: 'City'
+  City: 'City',
+  KeyData: 'KeyData',
+  SalesTrend: 'SalesTrend',
+  OrderTrend: 'OrderTrend',
+  TodayData: 'TodayData',
+  LatestOrder: 'LatestOrder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "city"
+    modelProps: "city" | "keyData" | "salesTrend" | "orderTrend" | "todayData" | "latestOrder"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -483,6 +488,336 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    KeyData: {
+      payload: Prisma.$KeyDataPayload<ExtArgs>
+      fields: Prisma.KeyDataFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KeyDataFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KeyDataFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload>
+        }
+        findFirst: {
+          args: Prisma.KeyDataFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KeyDataFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload>
+        }
+        findMany: {
+          args: Prisma.KeyDataFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload>[]
+        }
+        create: {
+          args: Prisma.KeyDataCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload>
+        }
+        createMany: {
+          args: Prisma.KeyDataCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.KeyDataDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload>
+        }
+        update: {
+          args: Prisma.KeyDataUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload>
+        }
+        deleteMany: {
+          args: Prisma.KeyDataDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KeyDataUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.KeyDataUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KeyDataPayload>
+        }
+        aggregate: {
+          args: Prisma.KeyDataAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKeyData>
+        }
+        groupBy: {
+          args: Prisma.KeyDataGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KeyDataGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KeyDataCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KeyDataCountAggregateOutputType> | number
+        }
+      }
+    }
+    SalesTrend: {
+      payload: Prisma.$SalesTrendPayload<ExtArgs>
+      fields: Prisma.SalesTrendFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SalesTrendFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SalesTrendFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload>
+        }
+        findFirst: {
+          args: Prisma.SalesTrendFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SalesTrendFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload>
+        }
+        findMany: {
+          args: Prisma.SalesTrendFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload>[]
+        }
+        create: {
+          args: Prisma.SalesTrendCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload>
+        }
+        createMany: {
+          args: Prisma.SalesTrendCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SalesTrendDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload>
+        }
+        update: {
+          args: Prisma.SalesTrendUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload>
+        }
+        deleteMany: {
+          args: Prisma.SalesTrendDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SalesTrendUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SalesTrendUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTrendPayload>
+        }
+        aggregate: {
+          args: Prisma.SalesTrendAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSalesTrend>
+        }
+        groupBy: {
+          args: Prisma.SalesTrendGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTrendGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SalesTrendCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTrendCountAggregateOutputType> | number
+        }
+      }
+    }
+    OrderTrend: {
+      payload: Prisma.$OrderTrendPayload<ExtArgs>
+      fields: Prisma.OrderTrendFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrderTrendFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrderTrendFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload>
+        }
+        findFirst: {
+          args: Prisma.OrderTrendFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrderTrendFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload>
+        }
+        findMany: {
+          args: Prisma.OrderTrendFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload>[]
+        }
+        create: {
+          args: Prisma.OrderTrendCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload>
+        }
+        createMany: {
+          args: Prisma.OrderTrendCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.OrderTrendDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload>
+        }
+        update: {
+          args: Prisma.OrderTrendUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload>
+        }
+        deleteMany: {
+          args: Prisma.OrderTrendDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrderTrendUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.OrderTrendUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrderTrendPayload>
+        }
+        aggregate: {
+          args: Prisma.OrderTrendAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrderTrend>
+        }
+        groupBy: {
+          args: Prisma.OrderTrendGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrderTrendGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrderTrendCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrderTrendCountAggregateOutputType> | number
+        }
+      }
+    }
+    TodayData: {
+      payload: Prisma.$TodayDataPayload<ExtArgs>
+      fields: Prisma.TodayDataFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TodayDataFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TodayDataFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload>
+        }
+        findFirst: {
+          args: Prisma.TodayDataFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TodayDataFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload>
+        }
+        findMany: {
+          args: Prisma.TodayDataFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload>[]
+        }
+        create: {
+          args: Prisma.TodayDataCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload>
+        }
+        createMany: {
+          args: Prisma.TodayDataCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.TodayDataDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload>
+        }
+        update: {
+          args: Prisma.TodayDataUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload>
+        }
+        deleteMany: {
+          args: Prisma.TodayDataDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TodayDataUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.TodayDataUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TodayDataPayload>
+        }
+        aggregate: {
+          args: Prisma.TodayDataAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTodayData>
+        }
+        groupBy: {
+          args: Prisma.TodayDataGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TodayDataGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TodayDataCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TodayDataCountAggregateOutputType> | number
+        }
+      }
+    }
+    LatestOrder: {
+      payload: Prisma.$LatestOrderPayload<ExtArgs>
+      fields: Prisma.LatestOrderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LatestOrderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LatestOrderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload>
+        }
+        findFirst: {
+          args: Prisma.LatestOrderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LatestOrderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload>
+        }
+        findMany: {
+          args: Prisma.LatestOrderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload>[]
+        }
+        create: {
+          args: Prisma.LatestOrderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload>
+        }
+        createMany: {
+          args: Prisma.LatestOrderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.LatestOrderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload>
+        }
+        update: {
+          args: Prisma.LatestOrderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload>
+        }
+        deleteMany: {
+          args: Prisma.LatestOrderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LatestOrderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.LatestOrderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LatestOrderPayload>
+        }
+        aggregate: {
+          args: Prisma.LatestOrderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLatestOrder>
+        }
+        groupBy: {
+          args: Prisma.LatestOrderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LatestOrderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LatestOrderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LatestOrderCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -526,14 +861,74 @@ export const CityScalarFieldEnum = {
   id: 'id',
   cityId: 'cityId',
   name: 'name',
+  cfg: 'cfg',
   longitude: 'longitude',
   latitude: 'latitude',
-  value: 'value',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  scale: 'scale',
+  value: 'value'
 } as const
 
 export type CityScalarFieldEnum = (typeof CityScalarFieldEnum)[keyof typeof CityScalarFieldEnum]
+
+
+export const KeyDataScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title',
+  account: 'account',
+  diff: 'diff',
+  status: 'status'
+} as const
+
+export type KeyDataScalarFieldEnum = (typeof KeyDataScalarFieldEnum)[keyof typeof KeyDataScalarFieldEnum]
+
+
+export const SalesTrendScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  date: 'date',
+  value: 'value'
+} as const
+
+export type SalesTrendScalarFieldEnum = (typeof SalesTrendScalarFieldEnum)[keyof typeof SalesTrendScalarFieldEnum]
+
+
+export const OrderTrendScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  date: 'date',
+  value: 'value'
+} as const
+
+export type OrderTrendScalarFieldEnum = (typeof OrderTrendScalarFieldEnum)[keyof typeof OrderTrendScalarFieldEnum]
+
+
+export const TodayDataScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title',
+  account: 'account',
+  diff: 'diff',
+  status: 'status'
+} as const
+
+export type TodayDataScalarFieldEnum = (typeof TodayDataScalarFieldEnum)[keyof typeof TodayDataScalarFieldEnum]
+
+
+export const LatestOrderScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  cityId: 'cityId',
+  userName: 'userName',
+  productName: 'productName',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type LatestOrderScalarFieldEnum = (typeof LatestOrderScalarFieldEnum)[keyof typeof LatestOrderScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -546,10 +941,53 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 export const CityOrderByRelevanceFieldEnum = {
   cityId: 'cityId',
-  name: 'name'
+  name: 'name',
+  cfg: 'cfg'
 } as const
 
 export type CityOrderByRelevanceFieldEnum = (typeof CityOrderByRelevanceFieldEnum)[keyof typeof CityOrderByRelevanceFieldEnum]
+
+
+export const KeyDataOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title'
+} as const
+
+export type KeyDataOrderByRelevanceFieldEnum = (typeof KeyDataOrderByRelevanceFieldEnum)[keyof typeof KeyDataOrderByRelevanceFieldEnum]
+
+
+export const SalesTrendOrderByRelevanceFieldEnum = {
+  cityId: 'cityId'
+} as const
+
+export type SalesTrendOrderByRelevanceFieldEnum = (typeof SalesTrendOrderByRelevanceFieldEnum)[keyof typeof SalesTrendOrderByRelevanceFieldEnum]
+
+
+export const OrderTrendOrderByRelevanceFieldEnum = {
+  cityId: 'cityId'
+} as const
+
+export type OrderTrendOrderByRelevanceFieldEnum = (typeof OrderTrendOrderByRelevanceFieldEnum)[keyof typeof OrderTrendOrderByRelevanceFieldEnum]
+
+
+export const TodayDataOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  metricId: 'metricId',
+  title: 'title'
+} as const
+
+export type TodayDataOrderByRelevanceFieldEnum = (typeof TodayDataOrderByRelevanceFieldEnum)[keyof typeof TodayDataOrderByRelevanceFieldEnum]
+
+
+export const LatestOrderOrderByRelevanceFieldEnum = {
+  orderId: 'orderId',
+  cityId: 'cityId',
+  userName: 'userName',
+  productName: 'productName'
+} as const
+
+export type LatestOrderOrderByRelevanceFieldEnum = (typeof LatestOrderOrderByRelevanceFieldEnum)[keyof typeof LatestOrderOrderByRelevanceFieldEnum]
 
 
 
@@ -737,6 +1175,11 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   city?: Prisma.CityOmit
+  keyData?: Prisma.KeyDataOmit
+  salesTrend?: Prisma.SalesTrendOmit
+  orderTrend?: Prisma.OrderTrendOmit
+  todayData?: Prisma.TodayDataOmit
+  latestOrder?: Prisma.LatestOrderOmit
 }
 
 /* Types for Logging */

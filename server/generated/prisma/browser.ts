@@ -22,3 +22,28 @@ export * from './enums.js';
  * 
  */
 export type City = Prisma.CityModel
+/**
+ * Model KeyData
+ * 
+ */
+export type KeyData = Prisma.KeyDataModel
+/**
+ * Model SalesTrend
+ * 
+ */
+export type SalesTrend = Prisma.SalesTrendModel
+/**
+ * Model OrderTrend
+ * 
+ */
+export type OrderTrend = Prisma.OrderTrendModel
+/**
+ * Model TodayData
+ * 
+ */
+export type TodayData = Prisma.TodayDataModel
+/**
+ * Model LatestOrder
+ * 
+ */
+export type LatestOrder = Prisma.LatestOrderModel

@@ -1,31 +1,19 @@
 import { Router } from 'express'
-import { getCities, getCityById, getCityConnections } from '../services/city.js'
+import { getCityList } from '../services/city.service.js'
 
-// 独立路由对象，不用把所有 API 都放在 app.ts 中
-const router = Router()
+const cityRouter = Router()
 
-router.get('/', (_req, res) => {
-  const cities = getCities()
-  res.json(cities)
-})
+cityRouter.get('/', async (_req, res) => {
+  try {
+    const cities = await getCityList()
+    res.json(cities)
+  } catch (error) {
+    console.error(error)
 
-router.get('/connections', (_req, res) => {
-  const connections = getCityConnections()
-  res.json(connections)
-})
-
-router.get('/:cityId', (req, res) => {
-  const { cityId } = req.params
-  const city = getCityById(cityId)
-
-  if (!city) {
-    res.status(404).json({
-      message: 'City not found',
+    res.status(500).json({
+      message: '获取城市数据失败',
     })
-    return
   }
-
-  res.json(city)
 })
 
-export default router
+export default cityRouter

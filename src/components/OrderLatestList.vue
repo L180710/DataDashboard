@@ -9,15 +9,15 @@
       <div class="data">状态</div>
     </li>
     <li class="list-item" v-for="item in list" :key="item.id">
-      <div class="data">{{ item.orderNum }}</div>
+      <div class="data">{{ item.orderId }}</div>
       <div class="data">{{ item.userName }}</div>
       <div class="data">{{ item.productName }}</div>
-      <div class="data">{{ item.price.toFixed(2) }}</div>
-      <div class="data">{{ item.time }}</div>
+      <div class="data">{{ item.amount.toFixed(2) }}</div>
+      <div class="data">{{ item.createdAt.split('T')[0] }}</div>
       <div class="data">
-        <span class="state0" v-if="item.state === 0">待发货</span>
-        <span class="state1" v-else-if="item.state === 1">已发货</span>
-        <span class="state2" v-else-if="item.state === 2">已完成</span>
+        <span class="state0" v-if="item.status === 0">待发货</span>
+        <span class="state1" v-else-if="item.status === 1">已发货</span>
+        <span class="state2" v-else-if="item.status === 2">已完成</span>
       </div>
     </li>
   </ul>

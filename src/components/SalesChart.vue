@@ -16,12 +16,12 @@ const props = defineProps<{
 
 // 日期
 const dateArr = computed(() => {
-  return props.saleTrendList.map((item) => item.date)
+  return (props.saleTrendList ?? []).map((item) => item.name)
 })
 
 // 数值
 const valueArr = computed(() => {
-  return props.saleTrendList.map((item) => item.value)
+  return (props.saleTrendList ?? []).map((item) => item.value)
 })
 
 const getOption = (): echarts.EChartsOption => {
@@ -106,8 +106,8 @@ const getOption = (): echarts.EChartsOption => {
     yAxis: {
       type: 'value',
       min: 0,
-      max: 100000,
-      interval: 20000,
+      max: 300000,
+      interval: 60000,
       axisLabel: {
         color: '#a9b8d0',
         fontSize: remToPx(0.16),
@@ -158,7 +158,6 @@ const getOption = (): echarts.EChartsOption => {
             },
           ]),
         },
-
         data: valueArr.value,
       },
     ],

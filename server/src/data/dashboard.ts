@@ -1,3 +1,5 @@
+// 这个后续可删，也可以将 cities.ts 内容汇入 dashboard-template.ts 中
+
 import type {
   DashboardData,
   SalesTrendList,
@@ -5,6 +7,7 @@ import type {
   UserStatistics,
   ChannelStatistics,
 } from '../../../shared/types/dashboard.js'
+// 这个后续也可删
 import { getLast7Days } from '../utils/date.js'
 
 // 近 7 天
