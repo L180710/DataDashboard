@@ -22,6 +22,7 @@ import { lonLatToVector3 } from '@/utils/geo'
 import { createCityLabel } from '@/utils/cityLabel'
 import { createFlightLine } from '@/utils/earthLine'
 import { createChinaFills, createChinaBoundaries, boundaryGlowMaterials } from '@/utils/chinaGeo'
+import { getCityConnections } from '../../server/src/data/cities'
 import type { City } from '../../shared/types/city'
 import { getCities } from '@/api/city'
 
@@ -155,13 +156,13 @@ const earthEndQuaternion = new THREE.Quaternion()
 // 所有城市
 let cityList = ref<City[]>([])
 
-// 城市之间的链接
-const cityConnections = [
-  ['北京', '上海'],
-  ['北京', '广州'],
-  ['北京', '成都'],
-  ['北京', '深圳'],
-]
+// // 城市之间的链接
+// const cityConnections22 = [
+//   ['北京', '上海'],
+//   ['北京', '广州'],
+//   ['北京', '成都'],
+//   ['北京', '深圳'],
+// ]
 
 // 初始化
 const initThree = async () => {
@@ -185,7 +186,8 @@ const initThree = async () => {
     antialias: true,
     alpha: true,
   })
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  renderer.setPixelRatio(1.25)
   renderer.setSize(width, height)
 
   container.appendChild(renderer.domElement)
@@ -234,7 +236,7 @@ const initThree = async () => {
   // createFlightLines()
 
   // 添加粒子
-  createFlightParticles()
+  // createFlightParticles()
 
   // 添加中国地图
   await loadChinaMap()
@@ -480,10 +482,12 @@ const createCityPoints = async () => {
     })
   })
   earth?.add(cityPoints)
-  createFlightLines()
+  // earth ? createFlightLines() : ''
 }
 
 // 获取城市点
+// 可删，当根据cities数据返回 from to 数据时
+// 另外 cityConnections 已经根据cities 返回
 const getCityPoint = (name: string) => {
   return cityList.value.find((city: City) => city.name === name)
 }

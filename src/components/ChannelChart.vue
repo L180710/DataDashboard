@@ -7,15 +7,11 @@ import { computed } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
-import type { ChannelStatistics } from '@/types/dashboard'
+import type { ChannelStatistics } from '../../shared/types/dashboard'
 
 const props = defineProps<{
   channelStatistics: ChannelStatistics
 }>()
-
-const legendPercentage = computed(() => {
-  return
-})
 
 const getOption = (): echarts.EChartsOption => {
   return {

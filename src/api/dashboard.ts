@@ -1,13 +1,19 @@
 import request from '@/utils/request'
-import type { DataItem, OrderRencentItem } from '../../shared/types/dashboard'
+import type {
+  DataItem,
+  OrderRencentItem,
+  HotProductItem,
+  StatisticsItem,
+  UserStatistics,
+} from '../../shared/types/dashboard'
 
-// 可删，当独立模块设置好之后
-import type { DashboardData } from '../../shared/types/dashboard'
-// 这个获取的是一个 cityId 对应的各个模块，当独立模块设置好了，可删
-export const getDashboardData = async (cityId: string): Promise<DashboardData> => {
-  const response = await request.get<DashboardData>(`/dashboard/${cityId}`)
-  return response.data
-}
+// // 可删，当独立模块设置好之后
+// import type { DashboardData } from '../../shared/types/dashboard'
+// // 这个获取的是一个 cityId 对应的各个模块，当独立模块设置好了，可删
+// export const getDashboardData = async (cityId: string): Promise<DashboardData> => {
+//   const response = await request.get<DashboardData>(`/dashboard/${cityId}`)
+//   return response.data
+// }
 
 // 核心指标
 export const getKeyData = async (cityId: string): Promise<DataItem[]> => {
@@ -36,5 +42,23 @@ export const getTodayData = async (cityId: string): Promise<DataItem[]> => {
 // 最新订单
 export const getLatestOrder = async (cityId: string): Promise<OrderRencentItem[]> => {
   const response = await request.get<OrderRencentItem[]>(`/latest-order/${cityId}`)
+  return response.data
+}
+
+// 用户统计
+export const getUserStatistics = async (cityId: string): Promise<UserStatistics> => {
+  const response = await request.get<UserStatistics>(`/user-statistics/${cityId}`)
+  return response.data
+}
+
+// 热门商品
+export const getHotProduct = async (cityId: string): Promise<HotProductItem[]> => {
+  const response = await request.get<HotProductItem[]>(`/hot-product/${cityId}`)
+  return response.data
+}
+
+// 渠道来源
+export const getChannelStatistics = async (cityId: string): Promise<StatisticsItem[]> => {
+  const response = await request.get<StatisticsItem[]>(`/channel-statistics/${cityId}`)
   return response.data
 }

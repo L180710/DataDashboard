@@ -11,7 +11,7 @@
         <div class="item-name">{{ item.productName }}</div>
         <div class="item-ratio" :style="{ width: `${item.ratio}%` }"></div>
       </div>
-      <div class="data item-price">{{ item.price }}</div>
+      <div class="data item-price">{{ item.amount }}</div>
     </li>
   </ul>
 </template>
@@ -31,7 +31,7 @@ defineProps<{
     grid-template-columns: 0.8fr 3fr 1fr;
     align-items: center;
     gap: 0.1rem;
-    padding: 0 0 0.2rem;
+    padding: 0 0 0.15rem;
     font-size: 0.14rem;
     &.list-header {
       font-size: 0.16rem;

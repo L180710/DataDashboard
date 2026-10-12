@@ -56,7 +56,10 @@ export const ModelName = {
   SalesTrend: 'SalesTrend',
   OrderTrend: 'OrderTrend',
   TodayData: 'TodayData',
-  LatestOrder: 'LatestOrder'
+  LatestOrder: 'LatestOrder',
+  UserStatistics: 'UserStatistics',
+  HotProduct: 'HotProduct',
+  ChannelStatistics: 'ChannelStatistics'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -149,6 +152,39 @@ export const LatestOrderScalarFieldEnum = {
 export type LatestOrderScalarFieldEnum = (typeof LatestOrderScalarFieldEnum)[keyof typeof LatestOrderScalarFieldEnum]
 
 
+export const UserStatisticsScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  category: 'category',
+  name: 'name',
+  value: 'value'
+} as const
+
+export type UserStatisticsScalarFieldEnum = (typeof UserStatisticsScalarFieldEnum)[keyof typeof UserStatisticsScalarFieldEnum]
+
+
+export const HotProductScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  productName: 'productName',
+  amount: 'amount',
+  ratio: 'ratio'
+} as const
+
+export type HotProductScalarFieldEnum = (typeof HotProductScalarFieldEnum)[keyof typeof HotProductScalarFieldEnum]
+
+
+export const ChannelStatisticsScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  name: 'name',
+  ratio: 'ratio',
+  value: 'value'
+} as const
+
+export type ChannelStatisticsScalarFieldEnum = (typeof ChannelStatisticsScalarFieldEnum)[keyof typeof ChannelStatisticsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -206,4 +242,29 @@ export const LatestOrderOrderByRelevanceFieldEnum = {
 } as const
 
 export type LatestOrderOrderByRelevanceFieldEnum = (typeof LatestOrderOrderByRelevanceFieldEnum)[keyof typeof LatestOrderOrderByRelevanceFieldEnum]
+
+
+export const UserStatisticsOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  category: 'category',
+  name: 'name'
+} as const
+
+export type UserStatisticsOrderByRelevanceFieldEnum = (typeof UserStatisticsOrderByRelevanceFieldEnum)[keyof typeof UserStatisticsOrderByRelevanceFieldEnum]
+
+
+export const HotProductOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  productName: 'productName'
+} as const
+
+export type HotProductOrderByRelevanceFieldEnum = (typeof HotProductOrderByRelevanceFieldEnum)[keyof typeof HotProductOrderByRelevanceFieldEnum]
+
+
+export const ChannelStatisticsOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  name: 'name'
+} as const
+
+export type ChannelStatisticsOrderByRelevanceFieldEnum = (typeof ChannelStatisticsOrderByRelevanceFieldEnum)[keyof typeof ChannelStatisticsOrderByRelevanceFieldEnum]
 

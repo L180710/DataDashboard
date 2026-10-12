@@ -261,6 +261,9 @@ export type CityWhereInput = {
   orderTrend?: Prisma.OrderTrendListRelationFilter
   todayData?: Prisma.TodayDataListRelationFilter
   latestOrder?: Prisma.LatestOrderListRelationFilter
+  userStatistics?: Prisma.UserStatisticsListRelationFilter
+  hotProduct?: Prisma.HotProductListRelationFilter
+  channelStatistics?: Prisma.ChannelStatisticsListRelationFilter
 }
 
 export type CityOrderByWithRelationInput = {
@@ -277,6 +280,9 @@ export type CityOrderByWithRelationInput = {
   orderTrend?: Prisma.OrderTrendOrderByRelationAggregateInput
   todayData?: Prisma.TodayDataOrderByRelationAggregateInput
   latestOrder?: Prisma.LatestOrderOrderByRelationAggregateInput
+  userStatistics?: Prisma.UserStatisticsOrderByRelationAggregateInput
+  hotProduct?: Prisma.HotProductOrderByRelationAggregateInput
+  channelStatistics?: Prisma.ChannelStatisticsOrderByRelationAggregateInput
   _relevance?: Prisma.CityOrderByRelevanceInput
 }
 
@@ -297,6 +303,9 @@ export type CityWhereUniqueInput = Prisma.AtLeast<{
   orderTrend?: Prisma.OrderTrendListRelationFilter
   todayData?: Prisma.TodayDataListRelationFilter
   latestOrder?: Prisma.LatestOrderListRelationFilter
+  userStatistics?: Prisma.UserStatisticsListRelationFilter
+  hotProduct?: Prisma.HotProductListRelationFilter
+  channelStatistics?: Prisma.ChannelStatisticsListRelationFilter
 }, "id" | "cityId">
 
 export type CityOrderByWithAggregationInput = {
@@ -342,6 +351,9 @@ export type CityCreateInput = {
   orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
 }
 
 export type CityUncheckedCreateInput = {
@@ -358,6 +370,9 @@ export type CityUncheckedCreateInput = {
   orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
 }
 
 export type CityUpdateInput = {
@@ -373,6 +388,9 @@ export type CityUpdateInput = {
   orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
 }
 
 export type CityUncheckedUpdateInput = {
@@ -389,6 +407,9 @@ export type CityUncheckedUpdateInput = {
   orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
 }
 
 export type CityCreateManyInput = {
@@ -573,6 +594,48 @@ export type CityUpdateOneRequiredWithoutLatestOrderNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutLatestOrderInput, Prisma.CityUpdateWithoutLatestOrderInput>, Prisma.CityUncheckedUpdateWithoutLatestOrderInput>
 }
 
+export type CityCreateNestedOneWithoutUserStatisticsInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutUserStatisticsInput, Prisma.CityUncheckedCreateWithoutUserStatisticsInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutUserStatisticsInput
+  connect?: Prisma.CityWhereUniqueInput
+}
+
+export type CityUpdateOneRequiredWithoutUserStatisticsNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutUserStatisticsInput, Prisma.CityUncheckedCreateWithoutUserStatisticsInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutUserStatisticsInput
+  upsert?: Prisma.CityUpsertWithoutUserStatisticsInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutUserStatisticsInput, Prisma.CityUpdateWithoutUserStatisticsInput>, Prisma.CityUncheckedUpdateWithoutUserStatisticsInput>
+}
+
+export type CityCreateNestedOneWithoutHotProductInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutHotProductInput, Prisma.CityUncheckedCreateWithoutHotProductInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutHotProductInput
+  connect?: Prisma.CityWhereUniqueInput
+}
+
+export type CityUpdateOneRequiredWithoutHotProductNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutHotProductInput, Prisma.CityUncheckedCreateWithoutHotProductInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutHotProductInput
+  upsert?: Prisma.CityUpsertWithoutHotProductInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutHotProductInput, Prisma.CityUpdateWithoutHotProductInput>, Prisma.CityUncheckedUpdateWithoutHotProductInput>
+}
+
+export type CityCreateNestedOneWithoutChannelStatisticsInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutChannelStatisticsInput, Prisma.CityUncheckedCreateWithoutChannelStatisticsInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutChannelStatisticsInput
+  connect?: Prisma.CityWhereUniqueInput
+}
+
+export type CityUpdateOneRequiredWithoutChannelStatisticsNestedInput = {
+  create?: Prisma.XOR<Prisma.CityCreateWithoutChannelStatisticsInput, Prisma.CityUncheckedCreateWithoutChannelStatisticsInput>
+  connectOrCreate?: Prisma.CityCreateOrConnectWithoutChannelStatisticsInput
+  upsert?: Prisma.CityUpsertWithoutChannelStatisticsInput
+  connect?: Prisma.CityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CityUpdateToOneWithWhereWithoutChannelStatisticsInput, Prisma.CityUpdateWithoutChannelStatisticsInput>, Prisma.CityUncheckedUpdateWithoutChannelStatisticsInput>
+}
+
 export type CityCreateWithoutKeyDataInput = {
   cityId: string
   name: string
@@ -585,6 +648,9 @@ export type CityCreateWithoutKeyDataInput = {
   orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
 }
 
 export type CityUncheckedCreateWithoutKeyDataInput = {
@@ -600,6 +666,9 @@ export type CityUncheckedCreateWithoutKeyDataInput = {
   orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
 }
 
 export type CityCreateOrConnectWithoutKeyDataInput = {
@@ -630,6 +699,9 @@ export type CityUpdateWithoutKeyDataInput = {
   orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
 }
 
 export type CityUncheckedUpdateWithoutKeyDataInput = {
@@ -645,6 +717,9 @@ export type CityUncheckedUpdateWithoutKeyDataInput = {
   orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
 }
 
 export type CityCreateWithoutSalesTrendInput = {
@@ -659,6 +734,9 @@ export type CityCreateWithoutSalesTrendInput = {
   orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
 }
 
 export type CityUncheckedCreateWithoutSalesTrendInput = {
@@ -674,6 +752,9 @@ export type CityUncheckedCreateWithoutSalesTrendInput = {
   orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
 }
 
 export type CityCreateOrConnectWithoutSalesTrendInput = {
@@ -704,6 +785,9 @@ export type CityUpdateWithoutSalesTrendInput = {
   orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
 }
 
 export type CityUncheckedUpdateWithoutSalesTrendInput = {
@@ -719,6 +803,9 @@ export type CityUncheckedUpdateWithoutSalesTrendInput = {
   orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
 }
 
 export type CityCreateWithoutOrderTrendInput = {
@@ -733,6 +820,9 @@ export type CityCreateWithoutOrderTrendInput = {
   salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
 }
 
 export type CityUncheckedCreateWithoutOrderTrendInput = {
@@ -748,6 +838,9 @@ export type CityUncheckedCreateWithoutOrderTrendInput = {
   salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
 }
 
 export type CityCreateOrConnectWithoutOrderTrendInput = {
@@ -778,6 +871,9 @@ export type CityUpdateWithoutOrderTrendInput = {
   salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
 }
 
 export type CityUncheckedUpdateWithoutOrderTrendInput = {
@@ -793,6 +889,9 @@ export type CityUncheckedUpdateWithoutOrderTrendInput = {
   salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
 }
 
 export type CityCreateWithoutTodayDataInput = {
@@ -807,6 +906,9 @@ export type CityCreateWithoutTodayDataInput = {
   salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
   orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
 }
 
 export type CityUncheckedCreateWithoutTodayDataInput = {
@@ -822,6 +924,9 @@ export type CityUncheckedCreateWithoutTodayDataInput = {
   salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
   orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
   latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
 }
 
 export type CityCreateOrConnectWithoutTodayDataInput = {
@@ -852,6 +957,9 @@ export type CityUpdateWithoutTodayDataInput = {
   salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
   orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
 }
 
 export type CityUncheckedUpdateWithoutTodayDataInput = {
@@ -867,6 +975,9 @@ export type CityUncheckedUpdateWithoutTodayDataInput = {
   salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
   orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
   latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
 }
 
 export type CityCreateWithoutLatestOrderInput = {
@@ -881,6 +992,9 @@ export type CityCreateWithoutLatestOrderInput = {
   salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
   orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
 }
 
 export type CityUncheckedCreateWithoutLatestOrderInput = {
@@ -896,6 +1010,9 @@ export type CityUncheckedCreateWithoutLatestOrderInput = {
   salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
   orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
   todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
 }
 
 export type CityCreateOrConnectWithoutLatestOrderInput = {
@@ -926,6 +1043,9 @@ export type CityUpdateWithoutLatestOrderInput = {
   salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
   orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
 }
 
 export type CityUncheckedUpdateWithoutLatestOrderInput = {
@@ -941,6 +1061,267 @@ export type CityUncheckedUpdateWithoutLatestOrderInput = {
   salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
   orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
   todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
+}
+
+export type CityCreateWithoutUserStatisticsInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutUserStatisticsInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutUserStatisticsInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutUserStatisticsInput, Prisma.CityUncheckedCreateWithoutUserStatisticsInput>
+}
+
+export type CityUpsertWithoutUserStatisticsInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutUserStatisticsInput, Prisma.CityUncheckedUpdateWithoutUserStatisticsInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutUserStatisticsInput, Prisma.CityUncheckedCreateWithoutUserStatisticsInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutUserStatisticsInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutUserStatisticsInput, Prisma.CityUncheckedUpdateWithoutUserStatisticsInput>
+}
+
+export type CityUpdateWithoutUserStatisticsInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutUserStatisticsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
+}
+
+export type CityCreateWithoutHotProductInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutHotProductInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutHotProductInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutHotProductInput, Prisma.CityUncheckedCreateWithoutHotProductInput>
+}
+
+export type CityUpsertWithoutHotProductInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutHotProductInput, Prisma.CityUncheckedUpdateWithoutHotProductInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutHotProductInput, Prisma.CityUncheckedCreateWithoutHotProductInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutHotProductInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutHotProductInput, Prisma.CityUncheckedUpdateWithoutHotProductInput>
+}
+
+export type CityUpdateWithoutHotProductInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutHotProductInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  channelStatistics?: Prisma.ChannelStatisticsUncheckedUpdateManyWithoutCityNestedInput
+}
+
+export type CityCreateWithoutChannelStatisticsInput = {
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductCreateNestedManyWithoutCityInput
+}
+
+export type CityUncheckedCreateWithoutChannelStatisticsInput = {
+  id?: number
+  cityId: string
+  name: string
+  cfg: string
+  longitude: number
+  latitude: number
+  scale?: number
+  value?: number
+  keyData?: Prisma.KeyDataUncheckedCreateNestedManyWithoutCityInput
+  salesTrend?: Prisma.SalesTrendUncheckedCreateNestedManyWithoutCityInput
+  orderTrend?: Prisma.OrderTrendUncheckedCreateNestedManyWithoutCityInput
+  todayData?: Prisma.TodayDataUncheckedCreateNestedManyWithoutCityInput
+  latestOrder?: Prisma.LatestOrderUncheckedCreateNestedManyWithoutCityInput
+  userStatistics?: Prisma.UserStatisticsUncheckedCreateNestedManyWithoutCityInput
+  hotProduct?: Prisma.HotProductUncheckedCreateNestedManyWithoutCityInput
+}
+
+export type CityCreateOrConnectWithoutChannelStatisticsInput = {
+  where: Prisma.CityWhereUniqueInput
+  create: Prisma.XOR<Prisma.CityCreateWithoutChannelStatisticsInput, Prisma.CityUncheckedCreateWithoutChannelStatisticsInput>
+}
+
+export type CityUpsertWithoutChannelStatisticsInput = {
+  update: Prisma.XOR<Prisma.CityUpdateWithoutChannelStatisticsInput, Prisma.CityUncheckedUpdateWithoutChannelStatisticsInput>
+  create: Prisma.XOR<Prisma.CityCreateWithoutChannelStatisticsInput, Prisma.CityUncheckedCreateWithoutChannelStatisticsInput>
+  where?: Prisma.CityWhereInput
+}
+
+export type CityUpdateToOneWithWhereWithoutChannelStatisticsInput = {
+  where?: Prisma.CityWhereInput
+  data: Prisma.XOR<Prisma.CityUpdateWithoutChannelStatisticsInput, Prisma.CityUncheckedUpdateWithoutChannelStatisticsInput>
+}
+
+export type CityUpdateWithoutChannelStatisticsInput = {
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUpdateManyWithoutCityNestedInput
+}
+
+export type CityUncheckedUpdateWithoutChannelStatisticsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  cityId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  cfg?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  scale?: Prisma.FloatFieldUpdateOperationsInput | number
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  keyData?: Prisma.KeyDataUncheckedUpdateManyWithoutCityNestedInput
+  salesTrend?: Prisma.SalesTrendUncheckedUpdateManyWithoutCityNestedInput
+  orderTrend?: Prisma.OrderTrendUncheckedUpdateManyWithoutCityNestedInput
+  todayData?: Prisma.TodayDataUncheckedUpdateManyWithoutCityNestedInput
+  latestOrder?: Prisma.LatestOrderUncheckedUpdateManyWithoutCityNestedInput
+  userStatistics?: Prisma.UserStatisticsUncheckedUpdateManyWithoutCityNestedInput
+  hotProduct?: Prisma.HotProductUncheckedUpdateManyWithoutCityNestedInput
 }
 
 
@@ -954,6 +1335,9 @@ export type CityCountOutputType = {
   orderTrend: number
   todayData: number
   latestOrder: number
+  userStatistics: number
+  hotProduct: number
+  channelStatistics: number
 }
 
 export type CityCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -962,6 +1346,9 @@ export type CityCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   orderTrend?: boolean | CityCountOutputTypeCountOrderTrendArgs
   todayData?: boolean | CityCountOutputTypeCountTodayDataArgs
   latestOrder?: boolean | CityCountOutputTypeCountLatestOrderArgs
+  userStatistics?: boolean | CityCountOutputTypeCountUserStatisticsArgs
+  hotProduct?: boolean | CityCountOutputTypeCountHotProductArgs
+  channelStatistics?: boolean | CityCountOutputTypeCountChannelStatisticsArgs
 }
 
 /**
@@ -1009,6 +1396,27 @@ export type CityCountOutputTypeCountLatestOrderArgs<ExtArgs extends runtime.Type
   where?: Prisma.LatestOrderWhereInput
 }
 
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountUserStatisticsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserStatisticsWhereInput
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountHotProductArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HotProductWhereInput
+}
+
+/**
+ * CityCountOutputType without action
+ */
+export type CityCountOutputTypeCountChannelStatisticsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChannelStatisticsWhereInput
+}
+
 
 export type CitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1024,6 +1432,9 @@ export type CitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   orderTrend?: boolean | Prisma.City$orderTrendArgs<ExtArgs>
   todayData?: boolean | Prisma.City$todayDataArgs<ExtArgs>
   latestOrder?: boolean | Prisma.City$latestOrderArgs<ExtArgs>
+  userStatistics?: boolean | Prisma.City$userStatisticsArgs<ExtArgs>
+  hotProduct?: boolean | Prisma.City$hotProductArgs<ExtArgs>
+  channelStatistics?: boolean | Prisma.City$channelStatisticsArgs<ExtArgs>
   _count?: boolean | Prisma.CityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["city"]>
 
@@ -1047,6 +1458,9 @@ export type CityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   orderTrend?: boolean | Prisma.City$orderTrendArgs<ExtArgs>
   todayData?: boolean | Prisma.City$todayDataArgs<ExtArgs>
   latestOrder?: boolean | Prisma.City$latestOrderArgs<ExtArgs>
+  userStatistics?: boolean | Prisma.City$userStatisticsArgs<ExtArgs>
+  hotProduct?: boolean | Prisma.City$hotProductArgs<ExtArgs>
+  channelStatistics?: boolean | Prisma.City$channelStatisticsArgs<ExtArgs>
   _count?: boolean | Prisma.CityCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1058,6 +1472,9 @@ export type $CityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     orderTrend: Prisma.$OrderTrendPayload<ExtArgs>[]
     todayData: Prisma.$TodayDataPayload<ExtArgs>[]
     latestOrder: Prisma.$LatestOrderPayload<ExtArgs>[]
+    userStatistics: Prisma.$UserStatisticsPayload<ExtArgs>[]
+    hotProduct: Prisma.$HotProductPayload<ExtArgs>[]
+    channelStatistics: Prisma.$ChannelStatisticsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1413,6 +1830,9 @@ export interface Prisma__CityClient<T, Null = never, ExtArgs extends runtime.Typ
   orderTrend<T extends Prisma.City$orderTrendArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$orderTrendArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderTrendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   todayData<T extends Prisma.City$todayDataArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$todayDataArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TodayDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   latestOrder<T extends Prisma.City$latestOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$latestOrderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LatestOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userStatistics<T extends Prisma.City$userStatisticsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$userStatisticsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserStatisticsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  hotProduct<T extends Prisma.City$hotProductArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$hotProductArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HotProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  channelStatistics<T extends Prisma.City$channelStatisticsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.City$channelStatisticsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChannelStatisticsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1915,6 +2335,78 @@ export type City$latestOrderArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.LatestOrderScalarFieldEnum | Prisma.LatestOrderScalarFieldEnum[]
+}
+
+/**
+ * City.userStatistics
+ */
+export type City$userStatisticsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserStatistics
+   */
+  select?: Prisma.UserStatisticsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserStatistics
+   */
+  omit?: Prisma.UserStatisticsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserStatisticsInclude<ExtArgs> | null
+  where?: Prisma.UserStatisticsWhereInput
+  orderBy?: Prisma.UserStatisticsOrderByWithRelationInput | Prisma.UserStatisticsOrderByWithRelationInput[]
+  cursor?: Prisma.UserStatisticsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserStatisticsScalarFieldEnum | Prisma.UserStatisticsScalarFieldEnum[]
+}
+
+/**
+ * City.hotProduct
+ */
+export type City$hotProductArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HotProduct
+   */
+  select?: Prisma.HotProductSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HotProduct
+   */
+  omit?: Prisma.HotProductOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HotProductInclude<ExtArgs> | null
+  where?: Prisma.HotProductWhereInput
+  orderBy?: Prisma.HotProductOrderByWithRelationInput | Prisma.HotProductOrderByWithRelationInput[]
+  cursor?: Prisma.HotProductWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HotProductScalarFieldEnum | Prisma.HotProductScalarFieldEnum[]
+}
+
+/**
+ * City.channelStatistics
+ */
+export type City$channelStatisticsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChannelStatistics
+   */
+  select?: Prisma.ChannelStatisticsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ChannelStatistics
+   */
+  omit?: Prisma.ChannelStatisticsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChannelStatisticsInclude<ExtArgs> | null
+  where?: Prisma.ChannelStatisticsWhereInput
+  orderBy?: Prisma.ChannelStatisticsOrderByWithRelationInput | Prisma.ChannelStatisticsOrderByWithRelationInput[]
+  cursor?: Prisma.ChannelStatisticsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChannelStatisticsScalarFieldEnum | Prisma.ChannelStatisticsScalarFieldEnum[]
 }
 
 /**

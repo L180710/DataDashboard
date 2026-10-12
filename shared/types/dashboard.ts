@@ -34,9 +34,9 @@ export type OrderLatestList = OrderRencentItem[]
 // 热门商品
 export interface HotProductItem {
   id: string
-  order: number
+  cityId: string
   productName: string
-  price: number
+  amount: number
   ratio: number
 }
 export type HotProductList = HotProductItem[]

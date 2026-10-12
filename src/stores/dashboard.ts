@@ -1,7 +1,14 @@
 // 这个能正常对接了，把 dashboard.ts 去掉
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { DataItem, TrendItem, OrderRencentItem } from '../../shared/types/dashboard'
+import type {
+  DataItem,
+  TrendItem,
+  OrderRencentItem,
+  UserStatistics,
+  HotProductItem,
+  ChannelStatistics,
+} from '../../shared/types/dashboard'
 import { createDataList } from '@/utils/data/DataList'
 import {
   getKeyData,
@@ -9,6 +16,9 @@ import {
   getOrderTrend,
   getTodayData,
   getLatestOrder,
+  getUserStatistics,
+  getHotProduct,
+  getChannelStatistics,
 } from '@/api/dashboard'
 
 export const useDashboardStore = defineStore('dashboard', () => {
@@ -35,6 +45,15 @@ export const useDashboardStore = defineStore('dashboard', () => {
 
   // 最新订单
   const latestOrder = ref<OrderRencentItem[] | null>(null)
+
+  // 用户统计
+  const userStatistics = ref<UserStatistics | null>(null)
+
+  // 热门商品
+  const hotProduct = ref<HotProductItem[] | null>(null)
+
+  // 渠道来源
+  const channelStatistics = ref<ChannelStatistics | null>(null)
 
   // 今日数据加工后数据
   const processedTodayData = computed(() => {
@@ -70,12 +89,18 @@ export const useDashboardStore = defineStore('dashboard', () => {
         orderTrendResult,
         todayDataResult,
         latestOrderResult,
+        userStatisticsResult,
+        hotProductResult,
+        channelStatisticsResult,
       ] = await Promise.allSettled([
         getKeyData(cityId),
         getSalesTrend(cityId),
         getOrderTrend(cityId),
         getTodayData(cityId),
         getLatestOrder(cityId),
+        getUserStatistics(cityId),
+        getHotProduct(cityId),
+        getChannelStatistics(cityId),
       ])
 
       // 核心指标
@@ -118,6 +143,30 @@ export const useDashboardStore = defineStore('dashboard', () => {
         console.error('最新订单数据获取失败')
       }
 
+      // 用户统计
+      if (userStatisticsResult.status === 'fulfilled') {
+        userStatistics.value = userStatisticsResult.value
+      } else {
+        userStatistics.value = null
+        console.error('用户统计数据获取失败')
+      }
+
+      // 热门商品
+      if (hotProductResult.status === 'fulfilled') {
+        hotProduct.value = hotProductResult.value
+      } else {
+        hotProduct.value = null
+        console.error('热门商品数据获取失败')
+      }
+
+      // 渠道来源
+      if (channelStatisticsResult.status === 'fulfilled') {
+        channelStatistics.value = channelStatisticsResult.value
+      } else {
+        userStatistics.value = null
+        console.error('渠道来源数据获取失败')
+      }
+
       // 如果全部失败，则给全局 error
       const allFailed = keyDataResult.status === 'rejected'
       if (allFailed) {
@@ -141,6 +190,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
     orderTrend,
     processedTodayData,
     latestOrder,
+    userStatistics,
+    hotProduct,
+    channelStatistics,
 
     // 状态
     loading,

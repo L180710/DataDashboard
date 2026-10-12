@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper flex flex-col">
-    <!-- <Header :selectedCity="selectedCity" @reset="handleResetNational" /> -->
+    <Header :selectedCity="selectedCity" @reset="handleResetNational" />
     <main class="main flex space-x">
       <aside class="main-left flex flex-col">
         <moduleTemp title="核心指标">
@@ -26,22 +26,19 @@
         </moduleTemp>
       </section>
 
-      <!-- <aside class="main-right flex flex-col">
+      <aside class="main-right flex flex-col">
         <moduleTemp title="用户统计" :flex="1.2">
-          <UserChart v-if="dashboardData" :user-statistics="dashboardData?.userStatistics!" />
+          <UserChart v-if="userStatistics" :user-statistics="userStatistics" />
         </moduleTemp>
 
         <moduleTemp title="热门商品TOP5">
-          <HotProductList v-if="dashboardData" :list="dashboardData?.hotProductData!" />
+          <HotProductList v-if="hotProduct" :list="hotProduct" />
         </moduleTemp>
 
         <moduleTemp title="渠道来源占比" :flex="1">
-          <ChannelChart
-            v-if="dashboardData"
-            :channel-statistics="dashboardData?.channelStatistics!"
-          />
+          <ChannelChart v-if="channelStatistics" :channel-statistics="channelStatistics" />
         </moduleTemp>
-      </aside> -->
+      </aside>
     </main>
   </div>
 </template>
@@ -60,7 +57,6 @@ import OrderLatestList from '@/components/OrderLatestList.vue'
 import UserChart from '@/components/UserChart.vue'
 import HotProductList from '@/components/HotProductList.vue'
 import ChannelChart from '@/components/ChannelChart.vue'
-import { createDataList } from '@/utils/data/DataList'
 import type { City } from '../../shared/types/city'
 
 const dashboardStore = useDashboardStore()
@@ -73,6 +69,9 @@ const {
   orderTrend,
   processedTodayData,
   latestOrder,
+  userStatistics,
+  hotProduct,
+  channelStatistics,
   loading,
   error,
 } = storeToRefs(dashboardStore)
@@ -81,11 +80,20 @@ const {
 const { selectCity } = dashboardStore
 
 // 选中城市
-const selectedCity = ref<City | null>(null)
+const selectedCity = ref<City | null>({
+  id: 2,
+  cityId: 'shanghai',
+  name: '上海',
+  cfg: 'SH',
+  longitude: 121.5,
+  latitude: 31.2,
+  scale: 1.35,
+  value: 0,
+})
 
 onMounted(() => {
   // todo: 这里暂时默认选中的北京，后面对接完各模块数据后，再处理
-  handleSelectCity({ cityId: 'beijing' })
+  handleSelectCity(selectedCity.value!)
 })
 
 // 选中城市操作
@@ -94,22 +102,19 @@ const handleSelectCity = (city: City) => {
   selectCity(selectedCity.value.cityId)
 }
 
-// 今日数据
-// const todayDataList = computed(() => {
-//   return createDataList(dashboardData.value?.todayData!, 'today')
-// })
-
-// // 选中城市操作
-// const handleSelectCity = async (city: City) => {
-//   selectedCity.value = city
-
-//   await dashboardStoreDel.fetchDashboard(city.id!)
-// }
-
-// // 返回全国
-// const handleResetNational = async () => {
-//   await dashboardStoreDel.fetchDashboard('national')
-// }
+// 返回全国
+const handleResetNational = async () => {
+  handleSelectCity({
+    id: 1,
+    cityId: 'beijing',
+    name: '北京',
+    cfg: 'BG',
+    longitude: 116.405285,
+    latitude: 39.904989,
+    scale: 1.2,
+    value: 0,
+  })
+}
 </script>
 
 <style lang="less" scoped>
@@ -145,10 +150,5 @@ const handleSelectCity = (city: City) => {
       width: 50%;
     }
   }
-}
-
-.test {
-  border: 1px solid #fff;
-  flex: 1;
 }
 </style>

@@ -402,7 +402,10 @@ export const ModelName = {
   SalesTrend: 'SalesTrend',
   OrderTrend: 'OrderTrend',
   TodayData: 'TodayData',
-  LatestOrder: 'LatestOrder'
+  LatestOrder: 'LatestOrder',
+  UserStatistics: 'UserStatistics',
+  HotProduct: 'HotProduct',
+  ChannelStatistics: 'ChannelStatistics'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "city" | "keyData" | "salesTrend" | "orderTrend" | "todayData" | "latestOrder"
+    modelProps: "city" | "keyData" | "salesTrend" | "orderTrend" | "todayData" | "latestOrder" | "userStatistics" | "hotProduct" | "channelStatistics"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -818,6 +821,204 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserStatistics: {
+      payload: Prisma.$UserStatisticsPayload<ExtArgs>
+      fields: Prisma.UserStatisticsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserStatisticsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserStatisticsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload>
+        }
+        findFirst: {
+          args: Prisma.UserStatisticsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserStatisticsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload>
+        }
+        findMany: {
+          args: Prisma.UserStatisticsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload>[]
+        }
+        create: {
+          args: Prisma.UserStatisticsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload>
+        }
+        createMany: {
+          args: Prisma.UserStatisticsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.UserStatisticsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload>
+        }
+        update: {
+          args: Prisma.UserStatisticsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserStatisticsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserStatisticsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.UserStatisticsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserStatisticsPayload>
+        }
+        aggregate: {
+          args: Prisma.UserStatisticsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserStatistics>
+        }
+        groupBy: {
+          args: Prisma.UserStatisticsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserStatisticsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserStatisticsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserStatisticsCountAggregateOutputType> | number
+        }
+      }
+    }
+    HotProduct: {
+      payload: Prisma.$HotProductPayload<ExtArgs>
+      fields: Prisma.HotProductFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HotProductFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HotProductFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload>
+        }
+        findFirst: {
+          args: Prisma.HotProductFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HotProductFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload>
+        }
+        findMany: {
+          args: Prisma.HotProductFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload>[]
+        }
+        create: {
+          args: Prisma.HotProductCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload>
+        }
+        createMany: {
+          args: Prisma.HotProductCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.HotProductDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload>
+        }
+        update: {
+          args: Prisma.HotProductUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload>
+        }
+        deleteMany: {
+          args: Prisma.HotProductDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HotProductUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.HotProductUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HotProductPayload>
+        }
+        aggregate: {
+          args: Prisma.HotProductAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHotProduct>
+        }
+        groupBy: {
+          args: Prisma.HotProductGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotProductGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HotProductCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HotProductCountAggregateOutputType> | number
+        }
+      }
+    }
+    ChannelStatistics: {
+      payload: Prisma.$ChannelStatisticsPayload<ExtArgs>
+      fields: Prisma.ChannelStatisticsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ChannelStatisticsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ChannelStatisticsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload>
+        }
+        findFirst: {
+          args: Prisma.ChannelStatisticsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ChannelStatisticsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload>
+        }
+        findMany: {
+          args: Prisma.ChannelStatisticsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload>[]
+        }
+        create: {
+          args: Prisma.ChannelStatisticsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload>
+        }
+        createMany: {
+          args: Prisma.ChannelStatisticsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ChannelStatisticsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload>
+        }
+        update: {
+          args: Prisma.ChannelStatisticsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload>
+        }
+        deleteMany: {
+          args: Prisma.ChannelStatisticsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ChannelStatisticsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ChannelStatisticsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelStatisticsPayload>
+        }
+        aggregate: {
+          args: Prisma.ChannelStatisticsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChannelStatistics>
+        }
+        groupBy: {
+          args: Prisma.ChannelStatisticsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChannelStatisticsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ChannelStatisticsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChannelStatisticsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -931,6 +1132,39 @@ export const LatestOrderScalarFieldEnum = {
 export type LatestOrderScalarFieldEnum = (typeof LatestOrderScalarFieldEnum)[keyof typeof LatestOrderScalarFieldEnum]
 
 
+export const UserStatisticsScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  category: 'category',
+  name: 'name',
+  value: 'value'
+} as const
+
+export type UserStatisticsScalarFieldEnum = (typeof UserStatisticsScalarFieldEnum)[keyof typeof UserStatisticsScalarFieldEnum]
+
+
+export const HotProductScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  productName: 'productName',
+  amount: 'amount',
+  ratio: 'ratio'
+} as const
+
+export type HotProductScalarFieldEnum = (typeof HotProductScalarFieldEnum)[keyof typeof HotProductScalarFieldEnum]
+
+
+export const ChannelStatisticsScalarFieldEnum = {
+  id: 'id',
+  cityId: 'cityId',
+  name: 'name',
+  ratio: 'ratio',
+  value: 'value'
+} as const
+
+export type ChannelStatisticsScalarFieldEnum = (typeof ChannelStatisticsScalarFieldEnum)[keyof typeof ChannelStatisticsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -988,6 +1222,31 @@ export const LatestOrderOrderByRelevanceFieldEnum = {
 } as const
 
 export type LatestOrderOrderByRelevanceFieldEnum = (typeof LatestOrderOrderByRelevanceFieldEnum)[keyof typeof LatestOrderOrderByRelevanceFieldEnum]
+
+
+export const UserStatisticsOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  category: 'category',
+  name: 'name'
+} as const
+
+export type UserStatisticsOrderByRelevanceFieldEnum = (typeof UserStatisticsOrderByRelevanceFieldEnum)[keyof typeof UserStatisticsOrderByRelevanceFieldEnum]
+
+
+export const HotProductOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  productName: 'productName'
+} as const
+
+export type HotProductOrderByRelevanceFieldEnum = (typeof HotProductOrderByRelevanceFieldEnum)[keyof typeof HotProductOrderByRelevanceFieldEnum]
+
+
+export const ChannelStatisticsOrderByRelevanceFieldEnum = {
+  cityId: 'cityId',
+  name: 'name'
+} as const
+
+export type ChannelStatisticsOrderByRelevanceFieldEnum = (typeof ChannelStatisticsOrderByRelevanceFieldEnum)[keyof typeof ChannelStatisticsOrderByRelevanceFieldEnum]
 
 
 
@@ -1180,6 +1439,9 @@ export type GlobalOmitConfig = {
   orderTrend?: Prisma.OrderTrendOmit
   todayData?: Prisma.TodayDataOmit
   latestOrder?: Prisma.LatestOrderOmit
+  userStatistics?: Prisma.UserStatisticsOmit
+  hotProduct?: Prisma.HotProductOmit
+  channelStatistics?: Prisma.ChannelStatisticsOmit
 }
 
 /* Types for Logging */

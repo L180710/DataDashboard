@@ -71,3 +71,18 @@ export type TodayData = Prisma.TodayDataModel
  * 
  */
 export type LatestOrder = Prisma.LatestOrderModel
+/**
+ * Model UserStatistics
+ * 
+ */
+export type UserStatistics = Prisma.UserStatisticsModel
+/**
+ * Model HotProduct
+ * 
+ */
+export type HotProduct = Prisma.HotProductModel
+/**
+ * Model ChannelStatistics
+ * 
+ */
+export type ChannelStatistics = Prisma.ChannelStatisticsModel

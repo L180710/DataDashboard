@@ -1,15 +1,15 @@
 export interface City {
-  id?: string
+  id: number
   cityId: string
   name: string
   cfg: string
   longitude: number
   latitude: number
   scale: number
-  value?: number
+  value: number
 }
 
 export interface CityConnection {
-  from: string
-  to: string
+  from: City
+  to: City
 }

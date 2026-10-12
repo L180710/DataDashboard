@@ -22,11 +22,18 @@ const props = withDefaults(
 )
 
 const nameArr = computed(() => {
-  return props.userStatistics.age.map((item) => item.name)
+  return props.userStatistics.age.map((item) => `${item.name} 以上`)
 })
 
 const valueArr = computed(() => {
-  return props.userStatistics.age.map((item) => item.value)
+  const ageArr = props.userStatistics.age
+  const total = ageArr.reduce((sum, item) => {
+    return sum + item.value
+  }, 0)
+
+  return ageArr.map((item) => {
+    return (item.value / total) * 100
+  })
 })
 
 const getOption = (): echarts.EChartsOption => {
@@ -45,9 +52,19 @@ const getOption = (): echarts.EChartsOption => {
         fontSize: remToPx(0.16),
       },
       formatter: (name: string) => {
+        const genderArr = props.userStatistics.gender
+
+        // 人数总和
+        const total = genderArr.reduce((sum, item) => {
+          return sum + item.value
+        }, 0)
+
+        const male = ((genderArr[0]!.value / total) * 100).toFixed(0)
+        const famale = ((genderArr[1]!.value / total) * 100).toFixed(0)
+
         const dataMap: Record<string, string> = {
-          男: `${props.userStatistics.gender[0]!.value}%`,
-          女: `${props.userStatistics.gender[1]!.value}%`,
+          男: `${male}%`,
+          女: `${famale}%`,
         }
         return `${name} ${dataMap[name] || ''}`
       },

@@ -26,7 +26,8 @@ export function useECharts(getOption?: () => echarts.EChartsOption) {
    * 调整图表尺寸
    */
   const resize = () => {
-    chartInstance?.resize()
+    // todo，为了优化而作的，但不确定是否有效
+    // chartInstance?.resize()
   }
 
   onMounted(() => {
@@ -40,7 +41,8 @@ export function useECharts(getOption?: () => echarts.EChartsOption) {
 
     // 监听容器大小
     resizeObserver = new ResizeObserver(() => {
-      resize()
+      // todo，为了优化而作的，但不确定是否有效
+      // resize()
 
       // 重新计算 option
       updateChart()

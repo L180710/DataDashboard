@@ -4,6 +4,9 @@ import { cities } from '../src/data/cities.js'
 import { generateKeyData } from '../src/generators/keyData.generator.js'
 import { generateSalesTrend, generateOrderTrend } from '../src/generators/trend.generator.js'
 import { generateLatestOrder } from '../src/generators/latestOrder.generator.js'
+import { generateUserStatistics } from '../src/generators/userStatistics.generator.js'
+import { generateHotProduct } from '../src/generators/hotProduct.generator.js'
+import { generateChannelStatistics } from '../src/generators/channelStatistics.generator.js'
 
 /**
 改了 schema.prisma 之后执行
@@ -98,6 +101,33 @@ async function main() {
     })
     await prisma.latestOrder.createMany({
       data: latestOrder,
+    })
+
+    // 用户统计
+    const userStatisics = generateUserStatistics(city)
+    await prisma.userStatistics.deleteMany({
+      where: { cityId: city.cityId },
+    })
+    await prisma.userStatistics.createMany({
+      data: userStatisics,
+    })
+
+    // 热门商品
+    const hotProduct = generateHotProduct(city)
+    await prisma.hotProduct.deleteMany({
+      where: { cityId: city.cityId },
+    })
+    await prisma.hotProduct.createMany({
+      data: hotProduct,
+    })
+
+    // 渠道来源
+    const channelStatistics = generateChannelStatistics(city)
+    await prisma.channelStatistics.deleteMany({
+      where: { cityId: city.cityId },
+    })
+    await prisma.channelStatistics.createMany({
+      data: channelStatistics,
     })
   }
 }

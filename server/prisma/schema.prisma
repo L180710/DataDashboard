@@ -18,11 +18,14 @@ model City {
   scale     Float    @default(1.0)
   value     Int      @default(0)
 
-  keyData       KeyData[]
-  salesTrend    SalesTrend[]
-  orderTrend    OrderTrend[]
-  todayData     TodayData[]
-  latestOrder   LatestOrder[]
+  keyData             KeyData[]
+  salesTrend          SalesTrend[]
+  orderTrend          OrderTrend[]
+  todayData           TodayData[]
+  latestOrder         LatestOrder[]
+  userStatistics      UserStatistics[]
+  hotProduct          HotProduct[]
+  channelStatistics   ChannelStatistics[]
 }
 
 // 核心指标
@@ -102,3 +105,49 @@ model LatestOrder {
 
   @@index([cityId, createdAt])
 }
+
+// 用户统计
+model UserStatistics {
+  id         Int     @id   @default(autoincrement())
+  cityId     String
+  category   String   // gender
+  name       String   // age
+  value      Int
+
+  city       City     @relation(fields: [cityId], references: [cityId])
+
+  @@unique([cityId, category, name])
+  @@index([cityId, category])  // 复合索引
+}
+
+// 热门商品
+model HotProduct {
+  id            Int     @id  @default(autoincrement())
+  cityId        String
+  productName   String
+  amount        Float
+  ratio         Float @default(0)
+
+  city          City    @relation(fields: [cityId], references: [cityId])
+
+  @@unique([cityId, productName])
+  @@index([cityId])
+}
+
+// 渠道来源
+model ChannelStatistics {
+  id        Int      @id  @default(autoincrement())
+  cityId    String
+  name      String
+  ratio     Float
+  value     Int
+
+  city      City     @relation(fields: [cityId], references: [cityId])
+
+  @@unique([cityId, name])
+  @@index([cityId])
+}
+
+
+
+

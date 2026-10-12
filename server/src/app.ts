@@ -6,9 +6,9 @@ import salesTrendRouter from './routes/salesTrend.routes.js'
 import orderTrendRouter from './routes/orderTrend.routes.js'
 import todayDataRouter from './routes/todayData.routes.js'
 import latestOrderRouter from './routes/latestOrder.routes.js'
-
-// 后续各模块数据处理完了可删除
-import dashboardRouter from './routes/dashboard.js'
+import userStatisticsRouter from './routes/userStatistics.routes.js'
+import hotProductRouter from './routes/hotProduct.routes.js'
+import channelStatisticsRouter from './routes/channelStatistics.routes.js'
 
 const app = express()
 
@@ -20,9 +20,9 @@ app.use('/api/sales-trend', salesTrendRouter)
 app.use('/api/order-trend', orderTrendRouter)
 app.use('/api/today-data', todayDataRouter)
 app.use('/api/latest-order', latestOrderRouter)
-
-// 后续各模块数据处理完了可删除
-app.use('/api/dashboard', dashboardRouter)
+app.use('/api/user-statistics', userStatisticsRouter)
+app.use('/api/hot-product', hotProductRouter)
+app.use('/api/channel-statistics', channelStatisticsRouter)
 
 app.listen(3000, () => {
   console.log('Server running at http://localhost:3000')

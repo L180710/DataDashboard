@@ -82,33 +82,33 @@ export const customerNamePool = [
 // 最终值 = baseValue * cityScale
 export const userStatisticsTemplate = {
   gender: [
-    { type: 'male', baseValue: 5600 },
-    { type: 'female', baseValue: 4400 },
+    { name: '男', baseValue: 5600 },
+    { name: '女', baseValue: 4400 },
   ],
   age: [
-    { type: '18-24', baseValue: 1800 },
-    { type: '25-34', baseValue: 4200 },
-    { type: '35-44', baseValue: 2500 },
-    { type: '45+', baseValue: 1500 },
+    { name: '18-24', baseValue: 1800 },
+    { name: '25-34', baseValue: 4200 },
+    { name: '35-44', baseValue: 2500 },
+    { name: '45+', baseValue: 1500 },
   ],
 }
 
 // 热门商品模板
 // 最终值 = baseValue * cityScale
-// 这里有个疑问，如何使得商品名字也自定义化
+// 这里有个疑问，如何使得商品名字也自定义化--用的是名字池
 export const hotProductTemplate = [
-  { name: '智能手机', baseAmount: 350000 },
-  { name: '笔记本电脑', baseAmount: 280000 },
-  { name: '平板电脑', baseAmount: 230000 },
-  { name: '智能手表', baseAmount: 180000 },
-  { name: '无线耳机', baseAmount: 80000 },
+  { name: '智能手机', baseAmount: 350000, ratio: 98 },
+  { name: '笔记本电脑', baseAmount: 280000, ratio: 88 },
+  { name: '平板电脑', baseAmount: 230000, ratio: 80 },
+  { name: '智能手表', baseAmount: 180000, ratio: 66 },
+  { name: '无线耳机', baseAmount: 80000, ratio: 50 },
 ]
 
 // 渠道来源模版
 // 最终值 = baseValue * cityScale * moduleScale(channelModuleScale)
 export const channelTemplate = [
-  { channelId: 'online', name: '线上商城', baseValue: 4200 },
-  { channelId: 'offline', name: '线下门店', baseValue: 2800 },
-  { channelId: 'thirdParty', name: '第三方平台', baseValue: 1800 },
-  { channelId: 'social', name: '社交媒体', baseValue: 1200 },
+  { name: '线上商城', baseValue: 4200 },
+  { name: '线下门店', baseValue: 2800 },
+  { name: '第三方平台', baseValue: 1800 },
+  { name: '社交媒体', baseValue: 1200 },
 ]

@@ -1,5 +1,6 @@
 import type { City, CityConnection } from '../../../shared/types/city.js'
 
+// 城市模板
 export const cities: City[] = [
   {
     cityId: 'beijing',
@@ -16,25 +17,18 @@ export const cities: City[] = [
   { cityId: 'hangzhou', name: '杭州', cfg: 'HZ', longitude: 120.15, latitude: 30.28, scale: 1.05 },
 ]
 
-export const cityConnections: CityConnection[] = [
-  {
-    from: 'beijing',
-    to: 'shanghai',
-  },
-  {
-    from: 'beijing',
-    to: 'shenzhen',
-  },
-  {
-    from: 'beijing',
-    to: 'guangzhou',
-  },
-  {
-    from: 'beijing',
-    to: 'chengdu',
-  },
-  {
-    from: 'beijing',
-    to: 'hangzhou',
-  },
-]
+// 城市链接
+export const getCityConnections = (cites: City[]): CityConnection[] => {
+  const origin = cities[0]
+
+  if (!origin) {
+    return []
+  }
+
+  return cities
+    .filter((city) => city.cityId !== origin.cityId)
+    .map((city) => ({
+      from: origin,
+      to: city,
+    }))
+}

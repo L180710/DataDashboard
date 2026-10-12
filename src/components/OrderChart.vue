@@ -15,7 +15,7 @@ const props = defineProps<{
 
 // 日期
 const dateArr = computed(() => {
-  return (props.orderTrendList ?? []).map((item) => item.value)
+  return (props.orderTrendList ?? []).map((item) => item.name)
 })
 
 // 数值
