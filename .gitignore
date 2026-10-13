@@ -50,7 +50,10 @@ Node-MySQL.md
 # VS Code Local History
 .history/
 
-# env
+# 环境变量与密钥
 .env
+.env.*
+!.env.example
+
 # Prisma7_DataDashboard_学习说明.md
 Prisma7_DataDashboard_学习说明.md
