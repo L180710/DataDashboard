@@ -117,6 +117,8 @@ let raycaster = new THREE.Raycaster()
 let mouse = new THREE.Vector2()
 
 let animationId = 0
+const FRAME_INTERVAL = 1000 / 30
+let lastFrameTime = 0
 
 // 相机聚焦动画
 let isFocusing = false
@@ -156,14 +158,6 @@ const earthEndQuaternion = new THREE.Quaternion()
 // 所有城市
 let cityList = ref<City[]>([])
 
-// // 城市之间的链接
-// const cityConnections22 = [
-//   ['北京', '上海'],
-//   ['北京', '广州'],
-//   ['北京', '成都'],
-//   ['北京', '深圳'],
-// ]
-
 // 初始化
 const initThree = async () => {
   if (!containerRef.value) return
@@ -179,15 +173,14 @@ const initThree = async () => {
 
   // 创建 Camera
   camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-  camera.position.set(0, 0, 3.6)
+  camera.position.set(0, 0, 2.85)
 
   // 创建 Renderer
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true,
   })
-  // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-  renderer.setPixelRatio(1.25)
+  renderer.setPixelRatio(1)
   renderer.setSize(width, height)
 
   container.appendChild(renderer.domElement)
@@ -231,12 +224,6 @@ const initThree = async () => {
 
   // 添加城市
   createCityPoints()
-
-  // 添加飞行线
-  // createFlightLines()
-
-  // 添加粒子
-  // createFlightParticles()
 
   // 添加中国地图
   await loadChinaMap()
@@ -459,11 +446,13 @@ const createCityPoint = (position: THREE.Vector3, city: City) => {
 
 // 创建城市组
 const createCityPoints = async () => {
+  const allCities = await getCities()
+  // 全国作为返回的一个城市，暂时去掉在列表中
+  cityList.value = allCities.filter((item) => item.cityId !== 'national')
+
   cityPoints = new THREE.Group()
 
-  cityList.value = await getCities()
-
-  cityList.value.forEach((city) => {
+  cityList.value.forEach((city, index) => {
     const position = lonLatToVector3(city.longitude!, city.latitude!, CITY_RADIUS)
 
     const { group, label, rings, core, glow, pillar } = createCityPoint(position, city)
@@ -482,30 +471,24 @@ const createCityPoints = async () => {
     })
   })
   earth?.add(cityPoints)
-  // earth ? createFlightLines() : ''
-}
 
-// 获取城市点
-// 可删，当根据cities数据返回 from to 数据时
-// 另外 cityConnections 已经根据cities 返回
-const getCityPoint = (name: string) => {
-  return cityList.value.find((city: City) => city.name === name)
+  // 添加飞行线
+  createFlightLines()
 }
 
 // 创建飞行线
 const createFlightLines = () => {
+  if (cityList.value.length == 0) return
+
+  const cityConnections = getCityConnections(cityList.value)
+
   flightLines = new THREE.Group()
 
-  cityConnections.forEach(([startName, endName]) => {
-    const startCity = getCityPoint(startName!)
-    const endCity = getCityPoint(endName!)
+  cityConnections.forEach(({ from, to }) => {
+    if (!from || !to) return
 
-    if (!startCity || !endCity) {
-      return
-    }
-
-    const start = lonLatToVector3(startCity.longitude!, startCity.latitude!, CITY_RADIUS)
-    const end = lonLatToVector3(endCity.longitude!, endCity.latitude!, CITY_RADIUS)
+    const start = lonLatToVector3(from.longitude!, from.latitude!, CITY_RADIUS)
+    const end = lonLatToVector3(to.longitude!, to.latitude!, CITY_RADIUS)
 
     const { line, curve } = createFlightLine(start, end)
     flightLines!.add(line)
@@ -513,6 +496,9 @@ const createFlightLines = () => {
   })
 
   earth?.add(flightLines)
+
+  // 添加粒子
+  createFlightParticles()
 }
 
 // 创建粒子
@@ -803,6 +789,10 @@ const animate = () => {
 
   // 当前时间
   const now = performance.now()
+  if (now - lastFrameTime < FRAME_INTERVAL) {
+    return
+  }
+  lastFrameTime = now
 
   const opacity = 0.15 + Math.sin(now * 0.002) * 0.1
   boundaryGlowMaterials.forEach((material) => {
@@ -1100,7 +1090,7 @@ onBeforeUnmount(() => {
   position: relative;
   width: 100%;
   height: 100%;
-  flex: 1;
+  // flex: 1;
 }
 
 .city-tooltip {

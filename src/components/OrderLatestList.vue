@@ -34,7 +34,11 @@ defineProps<{
 <style lang="less" scoped>
 .order-list {
   width: 100%;
-  height: max-content;
+  // flex: 1;
+  // min-height: 0;
+  // overflow-y: auto;
+  min-height: min-content;
+  height: min-content;
 
   .list-item {
     display: grid;

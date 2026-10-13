@@ -22,6 +22,10 @@ defineProps<{
   --corner-width: 0.02rem;
 
   overflow: hidden;
+  // min-height: 0;
+  min-height: min-content;
+  height: max-content;
+
   padding: 0.2rem 0.2rem 0.2rem;
   border: 1px solid rgba(0, 150, 255, 0.2);
   border-radius: 0.1rem;
@@ -93,6 +97,8 @@ defineProps<{
   // 模块内容
   .module-main {
     flex: 1;
+    // min-height: 0;
+    min-height: min-content;
   }
 }
 </style>

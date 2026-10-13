@@ -1,5 +1,5 @@
 export interface City {
-  id: number
+  id?: number
   cityId: string
   name: string
   cfg: string

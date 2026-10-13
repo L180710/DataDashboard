@@ -19,9 +19,9 @@
       <section class="main-center flex flex-col">
         <DataList v-if="selectedCityId" :columns="4" :list="processedTodayData" />
 
-        <!-- <Earth v-if="selectedCityId" :selectedCity="selectedCity" @select-city="handleSelectCity" /> -->
+        <Earth :selectedCity="selectedCity" @select-city="handleSelectCity" />
 
-        <moduleTemp title="最新订单">
+        <moduleTemp title="最新订单" class="latest-order-module">
           <OrderLatestList v-if="latestOrder" :list="latestOrder" />
         </moduleTemp>
       </section>
@@ -80,40 +80,22 @@ const {
 const { selectCity } = dashboardStore
 
 // 选中城市
-const selectedCity = ref<City | null>({
-  id: 2,
-  cityId: 'shanghai',
-  name: '上海',
-  cfg: 'SH',
-  longitude: 121.5,
-  latitude: 31.2,
-  scale: 1.35,
-  value: 0,
-})
+const selectedCity = ref<City | null>(null)
 
 onMounted(() => {
-  // todo: 这里暂时默认选中的北京，后面对接完各模块数据后，再处理
-  handleSelectCity(selectedCity.value!)
+  handleResetNational()
 })
-
-// 选中城市操作
-const handleSelectCity = (city: City) => {
-  selectedCity.value = city
-  selectCity(selectedCity.value.cityId)
-}
 
 // 返回全国
 const handleResetNational = async () => {
-  handleSelectCity({
-    id: 1,
-    cityId: 'beijing',
-    name: '北京',
-    cfg: 'BG',
-    longitude: 116.405285,
-    latitude: 39.904989,
-    scale: 1.2,
-    value: 0,
-  })
+  selectCity()
+  selectedCity.value = null
+}
+
+// 选中城市操作
+const handleSelectCity = (city: City) => {
+  selectCity(city.cityId)
+  selectedCity.value = city
 }
 </script>
 
@@ -148,6 +130,22 @@ const handleResetNational = async () => {
       justify-content: space-between;
       row-gap: 0.15rem;
       width: 50%;
+      // min-width: 0;
+      // min-height: 0;
+
+      // .latest-order-module {
+      //   min-height: 0;
+      // }
+
+      // .latest-order-module :deep(.module-main) {
+      //   min-height: 0;
+      //   overflow: hidden;
+      // }
+
+      // .latest-order-module :deep(.order-list) {
+      //   min-height: 0;
+      //   overflow-y: auto;
+      // }
     }
   }
 }

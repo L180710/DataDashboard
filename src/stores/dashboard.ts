@@ -69,9 +69,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
    * 切换城市
    * @param cityId - 城市 ID
    */
-  const selectCity = (cityId: string) => {
-    selectedCityId.value = cityId
-    getDashboardData(cityId)
+  const selectCity = (cityId?: string) => {
+    selectedCityId.value = cityId ? cityId : 'national'
+    getDashboardData(selectedCityId?.value)
   }
 
   /**
