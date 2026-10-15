@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `city` ADD COLUMN `scale` DOUBLE NOT NULL DEFAULT 1.0;
