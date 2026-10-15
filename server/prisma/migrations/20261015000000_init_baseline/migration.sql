@@ -1,4 +1,4 @@
-﻿-- CreateTable
+-- CreateTable
 CREATE TABLE `City` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `cityId` VARCHAR(191) NOT NULL,
