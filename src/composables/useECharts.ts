@@ -7,13 +7,6 @@ export function useECharts(getOption?: () => echarts.EChartsOption) {
   let resizeObserver: ResizeObserver | null = null
 
   /**
-   * 设置图表配置
-   */
-  const setOption = (option: echarts.EChartsOption) => {
-    chartInstance?.setOption(option)
-  }
-
-  /**
    * 更新图表
    */
   const updateChart = () => {
@@ -26,8 +19,7 @@ export function useECharts(getOption?: () => echarts.EChartsOption) {
    * 调整图表尺寸
    */
   const resize = () => {
-    // todo，为了优化而作的，但不确定是否有效
-    // chartInstance?.resize()
+    chartInstance?.resize()
   }
 
   onMounted(() => {
@@ -41,11 +33,7 @@ export function useECharts(getOption?: () => echarts.EChartsOption) {
 
     // 监听容器大小
     resizeObserver = new ResizeObserver(() => {
-      // todo，为了优化而作的，但不确定是否有效
-      // resize()
-
-      // 重新计算 option
-      updateChart()
+      resize()
     })
 
     resizeObserver.observe(chartRef.value)
@@ -61,5 +49,6 @@ export function useECharts(getOption?: () => echarts.EChartsOption) {
 
   return {
     chartRef,
+    updateChart,
   }
 }

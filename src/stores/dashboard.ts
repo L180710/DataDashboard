@@ -1,4 +1,3 @@
-// 这个能正常对接了，把 dashboard.ts 去掉
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type {

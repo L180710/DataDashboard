@@ -73,15 +73,15 @@ defineProps<{
       }
 
       .state0 {
-        color: rgb(234, 42, 8);
+        color: #f6a89a;
       }
 
       .state1 {
-        color: rgb(245, 200, 36);
+        color: #f9db6f;
       }
 
       .state2 {
-        color: rgb(34 197 94);
+        color: #79df9e;
       }
     }
   }

@@ -38,13 +38,12 @@ defineProps<{
     }
 
     .item-order {
-      // align-self: self-end;
       align-self: center;
       width: 0.3rem;
       height: 0.3rem;
       margin: 0 auto;
       line-height: 0.3rem;
-      font-size: 0.16rem;
+      font-size: 0.14rem;
       text-align: center;
       border-radius: 0.04rem;
       border-width: 1px;

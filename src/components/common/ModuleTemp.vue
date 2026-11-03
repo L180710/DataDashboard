@@ -18,17 +18,15 @@ defineProps<{
 
 <style lang="less" scoped>
 .module-container {
-  --corner-length: 0.3rem;
+  --corner-length: 0.2rem;
   --corner-width: 0.02rem;
 
   overflow: hidden;
-  // min-height: 0;
   min-height: min-content;
   height: max-content;
 
-  padding: 0.2rem 0.2rem 0.2rem;
+  padding: 0.16rem 0.16rem;
   border: 1px solid rgba(0, 150, 255, 0.2);
-  border-radius: 0.1rem;
   flex: var(--flex);
 
   background:
@@ -58,10 +56,10 @@ defineProps<{
 
     .title {
       position: relative;
-      font-size: 0.22rem;
+      font-size: 0.2rem;
       font-weight: 500;
-      line-height: 0.22rem;
-      color: #fff;
+      line-height: 0.2rem;
+      color: #f4f4f4;
       letter-spacing: 0.05rem;
 
       text-shadow:

@@ -36,12 +36,11 @@ const props = defineProps<{
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   flex: 1;
-  gap: 0.1rem 0.15rem;
-  padding: 0.1rem;
-  color: #edebeb;
+  gap: 0.08rem 0.13rem;
+  padding: 0.1rem 0.08rem 0.1rem 0.1rem;
+  color: #dce8ff;
   border-radius: 0.1rem;
-  background: rgb(7 7 122 / 12%);
-  border: 1px solid rgb(63 81 122);
+  border: 1px solid rgba(0, 150, 255, 0.2);
 
   .data-icon {
     grid-row: 1/ 4;
@@ -61,11 +60,13 @@ const props = defineProps<{
   }
 
   .data-title {
-    font-size: 0.14rem;
+    font-size: 0.13rem;
+    color: rgb(205, 206, 207);
   }
 
   .data-diff-status {
-    font-size: 0.14rem;
+    font-size: 0.13rem;
+    color: var(--color);
   }
 
   .data-account {
@@ -76,7 +77,7 @@ const props = defineProps<{
   }
 
   .data-status {
-    color: var(--color);
+    // color: var(--color);
   }
 }
 </style>

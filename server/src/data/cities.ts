@@ -8,7 +8,7 @@ export const cities: City[] = [
     cfg: 'GL',
     longitude: 104,
     latitude: 35,
-    scale: 1,
+    scale: 2.286,
     value: 1000000,
   },
   {

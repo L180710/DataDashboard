@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
@@ -12,6 +12,13 @@ import type { ChannelStatistics } from '../../shared/types/dashboard'
 const props = defineProps<{
   channelStatistics: ChannelStatistics
 }>()
+
+watch(
+  () => props.channelStatistics,
+  (val) => {
+    updateChart()
+  },
+)
 
 const getOption = (): echarts.EChartsOption => {
   return {
@@ -26,7 +33,7 @@ const getOption = (): echarts.EChartsOption => {
       itemHeight: 8,
       itemGap: remToPx(0.14),
       textStyle: {
-        color: '#dce8ff',
+        color: '#e2e2e5',
         fontSize: remToPx(0.14),
       },
       formatter: (name: string) => {
@@ -74,7 +81,7 @@ const getOption = (): echarts.EChartsOption => {
   }
 }
 
-const { chartRef } = useECharts(getOption)
+const { chartRef, updateChart } = useECharts(getOption)
 </script>
 
 <style lang="less" scoped></style>

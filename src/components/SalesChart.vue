@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
@@ -13,6 +13,14 @@ import type { SalesTrendList } from '../../shared/types/dashboard'
 const props = defineProps<{
   saleTrendList: SalesTrendList
 }>()
+
+// 监听销售趋势数据变化，更新 Echart
+watch(
+  () => props.saleTrendList,
+  () => {
+    updateChart()
+  },
+)
 
 // 日期
 const dateArr = computed(() => {
@@ -97,7 +105,7 @@ const getOption = (): echarts.EChartsOption => {
 
       // x 轴名称
       axisLabel: {
-        color: '#a9b8d0',
+        color: '#dce8ff',
         fontSize: remToPx(0.16),
         margin: 10,
       },
@@ -109,7 +117,7 @@ const getOption = (): echarts.EChartsOption => {
       max: 300000,
       interval: 60000,
       axisLabel: {
-        color: '#a9b8d0',
+        color: '#dce8ff',
         fontSize: remToPx(0.16),
 
         formatter: (value: number) => {
@@ -164,7 +172,7 @@ const getOption = (): echarts.EChartsOption => {
   }
 }
 
-const { chartRef } = useECharts(getOption)
+const { chartRef, updateChart } = useECharts(getOption)
 </script>
 
 <style lang="less" scoped></style>

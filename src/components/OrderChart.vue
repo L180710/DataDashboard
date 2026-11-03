@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
@@ -12,6 +12,13 @@ import type { OrderTrendList } from '../../shared/types/dashboard'
 const props = defineProps<{
   orderTrendList: OrderTrendList
 }>()
+
+watch(
+  () => props.orderTrendList,
+  () => {
+    updateChart()
+  },
+)
 
 // 日期
 const dateArr = computed(() => {
@@ -35,7 +42,7 @@ const getOption = (): echarts.EChartsOption => {
         borderWidth: 0,
       },
       textStyle: {
-        color: '#dce8ff',
+        color: '#e2e2e5',
         fontSize: remToPx(0.18),
       },
 
@@ -87,6 +94,11 @@ const getOption = (): echarts.EChartsOption => {
         color: '#a9b8d0',
         fontSize: remToPx(0.16),
         margin: 10,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#0a2368',
+        },
       },
     },
 
@@ -142,7 +154,7 @@ const getOption = (): echarts.EChartsOption => {
   }
 }
 
-const { chartRef } = useECharts(getOption)
+const { chartRef, updateChart } = useECharts(getOption)
 </script>
 
 <style lang="less" scoped></style>

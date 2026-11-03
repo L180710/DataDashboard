@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch, watchEffect } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '@/composables/useECharts'
 import { remToPx } from '@/utils/responsive'
@@ -18,6 +18,16 @@ const props = withDefaults(
       gender: [],
       age: [],
     }),
+  },
+)
+
+watch(
+  () => props.userStatistics,
+  (val) => {
+    updateChart()
+  },
+  {
+    deep: true,
   },
 )
 
@@ -48,7 +58,7 @@ const getOption = (): echarts.EChartsOption => {
       itemHeight: 8,
       itemGap: remToPx(0.2),
       textStyle: {
-        color: '#dce8ff',
+        color: '#e2e2e5',
         fontSize: remToPx(0.16),
       },
       formatter: (name: string) => {
@@ -78,7 +88,7 @@ const getOption = (): echarts.EChartsOption => {
         left: '55%',
         style: {
           text: '年龄分布',
-          fill: '#dce8ff',
+          fill: '#e2e2e5',
           fontSize: remToPx(0.16),
         },
       },
@@ -112,7 +122,7 @@ const getOption = (): echarts.EChartsOption => {
         axisLine: { show: false },
         axisTick: { show: false },
         axisLabel: {
-          color: '#dce8ff',
+          color: '#e2e2e5',
           fontSize: remToPx(0.16),
           margin: remToPx(0.1),
         },
@@ -167,7 +177,7 @@ const getOption = (): echarts.EChartsOption => {
   }
 }
 
-const { chartRef } = useECharts(getOption)
+const { chartRef, updateChart } = useECharts(getOption)
 </script>
 
 <style lang="less" scoped></style>

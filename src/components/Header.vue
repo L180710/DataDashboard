@@ -1,6 +1,6 @@
 <template>
   <header class="header flex space-x align-center">
-    <div class="header-left">2026-08-28 16:45:40</div>
+    <div class="header-left">{{ clock.date }}&ensp;{{ clock.time }} &ensp;{{ clock.week }}</div>
     <svg
       class="header-center"
       xmlns="http://www.w3.org/2000/svg"
@@ -33,19 +33,19 @@
         stroke-linejoin="round"
       />
       <!-- 标题背后的光 -->
-      <!-- <ellipse cx="960" cy="42" rx="250" ry="45" fill="url(#titleGlow)" /> -->
+      <!-- <ellipse cx="1000" cy="42" rx="250" ry="45" fill="url(#titleGlow)" /> -->
       <text
         x="960"
         y="36"
         text-anchor="middle"
         dominant-baseline="middle"
         font-family="Arial, Microsoft YaHei, sans-serif"
-        font-size="42"
-        font-weight="600"
+        font-size="30"
+        font-weight="500"
         letter-spacing="6"
-        fill="#a9a9a9"
+        fill="#f4f4f4"
       >
-        数据可视化
+        城市综合数据可视化大屏
       </text>
       <polyline
         points="290,53 490,53 520,78"
@@ -77,7 +77,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import type { City } from '../../shared/types/city'
+import { startClock, getCurrentTime } from '@/utils/time'
 
 // 接收父组件的属性
 defineProps<{
@@ -89,9 +91,24 @@ const emit = defineEmits<{
   reset: []
 }>()
 
+const clock = ref(getCurrentTime())
+let stopClock: (() => void) | null = null
+
+// 重置全国
 const handleReset = () => {
   emit('reset')
 }
+
+onMounted(() => {
+  stopClock = startClock((value) => {
+    clock.value = value
+  })
+})
+
+onBeforeUnmount(() => {
+  stopClock?.()
+  stopClock = null
+})
 </script>
 
 <style lang="less" scoped>
@@ -99,7 +116,7 @@ const handleReset = () => {
   position: relative;
   justify-content: space-between;
   column-gap: 10px;
-  padding: 0.3rem 0.3rem 0.2rem;
+  padding: 0.3rem 0.3rem 0.1rem;
   color: #e3e6f1;
   flex-shrink: 0;
 

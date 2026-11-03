@@ -111,13 +111,20 @@ const currentCityWorldPosition = new THREE.Vector3()
 
 // 连线数组
 let flightLines: THREE.Group | null = null
+// 飞行曲线数组
 let flightCurves: THREE.QuadraticBezierCurve3[] = []
+// 飞行粒子数组
 let flightParticles: THREE.Mesh[] = []
+// 射线检测器
 let raycaster = new THREE.Raycaster()
+// 鼠标 NDC 坐标
 let mouse = new THREE.Vector2()
 
+// RAF id
 let animationId = 0
+// 30 fps 间隔
 const FRAME_INTERVAL = 1000 / 30
+// 上一帧时间
 let lastFrameTime = 0
 
 // 相机聚焦动画
@@ -158,6 +165,46 @@ const earthEndQuaternion = new THREE.Quaternion()
 // 所有城市
 let cityList = ref<City[]>([])
 
+// 观察容器变化
+let resizeObserver: ResizeObserver | null = null
+let isInitializing = false
+
+const observeContainerSize = () => {
+  const container = containerRef.value
+  if (!container) return
+
+  resizeObserver = new ResizeObserver((entries) => {
+    const entry = entries[0]
+
+    if (!entry) return
+
+    const { width, height } = entry.contentRect
+
+    // 容器尚未获取有效尺寸时，不初始化 three.js
+    if (width <= 0 || height <= 0) return
+
+    // 已初始化，只更新尺寸
+    if (renderer && camera) {
+      resize()
+      return
+    }
+
+    // 避免 initThree 内部 await 期间重复初始化
+    if (isInitializing) return
+    isInitializing = true
+
+    void initThree()
+      .catch((error) => {
+        console.log('Three.js 初始化失败', error)
+      })
+      .finally(() => {
+        isInitializing = false
+      })
+  })
+
+  resizeObserver.observe(container)
+}
+
 // 初始化
 const initThree = async () => {
   if (!containerRef.value) return
@@ -171,9 +218,9 @@ const initThree = async () => {
   // 创建 Scenes
   scene = new THREE.Scene()
 
-  // 创建 Camera
+  // 创建 Camerad
   camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-  camera.position.set(0, 0, 2.85)
+  camera.position.set(0, 0, 2.7)
 
   // 创建 Renderer
   renderer = new THREE.WebGLRenderer({
@@ -187,6 +234,7 @@ const initThree = async () => {
 
   // 创建 OrbitControls
   controls = new OrbitControls(camera, renderer.domElement)
+  controls.addEventListener('start', handleControlsStart)
   controls.enableDamping = true
   controls.dampingFactor = 0.05
   controls.minDistance = 2
@@ -223,7 +271,7 @@ const initThree = async () => {
   createStars()
 
   // 添加城市
-  createCityPoints()
+  await createCityPoints()
 
   // 添加中国地图
   await loadChinaMap()
@@ -1006,16 +1054,25 @@ const loadChinaMap = async () => {
 
 // 挂载
 onMounted(() => {
-  initThree()
+  observeContainerSize()
+
   window.addEventListener('resize', resize)
   containerRef.value?.addEventListener('mousemove', handleMouseMove)
   containerRef.value?.addEventListener('click', handleClick)
 
-  controls?.addEventListener('start', handleControlsStart)
+  // initThree()
+  // window.addEventListener('resize', resize)
+  // containerRef.value?.addEventListener('mousemove', handleMouseMove)
+  // containerRef.value?.addEventListener('click', handleClick)
+
+  // controls?.addEventListener('start', handleControlsStart)
 })
 
 // 在卸载前
 onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  resizeObserver = null
+
   cancelAnimationFrame(animationId)
 
   window.removeEventListener('resize', resize)
@@ -1088,9 +1145,10 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 .three-container {
   position: relative;
+  overflow: hidden;
   width: 100%;
   height: 100%;
-  // flex: 1;
+  border-radius: 0.1rem;
 }
 
 .city-tooltip {
