@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import axios from 'axios'
 import type {
   DataItem,
   TrendItem,
@@ -27,11 +28,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
   /**  各模块数据 */
   // 核心指标
   const keyData = ref<DataItem[] | null>(null)
-  // 核心指标加工后的数据
-  const processedKeyData = computed(() => {
-    if (!keyData.value) return []
-    return createDataList(keyData.value!, 'key')
-  })
 
   // 销售趋势
   const salesTrend = ref<TrendItem[] | null>(null)
@@ -54,6 +50,12 @@ export const useDashboardStore = defineStore('dashboard', () => {
   // 渠道来源
   const channelStatistics = ref<ChannelStatistics | null>(null)
 
+  // 核心指标加工后的数据
+  const processedKeyData = computed(() => {
+    if (!keyData.value) return []
+    return createDataList(keyData.value!, 'key')
+  })
+
   // 今日数据加工后数据
   const processedTodayData = computed(() => {
     if (!todayData.value) return []
@@ -64,13 +66,40 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
 
+  // 请求标识：解决快速切换城市产生的请求竞态
+  let requestId = 0
+
   /**
-   * 切换城市
+   * 统一转换错误信息
+   */
+  const getErrorMessage = (err: unknown): string => {
+    if (axios.isAxiosError(err)) {
+      if (!err.response) {
+        return '网络连接失败，请求检查网络后重试'
+      }
+
+      const status = err.response.status
+
+      if (status >= 500) {
+        return '服务器异常，请稍后重试'
+      }
+
+      if (status === 404) {
+        return '请求的数据不存在'
+      }
+      return '请求失败，请稍后重试'
+    }
+    return err instanceof Error ? err.message : '获取 Dashboard 数据失败'
+  }
+
+  /**
+   *
    * @param cityId - 城市 ID
    */
-  const selectCity = (cityId?: string) => {
-    selectedCityId.value = cityId ? cityId : 'national'
-    getDashboardData(selectedCityId?.value)
+  const selectCity = async (cityId?: string) => {
+    const targetCityId = cityId || 'national'
+    selectedCityId.value = targetCityId
+    await getDashboardData(targetCityId)
   }
 
   /**
@@ -78,20 +107,14 @@ export const useDashboardStore = defineStore('dashboard', () => {
    * @param cityId - 城市 ID
    */
   const getDashboardData = async (cityId: string) => {
+    // 每次请求生成新的 ID
+    const currentRequestId = ++requestId
+
     loading.value = true
     error.value = null
 
     try {
-      const [
-        keyDataResult,
-        salesTrendResult,
-        orderTrendResult,
-        todayDataResult,
-        latestOrderResult,
-        userStatisticsResult,
-        hotProductResult,
-        channelStatisticsResult,
-      ] = await Promise.allSettled([
+      const results = await Promise.allSettled([
         getKeyData(cityId),
         getSalesTrend(cityId),
         getOrderTrend(cityId),
@@ -102,80 +125,53 @@ export const useDashboardStore = defineStore('dashboard', () => {
         getChannelStatistics(cityId),
       ])
 
-      // 核心指标
-      if (keyDataResult.status === 'fulfilled') {
-        keyData.value = keyDataResult.value
-      } else {
-        keyData.value = null
-        console.error('核心指标获取失败：', keyDataResult.reason)
-      }
+      // 如果不是最新请求，直接放弃处理
+      if (currentRequestId !== requestId) return
 
-      // 销售趋势
-      if (salesTrendResult.status === 'fulfilled') {
-        salesTrend.value = salesTrendResult.value
-      } else {
-        salesTrend.value = null
-        console.error('销售趋势获取失败', salesTrendResult.reason)
-      }
+      const [
+        keyResult,
+        salesResult,
+        orderResult,
+        todayResult,
+        latestResult,
+        userResult,
+        hotResult,
+        channelResult,
+      ] = results
 
-      // 订单趋势
-      if (orderTrendResult.status === 'fulfilled') {
-        orderTrend.value = orderTrendResult.value
-      } else {
-        orderTrend.value = null
-        console.error('订单趋势获取失败', orderTrendResult.reason)
-      }
+      // 逐个更新模块数据
+      keyData.value = keyResult.status === 'fulfilled' ? keyResult.value : null
+      salesTrend.value = salesResult.status === 'fulfilled' ? salesResult.value : null
+      orderTrend.value = orderResult.status === 'fulfilled' ? orderResult.value : null
+      todayData.value = todayResult.status === 'fulfilled' ? todayResult.value : null
+      latestOrder.value = latestResult.status === 'fulfilled' ? latestResult.value : null
+      userStatistics.value = userResult.status === 'fulfilled' ? userResult.value : null
+      hotProduct.value = hotResult.status === 'fulfilled' ? hotResult.value : null
+      channelStatistics.value = channelResult.status === 'fulfilled' ? channelResult.value : null
 
-      // 今日数据
-      if (todayDataResult.status === 'fulfilled') {
-        todayData.value = todayDataResult.value
-      } else {
-        todayData.value = null
-        console.error('今日数据获取失败')
-      }
+      // 输出各模块失败信息，方便开发阶段排查
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          console.error(`Dashboard 第几 ${index + 1} 个模块请求失败：`, result.reason)
+        }
+      })
 
-      // 最新订单
-      if (latestOrderResult.status === 'fulfilled') {
-        latestOrder.value = latestOrderResult.value
-      } else {
-        latestOrder.value = null
-        console.error('最新订单数据获取失败')
-      }
+      // 八个接口全部失败，才触发全局错误
+      const allFailed = results.every((result) => result.status === 'rejected')
 
-      // 用户统计
-      if (userStatisticsResult.status === 'fulfilled') {
-        userStatistics.value = userStatisticsResult.value
-      } else {
-        userStatistics.value = null
-        console.error('用户统计数据获取失败')
-      }
-
-      // 热门商品
-      if (hotProductResult.status === 'fulfilled') {
-        hotProduct.value = hotProductResult.value
-      } else {
-        hotProduct.value = null
-        console.error('热门商品数据获取失败')
-      }
-
-      // 渠道来源
-      if (channelStatisticsResult.status === 'fulfilled') {
-        channelStatistics.value = channelStatisticsResult.value
-      } else {
-        userStatistics.value = null
-        console.error('渠道来源数据获取失败')
-      }
-
-      // 如果全部失败，则给全局 error
-      const allFailed = keyDataResult.status === 'rejected'
       if (allFailed) {
-        error.value = '获取 Dashboard 数据失败'
+        error.value = 'Dashboard 数据获取失败，请检查网络或服务器状态'
       }
     } catch (err) {
-      console.error(err)
-      error.value = err instanceof Error ? err.message : '获取 Dashboard 数据失败'
+      // 处理意外异常
+      if (currentRequestId !== requestId) return
+      console.error('Dashboard 请求异常：', err)
+      error.value = getErrorMessage(err)
     } finally {
-      loading.value = false
+      // 只有最新请求可以关闭 loading
+      if (currentRequestId === requestId) {
+        loading.value = false
+      }
     }
   }
   return {

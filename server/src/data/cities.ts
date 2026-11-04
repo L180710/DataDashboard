@@ -1,4 +1,4 @@
-import type { City, CityConnection } from '../../../shared/types/city.js'
+import type { City } from '../../../shared/types/city.js'
 
 // 城市模板
 export const cities: City[] = [
@@ -66,19 +66,3 @@ export const cities: City[] = [
     value: 20000,
   },
 ]
-
-// 城市链接
-export const getCityConnections = (cities: City[]): CityConnection[] => {
-  const origin = cities[0]
-
-  if (!origin) {
-    return []
-  }
-
-  return cities
-    .filter((city) => city.cityId !== origin.cityId && city.cityId !== 'national')
-    .map((city) => ({
-      from: origin,
-      to: city,
-    }))
-}

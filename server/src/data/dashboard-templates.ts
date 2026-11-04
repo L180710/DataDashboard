@@ -95,7 +95,6 @@ export const userStatisticsTemplate = {
 
 // 热门商品模板
 // 最终值 = baseValue * cityScale
-// 这里有个疑问，如何使得商品名字也自定义化--用的是名字池
 export const hotProductTemplate = [
   { name: '智能手机', baseAmount: 350000, ratio: 98 },
   { name: '笔记本电脑', baseAmount: 280000, ratio: 88 },

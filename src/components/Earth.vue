@@ -22,7 +22,7 @@ import { lonLatToVector3 } from '@/utils/geo'
 import { createCityLabel } from '@/utils/cityLabel'
 import { createFlightLine } from '@/utils/earthLine'
 import { createChinaFills, createChinaBoundaries, boundaryGlowMaterials } from '@/utils/chinaGeo'
-import { getCityConnections } from '../../server/src/data/cities'
+import { getCityConnections } from '@/utils/cityConnections'
 import type { City } from '../../shared/types/city'
 import { getCities } from '@/api/city'
 
@@ -34,6 +34,7 @@ const emit = defineEmits<{
 // 接收父组件传递数据
 const props = defineProps<{
   selectedCity: City | null
+  refreshKey: number
 }>()
 
 // 监听 selectedCity 变化，全国则重置地球视图
@@ -43,6 +44,17 @@ watch(
     if (city === null) {
       resetEarthView()
     }
+  },
+)
+
+watch(
+  () => props.refreshKey,
+  async (newValue, oldValue) => {
+    // 首次初始化时不需要重复请求
+    if (newValue === oldValue) return
+
+    // 重新获取城市数据
+    await createCityPoints()
   },
 )
 
@@ -168,6 +180,8 @@ let cityList = ref<City[]>([])
 // 观察容器变化
 let resizeObserver: ResizeObserver | null = null
 let isInitializing = false
+let isInitialized = false
+let isDisposed = false
 
 const observeContainerSize = () => {
   const container = containerRef.value
@@ -184,7 +198,9 @@ const observeContainerSize = () => {
     if (width <= 0 || height <= 0) return
 
     // 已初始化，只更新尺寸
-    if (renderer && camera) {
+    if (isDisposed) return
+
+    if (isInitialized && renderer && camera) {
       resize()
       return
     }
@@ -195,7 +211,7 @@ const observeContainerSize = () => {
 
     void initThree()
       .catch((error) => {
-        console.log('Three.js 初始化失败', error)
+        console.error('Three.js 初始化失败', error)
       })
       .finally(() => {
         isInitializing = false
@@ -207,13 +223,15 @@ const observeContainerSize = () => {
 
 // 初始化
 const initThree = async () => {
-  if (!containerRef.value) return
+  if (isDisposed || !containerRef.value) return
 
   const container = containerRef.value
 
   // 获取尺寸
   const width = container.clientWidth
   const height = container.clientHeight
+
+  if (width <= 0 || height <= 0) return
 
   // 创建 Scenes
   scene = new THREE.Scene()
@@ -270,12 +288,6 @@ const initThree = async () => {
   // 添加星星
   createStars()
 
-  // 添加城市
-  await createCityPoints()
-
-  // 添加中国地图
-  await loadChinaMap()
-
   // 添加环境光
   const ambientLight = new THREE.AmbientLight(0xffffff, 1)
   scene.add(ambientLight)
@@ -285,7 +297,15 @@ const initThree = async () => {
   directionalLight.position.set(5, 3, 5)
   scene.add(directionalLight)
 
+  // 基础场景完成后立即启动动画。城市 API 失败不会影响地球渲染。
+  isInitialized = true
   animate()
+
+  // GeoJSON 是前端静态资源，与 Node API 分离。
+  void loadChinaMap()
+
+  // 城市数据属于可选业务数据，单独请求、单独处理失败。
+  void createCityPoints()
 }
 
 // 创建大气层
@@ -492,74 +512,142 @@ const createCityPoint = (position: THREE.Vector3, city: City) => {
   }
 }
 
-// 创建城市组
-const createCityPoints = async () => {
-  const allCities = await getCities()
-  // 全国作为返回的一个城市，暂时去掉在列表中
-  cityList.value = allCities.filter((item) => item.cityId !== 'national')
+// 清理旧城市对象。用于重试或重新加载城市数据时避免重复添加。
+const clearCityVisuals = () => {
+  if (earth && cityPoints) earth.remove(cityPoints)
+  if (earth && flightLines) earth.remove(flightLines)
 
-  cityPoints = new THREE.Group()
-
-  cityList.value.forEach((city, index) => {
-    const position = lonLatToVector3(city.longitude!, city.latitude!, CITY_RADIUS)
-
-    const { group, label, rings, core, glow, pillar } = createCityPoint(position, city)
-
-    cityPoints!.add(group)
-
-    cityCores.push(core)
-
-    cityMarkers.push({
-      group,
-      label,
-      rings,
-      core,
-      glow,
-      pillar,
-    })
+  // 粒子使用共享 geometry/material，统一释放一次。
+  const particleGeometry = flightParticles[0]?.geometry
+  const particleMaterial = flightParticles[0]?.material
+  flightParticles.forEach((particle) => {
+    earth?.remove(particle)
   })
-  earth?.add(cityPoints)
+  particleGeometry?.dispose()
+  if (Array.isArray(particleMaterial)) {
+    particleMaterial.forEach((material) => material.dispose())
+  } else {
+    particleMaterial?.dispose()
+  }
 
-  // 添加飞行线
-  createFlightLines()
+  cityPoints?.traverse((object) => {
+    if (!(object instanceof THREE.Mesh || object instanceof THREE.Sprite)) return
+    if (object instanceof THREE.Mesh) object.geometry.dispose()
+    const material = object.material
+    if (Array.isArray(material)) material.forEach((item) => item.dispose())
+    else material?.dispose()
+  })
+
+  flightLines?.traverse((object) => {
+    if (!(
+      object instanceof THREE.Mesh ||
+      object instanceof THREE.Line ||
+      object instanceof THREE.LineSegments
+    ))
+      return
+    object.geometry?.dispose()
+    const material = object.material
+    if (Array.isArray(material)) material.forEach((item) => item.dispose())
+    else material?.dispose()
+  })
+
+  cityPoints = null
+  flightLines = null
+  cityCores = []
+  cityMarkers = []
+  cityList.value = []
+  flightCurves = []
+  flightParticles = []
+  hoveredCity = null
+  focusingCity = null
+  tooltip.value.visible = false
+  tooltip.value.city = null
 }
 
-// 创建飞行线
+// 城市接口单独加载。接口不可用时保留地球、星空、大气层和中国地图。
+const createCityPoints = async () => {
+  console.log('createCityPoints 执行')
+  if (isDisposed || !earth) return
+
+  let allCities: City[]
+  try {
+    allCities = await getCities()
+    console.log('城市数据获取成功：', allCities.length)
+  } catch (error) {
+    console.warn('城市数据获取失败，地球基础场景继续显示：', error)
+    return
+  }
+
+  if (isDisposed || !earth) return
+
+  const validCities = allCities.filter((city) => {
+    if (city.cityId === 'national') return false
+    const longitude = Number(city.longitude)
+    const latitude = Number(city.latitude)
+    return (
+      city.cityId &&
+      Number.isFinite(longitude) &&
+      Number.isFinite(latitude) &&
+      longitude >= -180 &&
+      longitude <= 180 &&
+      latitude >= -90 &&
+      latitude <= 90
+    )
+  })
+
+  clearCityVisuals()
+  cityList.value = validCities
+  cityPoints = new THREE.Group()
+
+  try {
+    cityList.value.forEach((city) => {
+      const position = lonLatToVector3(Number(city.longitude), Number(city.latitude), CITY_RADIUS)
+      const { group, label, rings, core, glow, pillar } = createCityPoint(position, city)
+      cityPoints!.add(group)
+      cityCores.push(core)
+      cityMarkers.push({ group, label, rings, core, glow, pillar })
+    })
+
+    earth.add(cityPoints)
+    createFlightLines()
+  } catch (error) {
+    console.error('城市可视化创建失败：', error)
+    clearCityVisuals()
+  }
+}
+
+// 创建飞行线：连接列表中的第一个城市与其余城市。
 const createFlightLines = () => {
-  if (cityList.value.length == 0) return
+  if (!earth || cityList.value.length === 0 || isDisposed) return
 
   const cityConnections = getCityConnections(cityList.value)
-
   flightLines = new THREE.Group()
+  flightCurves = []
 
   cityConnections.forEach(({ from, to }) => {
     if (!from || !to) return
-
-    const start = lonLatToVector3(from.longitude!, from.latitude!, CITY_RADIUS)
-    const end = lonLatToVector3(to.longitude!, to.latitude!, CITY_RADIUS)
-
+    const start = lonLatToVector3(Number(from.longitude), Number(from.latitude), CITY_RADIUS)
+    const end = lonLatToVector3(Number(to.longitude), Number(to.latitude), CITY_RADIUS)
     const { line, curve } = createFlightLine(start, end)
     flightLines!.add(line)
     flightCurves.push(curve)
   })
 
-  earth?.add(flightLines)
-
-  // 添加粒子
+  earth.add(flightLines)
   createFlightParticles()
 }
 
-// 创建粒子
+// 创建飞行粒子。所有粒子共享同一份 geometry/material，卸载时只释放一次。
 const createFlightParticles = () => {
+  if (!earth || flightCurves.length === 0 || isDisposed) return
   flightParticles = []
   const geometry = new THREE.SphereGeometry(0.005, 8, 8)
-  const material = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-  })
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff })
+
   flightCurves.forEach(() => {
     const particle = new THREE.Mesh(geometry, material)
     flightParticles.push(particle)
-    earth?.add(particle)
+    earth!.add(particle)
   })
 }
 
@@ -833,6 +921,7 @@ const easeOut = (t: number) => {
 
 // 动画
 const animate = () => {
+  if (isDisposed) return
   animationId = requestAnimationFrame(animate)
 
   // 当前时间
@@ -1033,6 +1122,7 @@ const orientEarthToChina = () => {
 
 // 加载中国地图
 const loadChinaMap = async () => {
+  if (isDisposed || !earth) return
   try {
     const response = await fetch('/geojson/china_province_full.geojson')
 
@@ -1041,6 +1131,7 @@ const loadChinaMap = async () => {
     }
 
     const geojson = await response.json()
+    if (isDisposed || !earth) return
 
     chinaFillGroup = createChinaFills(geojson, GEOJSON_RADIUS)
     chinaBoundaryGroup = createChinaBoundaries(geojson, GEOJSON_RADIUS)
@@ -1054,91 +1145,83 @@ const loadChinaMap = async () => {
 
 // 挂载
 onMounted(() => {
+  isDisposed = false
   observeContainerSize()
 
   window.addEventListener('resize', resize)
   containerRef.value?.addEventListener('mousemove', handleMouseMove)
   containerRef.value?.addEventListener('click', handleClick)
-
-  // initThree()
-  // window.addEventListener('resize', resize)
-  // containerRef.value?.addEventListener('mousemove', handleMouseMove)
-  // containerRef.value?.addEventListener('click', handleClick)
-
-  // controls?.addEventListener('start', handleControlsStart)
 })
 
-// 在卸载前
+// 卸载时停止异步更新并释放资源。
 onBeforeUnmount(() => {
+  isDisposed = true
+  isInitialized = false
+  isInitializing = false
+
   resizeObserver?.disconnect()
   resizeObserver = null
-
   cancelAnimationFrame(animationId)
 
   window.removeEventListener('resize', resize)
   containerRef.value?.removeEventListener('mousemove', handleMouseMove)
   containerRef.value?.removeEventListener('click', handleClick)
 
-  // 释放 earth
+  clearCityVisuals()
+
+  // 清理 GeoJSON 对象
+  const disposeObject = (root: THREE.Object3D | null) => {
+    root?.traverse((object) => {
+      if (!(
+        object instanceof THREE.Mesh ||
+        object instanceof THREE.Line ||
+        object instanceof THREE.LineSegments
+      ))
+        return
+      object.geometry?.dispose()
+      const material = object.material
+      if (Array.isArray(material)) material.forEach((item) => item.dispose())
+      else material?.dispose()
+    })
+  }
+  disposeObject(chinaFillGroup)
+  disposeObject(chinaBoundaryGroup)
+  chinaFillGroup = null
+  chinaBoundaryGroup = null
+  boundaryGlowMaterials.length = 0
+
   earth?.geometry.dispose()
   earthTexture?.dispose()
-  if (earth?.material instanceof THREE.Material) {
-    earth.material.dispose()
-  }
+  const earthMaterial = earth?.material
+  if (Array.isArray(earthMaterial)) earthMaterial.forEach((item) => item.dispose())
+  else earthMaterial?.dispose()
 
-  // 释放 atmosphere
   atmosphere?.geometry.dispose()
-  if (atmosphere?.material instanceof THREE.Material) {
-    atmosphere.material.dispose()
-  }
+  const atmosphereMaterial = atmosphere?.material
+  if (Array.isArray(atmosphereMaterial)) atmosphereMaterial.forEach((item) => item.dispose())
+  else atmosphereMaterial?.dispose()
 
-  // 释放 Stars
   stars?.geometry.dispose()
-  if (stars?.material instanceof THREE.Material) {
-    stars.material.dispose()
-  }
+  const starsMaterial = stars?.material
+  if (Array.isArray(starsMaterial)) starsMaterial.forEach((item) => item.dispose())
+  else starsMaterial?.dispose()
 
-  // 释放中国 GeoJSON 填充
-  chinaFillGroup?.traverse((object) => {
-    if (object instanceof THREE.Mesh) {
-      object.geometry.dispose()
-
-      if (Array.isArray(object.material)) {
-        object.material.forEach((material) => {
-          material.dispose()
-        })
-      } else {
-        object.material.dispose()
-      }
-    }
-  })
-
-  // 释放中国边界
-  boundaryGlowMaterials.length = 0
-  chinaBoundaryGroup?.traverse((object) => {
-    const line = object as THREE.Line
-
-    line.geometry?.dispose()
-
-    if (Array.isArray(line.material)) {
-      line.material.forEach((material) => {
-        material.dispose()
-      })
-    } else {
-      line.material?.dispose()
-    }
-  })
-
-  chinaFillGroup = null
-
-  // 释放 Renderer
+  controls?.removeEventListener('start', handleControlsStart)
+  controls?.dispose()
+  renderer?.renderLists.dispose()
   renderer?.dispose()
   renderer?.domElement.remove()
 
-  // 释放 OrbitControls
-  controls?.removeEventListener('start', handleControlsStart)
-  controls?.dispose()
+  renderer = null
+  scene = null
+  camera = null
   controls = null
+  earth = null
+  earthTexture = null
+  atmosphere = null
+  stars = null
+  tooltip.value.visible = false
+  tooltip.value.city = null
 })
 </script>
 
