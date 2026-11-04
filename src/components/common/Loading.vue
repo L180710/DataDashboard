@@ -13,11 +13,11 @@
   justify-content: center;
   gap: 0.2rem;
   color: #00d8ff;
-  font-size: 0.28rem;
+  font-size: 0.18rem;
 
   .spinner {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.32rem;
+    height: 0.32rem;
     border: 3px solid rgba(0, 216, 255, 0.2);
     border-top-color: #00d8ff;
     border-radius: 50%;
