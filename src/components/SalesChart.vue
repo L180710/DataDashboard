@@ -114,21 +114,19 @@ const getOption = (): echarts.EChartsOption => {
     yAxis: {
       type: 'value',
       min: 0,
-      max: 300000,
-      interval: 60000,
+      splitNumber: 4,
+
       axisLabel: {
         color: '#dce8ff',
         fontSize: remToPx(0.16),
-
         formatter: (value: number) => {
           return value.toLocaleString()
         },
       },
 
-      // 水平线
       splitLine: {
         lineStyle: {
-          color: 'rgba(16, 67, 160, 0)',
+          color: 'rgba(16, 67, 160, 0.15)',
         },
       },
     },

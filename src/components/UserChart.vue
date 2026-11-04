@@ -42,9 +42,11 @@ const valueArr = computed(() => {
   }, 0)
 
   return ageArr.map((item) => {
-    return (item.value / total) * 100
+    return ((item.value / total) * 100).toFixed(0)
   })
 })
+
+console.log(valueArr.value)
 
 const getOption = (): echarts.EChartsOption => {
   return {

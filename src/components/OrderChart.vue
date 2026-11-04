@@ -105,20 +105,23 @@ const getOption = (): echarts.EChartsOption => {
     yAxis: {
       type: 'value',
       min: 0,
-      max: 1500,
-      interval: 300,
+      splitNumber: 4,
+
+      minInterval: 1,
+
       axisLabel: {
         color: '#a9b8d0',
         fontSize: remToPx(0.16),
+
         formatter: (value: number) => {
           return value.toLocaleString()
         },
       },
 
-      // 水平线
+      // 水平分割线
       splitLine: {
         lineStyle: {
-          color: 'rgba(16, 67, 160, 0.2)', // 调整了透明度，让网格线稍微可见一点
+          color: 'rgba(16, 67, 160, 0.2)',
         },
       },
     },
